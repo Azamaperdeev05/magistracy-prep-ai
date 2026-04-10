@@ -28,7 +28,6 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   // State
   const [answers, setAnswers] = useState<UserAnswers>({});
   const [warningsCount, setWarningsCount] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(document.fullscreenElement !== null);
   
   // Resolve current state from URL
   const currentSubjectId = (subjectId as SubjectId) || SubjectId.ENGLISH;
@@ -85,10 +84,6 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       setWarningsCount(prev => prev + 1);
     };
 
-    const handleFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement !== null);
-    };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('contextmenu', handleContextMenu);
     window.addEventListener('copy', handleCopy);
@@ -97,7 +92,6 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
     window.addEventListener('keydown', handleKeydown);
     window.addEventListener('blur', handleWindowBlur);
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -108,16 +102,8 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       window.removeEventListener('keydown', handleKeydown);
       window.removeEventListener('blur', handleWindowBlur);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
-
-  const enterFullscreen = () => {
-    const docEl = document.documentElement;
-    if (docEl.requestFullscreen) {
-      docEl.requestFullscreen();
-    }
-  };
 
   // Helpers
   const handleAnswer = (optionId: string) => {
@@ -475,8 +461,6 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       {/* ANTI-CHEAT MODAL & WARNINGS */}
       <AntiCheatModal 
         warningsCount={warningsCount}
-        isFullscreen={isFullscreen}
-        onEnterFullscreen={enterFullscreen}
         onAutoFinish={() => onFinish(answers, warningsCount)}
       />
     </div>
