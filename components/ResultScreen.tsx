@@ -93,7 +93,9 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
     }
   };
 
-  const subjectResults = Object.values(SUBJECTS).map(subject => {
+  const subjectResults = Object.values(SUBJECTS)
+    .filter(subject => questions.some(q => q.subjectId === subject.id))
+    .map(subject => {
     const subjectQuestions = questions.filter(q => q.subjectId === subject.id);
     let correctCount = 0;
     let score = 0;
