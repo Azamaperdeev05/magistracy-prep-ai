@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Minus, Square, Menu, RotateCcw, MonitorUp, Delete } from 'lucide-react';
+import {
+  applyCalculatorFunction,
+  CalculatorFunction,
+  CalculatorOperator,
+  evaluateExpression,
+  formatCalculatorNumber,
+  replaceTrailingOperator,
+} from './calculatorEngine';
 
 interface CalculatorModalProps {
   isOpen: boolean;
@@ -9,18 +17,17 @@ interface CalculatorModalProps {
 const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) => {
   const [display, setDisplay] = useState('0');
   const [equation, setEquation] = useState('');
-  const [hasResult, setHasResult] = useState(false);
+  const [lastInput, setLastInput] = useState<'clear' | 'number' | 'operator' | 'function' | 'equals'>('clear');
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
 
-  if (!isOpen) return null;
-
   const handleNumber = (num: string) => {
-    if (hasResult) {
+    if (display === 'Қате' || lastInput === 'equals' || lastInput === 'operator' || lastInput === 'function') {
       setDisplay(num);
-      setEquation('');
-      setHasResult(false);
+      if (lastInput === 'equals' || display === 'Қате') {
+        setEquation('');
+      }
     } else if (display === '0' && num !== '.') {
       setDisplay(num);
     } else if (num === '.' && display.includes('.')) {
@@ -28,60 +35,72 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
     } else {
       setDisplay(display + num);
     }
+    setLastInput('number');
   };
 
-  const handleOperator = (op: string) => {
-    setEquation(display + ' ' + op + ' ');
+  const handleOperator = (op: CalculatorOperator) => {
+    if (display === 'Қате') {
+      return;
+    }
+
+    if (lastInput === 'operator') {
+      setEquation(prev => replaceTrailingOperator(prev, op));
+    } else if (lastInput === 'equals') {
+      setEquation(`${display} ${op} `);
+    } else {
+      setEquation(prev => `${prev}${display} ${op} `);
+    }
+
     setDisplay('0');
-    setHasResult(false);
+    setLastInput('operator');
   };
 
   const handleEquals = () => {
     try {
       const fullEquation = equation + display;
-      const sanitized = fullEquation.replace(/×/g, '*').replace(/÷/g, '/');
-      const result = eval(sanitized);
-      // Format result to avoid very long decimals
-      const formattedResult = Number.isInteger(result) ? result : parseFloat(result.toFixed(8));
-      setDisplay(String(formattedResult));
+      const result = evaluateExpression(fullEquation);
+      setDisplay(formatCalculatorNumber(result));
       setEquation('');
-      setHasResult(true);
+      setLastInput('equals');
     } catch {
       setDisplay('Қате');
-      setHasResult(true);
+      setEquation('');
+      setLastInput('equals');
     }
   };
 
   const handleClear = () => {
     setDisplay('0');
     setEquation('');
-    setHasResult(false);
+    setLastInput('clear');
   };
 
   const handleClearEntry = () => {
     setDisplay('0');
+    setLastInput('clear');
   };
 
   const handleBackspace = () => {
-    if (display.length > 1) {
+    if (display === 'Қате' || lastInput === 'equals') {
+      setDisplay('0');
+      setEquation('');
+      setLastInput('clear');
+    } else if (display.length > 1) {
       setDisplay(display.slice(0, -1));
     } else {
       setDisplay('0');
     }
   };
 
-  const handleMathFunc = (type: string) => {
-    const val = parseFloat(display);
-    let res = 0;
-    switch(type) {
-      case '1/x': res = 1 / val; break;
-      case 'x²': res = val * val; break;
-      case '√': res = Math.sqrt(val); break;
-      case '%': res = val / 100; break;
-      case '±': res = -val; break;
+  const handleMathFunc = (type: CalculatorFunction) => {
+    try {
+      setDisplay(applyCalculatorFunction(display, type, equation));
+      setLastInput('function');
+    } catch {
+      setDisplay('Қате');
+      setEquation('');
+      setLastInput('equals');
     }
-    setDisplay(String(Number.isInteger(res) ? res : parseFloat(res.toFixed(8))));
-    setHasResult(true);
   };
 
   const rows = [
@@ -103,7 +122,7 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
         case '⌫': handleBackspace(); break;
         case '=': handleEquals(); break;
         case '+': case '-': case '×': case '÷': handleOperator(btn); break;
-        default: handleMathFunc(btn); break;
+        default: handleMathFunc(btn as CalculatorFunction); break;
       }
     }
   };
@@ -136,6 +155,8 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[100]">

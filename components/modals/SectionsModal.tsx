@@ -22,7 +22,8 @@ const SectionsModal: React.FC<SectionsModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const subjectList = Object.values(SUBJECTS);
+  const activeSubjectIds = Array.from(new Set(questions.map(q => q.subjectId)));
+  const subjectList = Object.values(SUBJECTS).filter(s => activeSubjectIds.includes(s.id));
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]" onClick={onClose}>

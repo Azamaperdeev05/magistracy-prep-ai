@@ -2,7 +2,11 @@ export enum SubjectId {
   ENGLISH = 'english',
   TGO = 'tgo',
   ALGO = 'algo',
-  DB = 'db'
+  DB = 'db',
+  M001_PEDAGOGIKA = 'm001_pedagogika',
+  M001_PSYCHOLOGY = 'm001_psychology',
+  M002_PEDAGOGIKA = 'm002_pedagogika',
+  M002_SPEECH_DEV = 'm002_speech_dev'
 }
 
 export enum QuestionType {
@@ -49,7 +53,29 @@ export type ChartData =
   | { type: 'comparison'; columnA: string; columnB: string }
   | { type: 'comparison_table'; title?: string; columnA: { header: string; content: string }; columnB: { header: string; content: string }; question?: string }
   | { type: 'circle'; radius: number; label?: string; showCenter?: boolean }
-  | { type: 'math'; expressions: { label: string; value: string }[]; question?: string };
+  | { type: 'math'; expressions: { label: string; value: string }[]; question?: string }
+  | {
+      type: 'tgo_comparison_grid';
+      title?: string;
+      columns: {
+        header: string;
+        lines?: string[];
+        visual?: TgoVisualData;
+      }[];
+      footer?: string;
+    }
+  | { type: 'tgo_grouped_bar'; title?: string; yMin?: number; yMax?: number; categories: string[]; series: { name: string; color: string; values: number[] }[] }
+  | { type: 'tgo_step_perimeter'; widthLabel: string; heightLabel: string }
+  | { type: 'tgo_venn'; leftLabel: string; rightLabel: string; leftTotal: number; rightTotal: number; intersection: number; outside?: number }
+  | { type: 'tgo_shaded_rectangle'; widthParts: { label: string; value: number }[]; heightParts: { label: string; value: number }[] }
+  | { type: 'tgo_triangle_sides'; leftSide: string; rightSide: string; baseLabel: string }
+  | { type: 'tgo_inscribed_square'; radiusLabel: string }
+  | { type: 'tgo_square_mosaic'; unitAreaLabel: string };
+
+export type TgoVisualData =
+  | { type: 'triangle_bc'; totalBase: number; rightBase: number; leftHeight: number }
+  | { type: 'mini_step'; widthLabel: string; heightLabel: string }
+  | { type: 'mini_expression'; lines: string[] };
 
 
 export interface SubjectConfig {

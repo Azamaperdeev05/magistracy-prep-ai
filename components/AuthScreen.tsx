@@ -1,181 +1,33 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  GraduationCap, Mail, Lock, User, Eye, EyeOff, 
-  ArrowRight, ArrowLeft, Sparkles, Shield, AlertCircle, CheckCircle, KeyRound
-} from 'lucide-react';
-import { register, login, forgotPassword, resetPassword } from '../services/authService';
+import { AlertCircle } from 'lucide-react';
+import { loginWithGoogle } from '../services/authService';
+import { auth } from '../firebase';
 
 interface AuthScreenProps {
   onAuthSuccess: (user: { id: number; email: string; full_name: string }) => void;
 }
 
-type AuthMode = 'login' | 'register' | 'forgot' | 'otp' | 'newpass';
-
 const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
-  const [mode, setMode] = useState<AuthMode>('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  
-  // OTP State
-  const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [newPassword, setNewPassword] = useState('');
-  const [countdown, setCountdown] = useState(0);
 
-  // Countdown timer for resend
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [countdown]);
-
-  const clearMessages = () => { setError(''); setSuccess(''); };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearMessages();
+  const handleGoogleSignIn = async () => {
+    setError('');
     setIsLoading(true);
     try {
-      const result = await login(email, password);
+      const result = await loginWithGoogle();
       onAuthSuccess(result.user);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Google арқылы кіру кезінде қате орын алды');
     } finally {
       setIsLoading(false);
     }
   };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearMessages();
-    if (password.length < 6) { setError('Құпия сөз кемінде 6 таңбадан тұруы керек'); return; }
-    setIsLoading(true);
-    try {
-      const result = await register(email, fullName, password);
-      onAuthSuccess(result.user);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearMessages();
-    setIsLoading(true);
-    try {
-      await forgotPassword(email);
-      setSuccess('Код email-ге жіберілді!');
-      setCountdown(300); // 5 min
-      setMode('otp');
-      setOtpDigits(['', '', '', '', '', '']);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // OTP input handler
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) value = value.slice(-1);
-    if (value && !/^\d$/.test(value)) return;
-
-    const newDigits = [...otpDigits];
-    newDigits[index] = value;
-    setOtpDigits(newDigits);
-
-    // Auto-focus next
-    if (value && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handleOtpPaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    const newDigits = [...otpDigits];
-    for (let i = 0; i < pasted.length; i++) {
-      newDigits[i] = pasted[i];
-    }
-    setOtpDigits(newDigits);
-    if (pasted.length === 6) {
-      otpRefs.current[5]?.focus();
-    }
-  };
-
-  const handleOtpSubmit = () => {
-    const code = otpDigits.join('');
-    if (code.length !== 6) { setError('6 санды код жазыңыз'); return; }
-    clearMessages();
-    setMode('newpass');
-  };
-
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearMessages();
-    if (newPassword.length < 6) { setError('Құпия сөз кемінде 6 таңбадан тұруы керек'); return; }
-    setIsLoading(true);
-    try {
-      const otpCode = otpDigits.join('');
-      const message = await resetPassword(email, otpCode, newPassword);
-      setSuccess(message);
-      setTimeout(() => { setMode('login'); clearMessages(); setNewPassword(''); }, 2000);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    if (countdown > 0) return;
-    clearMessages();
-    setIsLoading(true);
-    try {
-      await forgotPassword(email);
-      setSuccess('Жаңа код жіберілді!');
-      setCountdown(300);
-      setOtpDigits(['', '', '', '', '', '']);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const switchMode = (newMode: AuthMode) => {
-    setMode(newMode);
-    clearMessages();
-  };
-
-  // Shared input class
-  const inputClass = "w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-blue-500/50 transition-colors text-white placeholder-slate-600 font-bold";
-  const inputClassPass = "w-full pl-12 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-blue-500/50 transition-colors text-white placeholder-slate-600 font-bold";
-  const btnClass = "w-full py-4 gradient-brand rounded-xl font-black text-white flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] transition-all active:scale-[0.98] disabled:opacity-50";
 
   return (
     <div className="min-h-screen bg-[#07090d] text-[#f8fafc] flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      {/* Background */}
+      {/* Background Glows */}
       <div className="absolute w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] top-[-100px] right-[-100px]" />
       <div className="absolute w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] bottom-[-50px] left-[-50px]" />
       
@@ -195,187 +47,89 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
             Magis<span className="text-blue-500">Core</span>
           </h1>
           <p className="text-slate-500 text-sm mt-2 font-medium">
-            {mode === 'login' && 'Аккаунтқа кіру'}
-            {mode === 'register' && 'Жаңа аккаунт құру'}
-            {mode === 'forgot' && 'Парольді қалпына келтіру'}
-            {mode === 'otp' && 'Кодты жазыңыз'}
-            {mode === 'newpass' && 'Жаңа пароль орнату'}
+            {!auth ? 'Жүйе баптаулары қажет' : 'Платформаға кіру'}
           </p>
         </div>
 
         {/* Card */}
         <div className="glass-dark rounded-3xl p-8 border border-white/5 shadow-2xl">
-          
-          {/* Messages */}
-          <AnimatePresence>
-            {error && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl mb-6 text-red-400 text-sm font-bold"
-              >
-                <AlertCircle className="w-4 h-4 shrink-0" /> {error}
-              </motion.div>
-            )}
-            {success && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                className="flex items-center gap-3 px-4 py-3 bg-green-500/10 border border-green-500/20 rounded-xl mb-6 text-green-400 text-sm font-bold"
-              >
-                <CheckCircle className="w-4 h-4 shrink-0" /> {success}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ====== LOGIN ====== */}
-          {mode === 'login' && (
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="Email" className={inputClass} />
+          {!auth ? (
+            <div className="text-center py-4">
+              <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4 animate-pulse" />
+              <h3 className="text-lg font-black text-white mb-2">Firebase бапталмаған</h3>
+              <p className="text-slate-400 text-xs leading-relaxed mb-6">
+                Қосымша дұрыс жұмыс істеуі үшін Firebase кілттері қажет. <code>.env</code> немесе Vercel орталық айнымалыларында келесі айнымалыларды орнатыңыз:
+              </p>
+              <div className="bg-black/50 text-left font-mono text-[10px] p-4 rounded-xl text-indigo-300 border border-white/5 space-y-1 mb-4 overflow-x-auto">
+                <div>VITE_FIREBASE_API_KEY</div>
+                <div>VITE_FIREBASE_AUTH_DOMAIN</div>
+                <div>VITE_FIREBASE_PROJECT_ID</div>
+                <div>VITE_FIREBASE_STORAGE_BUCKET</div>
+                <div>VITE_FIREBASE_MESSAGING_SENDER_ID</div>
+                <div>VITE_FIREBASE_APP_ID</div>
               </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required placeholder="Құпия сөз" className={inputClassPass} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-              <div className="flex justify-end">
-                <button type="button" onClick={() => switchMode('forgot')} className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
-                  Парольді ұмыттыңыз ба?
-                </button>
-              </div>
-              <button type="submit" disabled={isLoading} className={btnClass}>
-                {isLoading ? 'Жүктелуде...' : <><span>Кіру</span> <ArrowRight className="w-5 h-5" /></>}
-              </button>
-              <div className="text-center pt-4 border-t border-white/5">
-                <span className="text-slate-500 text-sm font-medium">Аккаунтыңыз жоқ па? </span>
-                <button type="button" onClick={() => switchMode('register')} className="text-sm font-black text-blue-400 hover:text-blue-300">Тіркелу</button>
-              </div>
-            </form>
-          )}
-
-          {/* ====== REGISTER ====== */}
-          {mode === 'register' && (
-            <form onSubmit={handleRegister} className="space-y-5">
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} required placeholder="Аты-жөніңіз" className={inputClass} />
-              </div>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="Email" className={inputClass} />
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required placeholder="Құпия сөз (кемінде 6 таңба)" className={inputClassPass} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-              <button type="submit" disabled={isLoading} className={btnClass}>
-                {isLoading ? 'Жүктелуде...' : <><Sparkles className="w-5 h-5" /> <span>Тіркелу</span></>}
-              </button>
-              <div className="text-center pt-4 border-t border-white/5">
-                <span className="text-slate-500 text-sm font-medium">Аккаунтыңыз бар ма? </span>
-                <button type="button" onClick={() => switchMode('login')} className="text-sm font-black text-blue-400 hover:text-blue-300">Кіру</button>
-              </div>
-            </form>
-          )}
-
-          {/* ====== FORGOT PASSWORD (enter email) ====== */}
-          {mode === 'forgot' && (
-            <form onSubmit={handleForgotPassword} className="space-y-5">
-              <p className="text-slate-400 text-sm font-medium mb-2">Email мекенжайыңызды жазыңыз. Біз сізге 6 санды код жібереміз.</p>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="Email" className={inputClass} />
-              </div>
-              <button type="submit" disabled={isLoading} className={btnClass}>
-                {isLoading ? 'Жіберілуде...' : <><Shield className="w-5 h-5" /> <span>Код жіберу</span></>}
-              </button>
-              <button type="button" onClick={() => switchMode('login')} className="w-full flex items-center justify-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition-colors pt-2">
-                <ArrowLeft className="w-4 h-4" /> Кіру бетіне қайту
-              </button>
-            </form>
-          )}
-
-          {/* ====== OTP INPUT ====== */}
-          {mode === 'otp' && (
+              <p className="text-[10px] text-slate-500">
+                Жергілікті тестілеу үшін жоба түбіріндегі <code>.env</code> файлында осы кілттерді толтырып шығыңыз.
+              </p>
+            </div>
+          ) : (
             <div className="space-y-6">
+              {/* Description */}
               <div className="text-center">
-                <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
-                  <KeyRound className="w-7 h-7 text-blue-400" />
-                </div>
                 <p className="text-slate-400 text-sm font-medium">
-                  <span className="text-white font-bold">{email}</span> мекенжайына 6 санды код жіберілді
+                  Дайындықты бастау және нәтижелерді сақтау үшін Google аккаунтыңызбен кіріңіз
                 </p>
               </div>
 
-              {/* OTP Inputs */}
-              <div className="flex justify-center gap-3" onPaste={handleOtpPaste}>
-                {otpDigits.map((digit, i) => (
-                  <input
-                    key={i}
-                    ref={el => { otpRefs.current[i] = el; }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={e => handleOtpChange(i, e.target.value)}
-                    onKeyDown={e => handleOtpKeyDown(i, e)}
-                    className={`w-12 h-14 text-center text-2xl font-black rounded-xl border-2 outline-none transition-all bg-white/5
-                      ${digit ? 'border-blue-500 text-white' : 'border-white/10 text-slate-400'}
-                      focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20`}
-                  />
-                ))}
-              </div>
-
-              {/* Timer & Resend */}
-              <div className="text-center">
-                {countdown > 0 ? (
-                  <p className="text-slate-500 text-sm font-medium">
-                    Қайта жіберу: <span className="text-blue-400 font-bold">{formatTime(countdown)}</span>
-                  </p>
-                ) : (
-                  <button onClick={handleResendOtp} disabled={isLoading} className="text-sm font-bold text-blue-400 hover:text-blue-300 transition-colors">
-                    Кодты қайта жіберу
-                  </button>
+              {/* Messages */}
+              <AnimatePresence>
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }} 
+                    animate={{ opacity: 1, height: 'auto' }} 
+                    exit={{ opacity: 0, height: 0 }}
+                    className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm font-bold"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0" /> {error}
+                  </motion.div>
                 )}
-              </div>
-
-              <button onClick={handleOtpSubmit} className={btnClass}>
-                <span>Растау</span> <ArrowRight className="w-5 h-5" />
+              </AnimatePresence>
+              
+              {/* Google Sign-in Button */}
+              <button 
+                type="button" 
+                onClick={handleGoogleSignIn} 
+                disabled={isLoading}
+                className="w-full py-4 bg-white hover:bg-slate-100 text-slate-900 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all active:scale-[0.98] disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <span className="text-slate-500">Жүктелуде...</span>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                    </svg>
+                    <span>Google аккаунтымен кіру</span>
+                  </>
+                )}
               </button>
               
-              <button type="button" onClick={() => switchMode('login')} className="w-full flex items-center justify-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition-colors">
-                <ArrowLeft className="w-4 h-4" /> Кіру бетіне қайту
-              </button>
+              {/* Registration Disclaimer */}
+              <div className="pt-6 border-t border-white/5 text-[11px] text-slate-500 font-semibold leading-relaxed space-y-2.5">
+                <p>
+                  <span className="text-slate-300 font-bold">MagisCore</span> — магистратура КТ емтиханына дайындалуға арналған тәуелсіз онлайн симулятор. Бұл Ұлттық тестілеу орталығының ресми сайты емес.
+                </p>
+                <p>
+                  Платформа ЖСН (ИИН), жеке куәлік деректері және телефон нөмірін жинамайды.
+                </p>
+                <p>
+                  Платформа тек аты-жөніңізді, email мекенжайыңызды және тест нәтижелеріңізді аккаунт ашу, нәтиже тарихын сақтау және оқу прогресін көрсету мақсатында ғана өңдейді.
+                </p>
+              </div>
             </div>
-          )}
-
-          {/* ====== NEW PASSWORD ====== */}
-          {mode === 'newpass' && (
-            <form onSubmit={handleResetPassword} className="space-y-5">
-              <div className="text-center mb-2">
-                <CheckCircle className="w-10 h-10 text-green-400 mx-auto mb-3" />
-                <p className="text-green-400 text-sm font-bold">Код расталды!</p>
-                <p className="text-slate-400 text-sm font-medium mt-1">Жаңа құпия сөзіңізді жазыңыз</p>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input 
-                  type={showPassword ? 'text' : 'password'} value={newPassword} onChange={e => setNewPassword(e.target.value)} required
-                  placeholder="Жаңа құпия сөз (кемінде 6 таңба)" className={inputClassPass}
-                />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-              <button type="submit" disabled={isLoading} className={btnClass}>
-                {isLoading ? 'Жаңартылуда...' : <><CheckCircle className="w-5 h-5" /> <span>Парольді жаңарту</span></>}
-              </button>
-            </form>
           )}
         </div>
 

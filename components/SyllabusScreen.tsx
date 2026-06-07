@@ -4,6 +4,8 @@ import { ChevronLeft, Book, Globe, Brain, Database, Info, Loader2 } from 'lucide
 import { SubjectId } from '../types';
 import { SUBJECTS } from '../constants';
 import { getSyllabus } from '../services/apiService';
+import MarkdownRenderer from './MarkdownRenderer';
+import { DB_TEXTBOOK, ALGO_TEXTBOOK, ENGLISH_TEXTBOOK, TGO_TEXTBOOK } from '../data/textbooks';
 
 interface SyllabusScreenProps {
   onBack: () => void;
@@ -16,8 +18,10 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
   
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [activeChapter, setActiveChapter] = useState<string>('1');
 
   useEffect(() => {
+    setActiveChapter('1');
     const fetchSyllabus = async () => {
       setIsLoading(true);
       const data = await getSyllabus(currentSubject);
@@ -32,36 +36,23 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
     { id: 'tgo', name: 'ОДАТ (Логика)', icon: Brain, color: 'text-violet-600', bg: 'bg-violet-50' },
     { id: 'algo', name: 'Алгоритмдер', icon: Book, color: 'text-rose-600', bg: 'bg-rose-50' },
     { id: 'db', name: 'Дерекқорлар', icon: Database, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { id: 'rules', name: 'Тест ережелері', icon: Info, color: 'text-emerald-600', bg: 'bg-emerald-50' },
     { id: 'info', name: 'Жалпы ақпарат', icon: Info, color: 'text-slate-600', bg: 'bg-slate-50' },
   ];
 
-  // Simple Markdown-to-HTML parser (basic headers and lists)
-  const renderMarkdown = (text: string) => {
-    return text.split('\n').map((line, index) => {
-      if (line.startsWith('# ')) return <h1 key={index} className="text-3xl font-bold text-slate-900 mt-8 mb-4">{line.replace('# ', '')}</h1>;
-      if (line.startsWith('## ')) return <h2 key={index} className="text-2xl font-bold text-slate-800 mt-6 mb-3 border-b pb-2">{line.replace('## ', '')}</h2>;
-      if (line.startsWith('### ')) return <h3 key={index} className="text-xl font-bold text-slate-800 mt-5 mb-2">{line.replace('### ', '')}</h3>;
-      if (line.startsWith('* ') || line.startsWith('- ')) return <li key={index} className="ml-6 text-slate-600 list-disc mb-1">{line.replace(/^[* -] /, '')}</li>;
-      if (line.trim() === '---') return <hr key={index} className="my-6 border-slate-200" />;
-      if (line.startsWith('> ')) return <blockquote key={index} className="border-l-4 border-blue-200 bg-blue-50/50 p-4 my-4 text-slate-700 italic">{line.replace('> ', '')}</blockquote>;
-      if (line.trim() === '') return <div key={index} className="h-2"></div>;
-      
-      // Inline formatting (very basic)
-      let formattedLine: any = line;
-      if (line.includes('**')) {
-        const parts = line.split('**');
-        formattedLine = parts.map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part);
-      }
-
-      return <p key={index} className="text-slate-600 leading-relaxed mb-2">{formattedLine}</p>;
-    });
-  };
+  const hasChapters = currentSubject !== 'info' && currentSubject !== 'rules';
+  const chapters = 
+    currentSubject === 'db' ? DB_TEXTBOOK : 
+    currentSubject === 'algo' ? ALGO_TEXTBOOK : 
+    currentSubject === 'english' ? ENGLISH_TEXTBOOK : 
+    currentSubject === 'tgo' ? TGO_TEXTBOOK : null;
+  const currentChapter = chapters ? chapters[activeChapter] : null;
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] flex flex-col">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <button 
             onClick={onBack}
             className="flex items-center text-slate-600 hover:text-blue-600 transition-colors font-medium"
@@ -69,14 +60,15 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
             <ChevronLeft className="w-5 h-5 mr-1" />
             Артқа
           </button>
-          <h1 className="text-lg font-bold text-slate-900">Оқу Бағдарламасы</h1>
+          <h1 className="text-lg font-bold text-slate-900">Оқу Бағдарламасы мен Оқулықтар</h1>
           <div className="w-20"></div> {/* Spacer */}
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto flex-1 w-full flex flex-col md:flex-row gap-6 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto flex-1 w-full flex flex-col lg:flex-row gap-6 p-6">
         {/* Sidebar Tabs */}
-        <aside className="w-full md:w-64 space-y-2">
+        <aside className="w-full lg:w-64 space-y-2 shrink-0">
+          <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Пәндер</div>
           {subjects.map((sub) => (
             <button
               key={sub.id}
@@ -91,10 +83,35 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
               <div className={`p-2 rounded-lg mr-3 ${currentSubject === sub.id ? 'bg-white/20' : sub.bg + ' ' + sub.color}`}>
                 <sub.icon className="w-5 h-5" />
               </div>
-              <span className="font-semibold">{sub.name}</span>
+              <span className="font-semibold text-sm">{sub.name}</span>
             </button>
           ))}
         </aside>
+
+        {/* Sub-sidebar for Chapters (Only for DB and Algo) */}
+        {hasChapters && chapters && (
+          <aside className="w-full lg:w-80 space-y-1.5 shrink-0 max-h-[calc(100vh-140px)] overflow-y-auto pr-1">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Тақырыптар бойынша оқулық</div>
+            {Object.keys(chapters).map((key) => {
+              const ch = chapters[key];
+              const isActive = activeChapter === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setActiveChapter(key)}
+                  className={`
+                    w-full text-left p-3 rounded-xl border transition text-xs font-semibold
+                    ${isActive 
+                      ? 'bg-blue-50/70 border-blue-200 text-blue-700 font-bold' 
+                      : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-50/50'}
+                  `}
+                >
+                  {ch.title}
+                </button>
+              );
+            })}
+          </aside>
+        )}
 
         {/* Content Area */}
         <main className="flex-1 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col min-h-[500px]">
@@ -106,7 +123,11 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
           ) : (
             <div className="flex-1 overflow-y-auto p-6 md:p-10 scrollbar-hide">
               <div className="max-w-3xl mx-auto">
-                {renderMarkdown(content)}
+                {hasChapters && currentChapter ? (
+                  <MarkdownRenderer content={currentChapter.content} />
+                ) : (
+                  <MarkdownRenderer content={content} />
+                )}
               </div>
             </div>
           )}

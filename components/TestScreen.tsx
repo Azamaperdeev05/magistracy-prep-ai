@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers, QuestionType } from '../types';
 import { SUBJECTS } from '../constants';
-import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut } from 'lucide-react';
+import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, BrainCircuit, X, Send, AlertTriangle } from 'lucide-react';
+import { askAiQuestion, ChatMessage, getAiExplanation, AiQuestionContext } from '../services/apiService';
+import MarkdownRenderer from './MarkdownRenderer';
+import { getTheoryForQuestion } from '../data/textbooks';
 
 // Import Modals
 import SectionsModal from './modals/SectionsModal';
@@ -10,9 +13,11 @@ import AnswerMapModal from './modals/AnswerMapModal';
 import CalculatorModal from './modals/CalculatorModal';
 import PeriodicTableModal from './modals/PeriodicTableModal';
 import SolubilityTableModal from './modals/SolubilityTableModal';
+import ReportModal from './modals/ReportModal';
 import AudioPlayer from './AudioPlayer';
 import ChartRenderer from './ChartRenderer';
-import AntiCheatModal from './modals/AntiCheatModal';
+import CodeAwareText from './CodeAwareText';
+import ConfirmModal from './modals/ConfirmModal';
 
 interface TestScreenProps {
   questions: Question[];
@@ -21,13 +26,132 @@ interface TestScreenProps {
   userName: string;
 }
 
+const buildAiQuestionContext = (question: Question): AiQuestionContext => ({
+  subjectId: question.subjectId,
+  topic: question.topic,
+  questionType: question.type,
+  context: question.context,
+  readingPassage: question.readingPassage,
+  codeSnippet: question.codeSnippet,
+  chartData: question.chartData,
+});
+
 const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onFinish, userName }) => {
   const { subjectId, qIndex } = useParams<{ subjectId: string; qIndex: string }>();
   const navigate = useNavigate();
 
   // State
   const [answers, setAnswers] = useState<UserAnswers>({});
-  const [warningsCount, setWarningsCount] = useState(0);
+  const [chatHistories, setChatHistories] = useState<Record<string, ChatMessage[]>>({});
+  const [showAiAssistant, setShowAiAssistant] = useState(false);
+  const [aiQuery, setAiQuery] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [analysisResponses, setAnalysisResponses] = useState<Record<string, string>>({});
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [drawerTab, setDrawerTab] = useState<'ai' | 'analysis' | 'theory'>('ai');
+
+  // Confirm Modal state
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState<{
+    message: string;
+    onConfirm: () => void;
+    confirmText?: string;
+  } | null>(null);
+
+  const triggerConfirm = (message: string, onConfirm: () => void, confirmText?: string) => {
+    setConfirmConfig({ message, onConfirm, confirmText });
+    setIsConfirmOpen(true);
+  };
+
+  const handleSendAiQuery = async (customQuery?: string) => {
+    const queryToSend = customQuery || aiQuery;
+    if (!queryToSend.trim() && !customQuery) return;
+    if (!currentQuestion) return;
+
+    const questionId = currentQuestion.id;
+    const existingHistory = chatHistories[questionId] || [];
+
+    const studentMsg: ChatMessage = { role: 'user', content: queryToSend };
+    const updatedHistory = [...existingHistory, studentMsg];
+    setChatHistories(prev => ({ ...prev, [questionId]: updatedHistory }));
+    
+    if (!customQuery) {
+      setAiQuery('');
+    }
+    
+    setAiLoading(true);
+    try {
+      const optionTexts = currentQuestion.options.map(o => o.text);
+      const correctOptionTexts = currentQuestion.options
+        .filter(o => currentQuestion.correctOptionIds.includes(o.id))
+        .map(o => o.text);
+      const selectedOptionTexts = currentQuestion.options
+        .filter(o => (answers[questionId] || []).includes(o.id))
+        .map(o => o.text);
+
+      const response = await askAiQuestion(
+        currentQuestion.text,
+        optionTexts,
+        correctOptionTexts,
+        selectedOptionTexts,
+        queryToSend,
+        existingHistory,
+        buildAiQuestionContext(currentQuestion)
+      );
+
+      const aiMsg: ChatMessage = { role: 'assistant', content: response };
+      setChatHistories(prev => ({
+        ...prev,
+        [questionId]: [...(prev[questionId] || []), aiMsg]
+      }));
+    } catch (err: any) {
+      const errMsg: ChatMessage = { role: 'assistant', content: `Қателік: ${err.message || 'AI жауап бере алмады.'}` };
+      setChatHistories(prev => ({
+        ...prev,
+        [questionId]: [...(prev[questionId] || []), errMsg]
+      }));
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleGenerateAnalysis = async () => {
+    if (!currentQuestion || !currentQuestionId) return;
+    if (analysisResponses[currentQuestionId] && !analysisResponses[currentQuestionId].startsWith('Қателік')) return;
+
+    setAnalysisLoading(true);
+    try {
+      const optionTexts = currentQuestion.options.map(o => o.text);
+      const correctOptionTexts = currentQuestion.options
+        .filter(o => currentQuestion.correctOptionIds.includes(o.id))
+        .map(o => o.text);
+      const selectedOptionTexts = currentQuestion.options
+        .filter(o => (answers[currentQuestionId] || []).includes(o.id))
+        .map(o => o.text);
+
+      const analysis = await getAiExplanation(
+        currentQuestion.text,
+        optionTexts,
+        correctOptionTexts,
+        selectedOptionTexts,
+        buildAiQuestionContext(currentQuestion)
+      );
+
+      setAnalysisResponses(prev => ({ ...prev, [currentQuestionId]: analysis }));
+    } catch (err: any) {
+      setAnalysisResponses(prev => ({
+        ...prev,
+        [currentQuestionId]: `Қателік: ${err.message || 'AI талдау жасай алмады.'}`,
+      }));
+    } finally {
+      setAnalysisLoading(false);
+    }
+  };
+
+  const handleOpenAnalysisTab = () => {
+    setDrawerTab('analysis');
+    void handleGenerateAnalysis();
+  };
   
   // Resolve current state from URL
   const currentSubjectId = (subjectId as SubjectId) || SubjectId.ENGLISH;
@@ -43,6 +167,9 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
   const currentIndex = currentQuestionIndex;
   const currentQuestionId = currentQuestion?.id;
+  const activeTheory = currentQuestion
+    ? getTheoryForQuestion(currentQuestion.subjectId, currentQuestion.topic, currentQuestion.text)
+    : "";
 
   // Modal States
   const [showSections, setShowSections] = useState(false);
@@ -50,8 +177,9 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const [showCalculator, setShowCalculator] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(false);
   const [showSolubilityTable, setShowSolubilityTable] = useState(false);
+  const [reportQuestion, setReportQuestion] = useState<{ id: string; text: string } | null>(null);
 
-  // Anti-cheat and Refresh Prevention
+  // Refresh and copy prevention
   useEffect(() => {
     // 1. Prevent refresh
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -73,25 +201,12 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       }
     };
 
-    // 3. Visibility and Focus Change (Cheating Detection)
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        setWarningsCount(prev => prev + 1);
-      }
-    };
-
-    const handleWindowBlur = () => {
-      setWarningsCount(prev => prev + 1);
-    };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('contextmenu', handleContextMenu);
     window.addEventListener('copy', handleCopy);
     window.addEventListener('selectstart', handleSelect);
     window.addEventListener('dragstart', handleDragStart);
     window.addEventListener('keydown', handleKeydown);
-    window.addEventListener('blur', handleWindowBlur);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -100,8 +215,6 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       window.removeEventListener('selectstart', handleSelect);
       window.removeEventListener('dragstart', handleDragStart);
       window.removeEventListener('keydown', handleKeydown);
-      window.removeEventListener('blur', handleWindowBlur);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -116,9 +229,14 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       } else {
         if (currentSelection.includes(optionId)) {
           return { ...prev, [currentQuestionId]: currentSelection.filter(id => id !== optionId) };
-        } else {
-          return { ...prev, [currentQuestionId]: [...currentSelection, optionId] };
         }
+
+        const maxSelections = [SubjectId.DB, SubjectId.M002_SPEECH_DEV].includes(currentQuestion.subjectId) ? 3 : Number.POSITIVE_INFINITY;
+        if (currentSelection.length >= maxSelections) {
+          return prev;
+        }
+
+        return { ...prev, [currentQuestionId]: [...currentSelection, optionId] };
       }
     });
   };
@@ -147,21 +265,25 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   };
 
   const handleNextSubject = () => {
-    const subjectIds = Object.values(SubjectId);
-    const currIdx = subjectIds.indexOf(currentSubjectId);
-    if(currIdx < subjectIds.length - 1) {
-        navigate(`/test/${subjectIds[currIdx + 1]}/q/1`);
+    const activeSubjectIds = Array.from(new Set(questions.map(q => q.subjectId)));
+    const currIdx = activeSubjectIds.indexOf(currentSubjectId);
+    if (currIdx < activeSubjectIds.length - 1) {
+      navigate(`/test/${activeSubjectIds[currIdx + 1]}/q/1`);
     } else {
-        if(window.confirm("Бұл соңғы пән. Тестті аяқтауға сенімдісіз бе?")) {
-            onFinish(answers, warningsCount);
-        }
+      triggerConfirm(
+        "Бұл соңғы пән. Тестті аяқтауға сенімдісіз бе?",
+        () => onFinish(answers),
+        "Аяқтау"
+      );
     }
   };
 
   const handleFinish = () => {
-    if(window.confirm("Тестті аяқтауға сенімдісіз бе?")) {
-      onFinish(answers, warningsCount);
-    }
+    triggerConfirm(
+      "Тестті аяқтауға сенімдісіз бе?",
+      () => onFinish(answers),
+      "Аяқтау"
+    );
   };
 
   // Sidebar Tools
@@ -169,6 +291,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
     { icon: <User className="w-6 h-6" />, label: userName.split(' ')[0] || "Жасұлан", onClick: () => {} },
     { icon: <FileText className="w-6 h-6" />, label: "Бөлімдер", onClick: () => setShowSections(true) },
     { icon: <Map className="w-6 h-6" />, label: "Жауап картасы", onClick: () => setShowAnswerMap(true) },
+    { icon: <BrainCircuit className="w-6 h-6 text-indigo-500" />, label: "ИИ Көмекші", onClick: () => setShowAiAssistant(true) },
     { icon: <Calculator className="w-6 h-6" />, label: "Калькулятор", onClick: () => setShowCalculator(true) },
     { icon: <Table className="w-6 h-6" />, label: "Менделеев кестесі", onClick: () => setShowPeriodicTable(true) },
     { icon: <FlaskConical className="w-6 h-6" />, label: "Ерігіштік кестесі", onClick: () => setShowSolubilityTable(true) },
@@ -331,9 +454,31 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
 
 
-                          <div className="text-2xl font-serif text-slate-900 leading-relaxed mb-6 font-medium">
-                              {currentQuestion.text}
-                          </div>
+                           <div className="flex justify-between items-start gap-4 mb-6">
+                             <div className="text-2xl font-serif text-slate-900 leading-relaxed font-medium">
+                                 <CodeAwareText text={currentQuestion.text} />
+                             </div>
+                             <button
+                               onClick={() => setReportQuestion({ id: currentQuestion.id, text: currentQuestion.text })}
+                               className="shrink-0 p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-bold border border-transparent hover:border-amber-200"
+                               title="Сұрақта қате бар ма? Хабарлау"
+                             >
+                               <AlertTriangle className="w-4 h-4 animate-pulse" />
+                               <span className="hidden sm:inline">Қате туралы хабарлау</span>
+                             </button>
+                           </div>
+
+                          {[SubjectId.DB, SubjectId.M002_SPEECH_DEV].includes(currentQuestion.subjectId) && currentQuestion.type === QuestionType.MULTIPLE && (
+                            <div className="mb-5 inline-flex rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-800">
+                              1-3 жауапты белгілеңіз. Толық дұрыс жауап - 2 балл, бір қате - 1 балл.
+                            </div>
+                          )}
+
+                          {currentQuestion.chartData && (
+                            <div className="mb-6">
+                              <ChartRenderer chartData={currentQuestion.chartData} />
+                            </div>
+                          )}
 
                           {/* Reading Passage for Comprehension Questions */}
                           {currentQuestion.readingPassage && (
@@ -390,7 +535,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
                                           <div className="text-lg text-slate-800 font-serif leading-snug pt-0.5">
                                               <span className="font-bold mr-2 uppercase">{letter})</span>
-                                              {option.text}
+                                              <CodeAwareText text={option.text} />
                                           </div>
                                       </div>
                                   );
@@ -438,6 +583,23 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
         onClose={() => setShowSolubilityTable(false)}
       />
 
+      <ReportModal 
+        isOpen={!!reportQuestion}
+        onClose={() => setReportQuestion(null)}
+        questionId={reportQuestion?.id || ''}
+        questionText={reportQuestion?.text || ''}
+      />
+
+      {confirmConfig && (
+        <ConfirmModal
+          isOpen={isConfirmOpen}
+          onClose={() => setIsConfirmOpen(false)}
+          onConfirm={confirmConfig.onConfirm}
+          message={confirmConfig.message}
+          confirmText={confirmConfig.confirmText}
+        />
+      )}
+
       {/* Mobile Bottom Navigation - Only visible on mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#56CCF2] border-t border-[#4DBBE0] flex justify-around items-center py-2 px-1 z-50 safe-area-bottom">
         <button onClick={() => setShowSections(true)} className="flex flex-col items-center text-white p-1">
@@ -447,6 +609,10 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
         <button onClick={() => setShowAnswerMap(true)} className="flex flex-col items-center text-white p-1">
           <Map className="w-5 h-5" />
           <span className="text-[9px] mt-0.5">Карта</span>
+        </button>
+        <button onClick={() => setShowAiAssistant(true)} className="flex flex-col items-center text-white p-1">
+          <BrainCircuit className="w-5 h-5" />
+          <span className="text-[9px] mt-0.5">ИИ Көмекші</span>
         </button>
         <button onClick={() => setShowCalculator(true)} className="flex flex-col items-center text-white p-1">
           <Calculator className="w-5 h-5" />
@@ -458,11 +624,216 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
         </button>
       </div>
 
-      {/* ANTI-CHEAT MODAL & WARNINGS */}
-      <AntiCheatModal 
-        warningsCount={warningsCount}
-        onAutoFinish={() => onFinish(answers, warningsCount)}
-      />
+      {/* AI ASSISTANT DRAWER */}
+      <div className={`
+        fixed top-0 h-full w-full sm:w-[450px] bg-white border-l border-slate-200 shadow-2xl z-[100]
+        flex flex-col
+      `}
+        style={{
+          right: showAiAssistant ? 0 : '-100%',
+          transform: 'none',
+          translate: 'none',
+        }}
+      >
+        {/* Drawer Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex items-center justify-between shadow-md shrink-0">
+          <div className="flex items-center gap-2">
+            <BrainCircuit className="w-5 h-5 animate-pulse" />
+            <div>
+              <h3 className="font-bold text-sm">ИИ Мұғалім Көмекшісі</h3>
+              <p className="text-[10px] text-blue-100">Сұрақ бойынша көмек сұрау</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => setShowAiAssistant(false)} 
+            className="p-1 hover:bg-white/20 rounded transition"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Drawer Tabs */}
+        <div className="flex border-b border-slate-200 shrink-0 bg-slate-50">
+          <button 
+            onClick={() => setDrawerTab('ai')}
+            className={`flex-1 py-3 text-xs font-bold border-b-2 transition-all ${drawerTab === 'ai' ? 'border-blue-600 text-blue-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            🤖 ИИ Көмекші
+          </button>
+          <button 
+            onClick={handleOpenAnalysisTab}
+            className={`flex-1 py-3 text-xs font-bold border-b-2 transition-all ${drawerTab === 'analysis' ? 'border-blue-600 text-blue-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            🧠 Талдау
+          </button>
+          <button 
+            onClick={() => setDrawerTab('theory')}
+            className={`flex-1 py-3 text-xs font-bold border-b-2 transition-all ${drawerTab === 'theory' ? 'border-blue-600 text-blue-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            📖 Тақырып теориясы
+          </button>
+        </div>
+
+        {/* Drawer Active Question Context banner */}
+        <div className="bg-slate-50 border-b border-slate-200 p-3 text-xs text-slate-600 font-medium shrink-0 flex flex-col gap-0.5">
+          <div className="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Сұрақ №{currentIndex + 1} ({currentQuestion?.topic})</div>
+          <div className="truncate text-slate-700 font-semibold">
+            <CodeAwareText text={currentQuestion.text} />
+          </div>
+        </div>
+
+        {drawerTab === 'theory' ? (
+          /* Theory View */
+          <div className="flex-1 overflow-y-auto p-5 bg-white select-none">
+            {activeTheory ? (
+              <MarkdownRenderer content={activeTheory} />
+            ) : (
+              <div className="text-slate-400 text-center py-10">Бұл тақырыпқа сәйкес теория табылмады.</div>
+            )}
+          </div>
+        ) : drawerTab === 'analysis' ? (
+          /* Current Question Analysis View */
+          <div className="flex-1 overflow-y-auto p-5 bg-slate-50/50">
+            {analysisResponses[currentQuestionId] ? (
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-relaxed shadow-sm">
+                <MarkdownRenderer content={analysisResponses[currentQuestionId]} />
+              </div>
+            ) : analysisLoading ? (
+              <div className="h-full flex items-center justify-center">
+                <div className="bg-white text-slate-500 border border-slate-100 rounded-2xl px-4 py-3 text-xs shadow-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <span className="font-semibold text-slate-400">Сұрақ талданып жатыр...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
+                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                  <BrainCircuit className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 text-sm">Осы сұраққа толық талдау</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-xs">
+                    ИИ сұрақтың шартын, барлық нұсқаны және дұрыс жауапқа апаратын логиканы бөлек түсіндіреді.
+                  </p>
+                </div>
+                <button
+                  onClick={handleGenerateAnalysis}
+                  disabled={analysisLoading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm disabled:opacity-50 transition"
+                >
+                  Талдауды бастау
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* AI Chat View */
+          <>
+            {/* Messages Body */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+              {(!chatHistories[currentQuestionId] || chatHistories[currentQuestionId].length === 0) && (
+                <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                    <BrainCircuit className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-sm">ИИ-ден сұрақ бойынша көмек сұраңыз</h4>
+                    <p className="text-xs text-slate-500 mt-1 max-w-xs">
+                      Сұрақтың теориясын, терминдерін немесе шығару логикасын сұраңыз. Толық нұсқа талдауы үшін "Талдау" бөлімін ашыңыз.
+                    </p>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="grid gap-2 w-full max-w-xs pt-4">
+                    <button 
+                      onClick={handleOpenAnalysisTab}
+                      className="bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 shadow-sm transition"
+                    >
+                      🧠 Толық талдау
+                    </button>
+                    <button 
+                      onClick={() => handleSendAiQuery("Осы сұрақтың жалпы логикасын түсіндіріп берші.")}
+                      className="bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 shadow-sm transition"
+                    >
+                      💡 Сұрақтың логикасын түсіндір
+                    </button>
+                    <button 
+                      onClick={() => handleSendAiQuery("Сұрақтағы негізгі терминдер мен анықтамаларды айтып берші.")}
+                      className="bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 shadow-sm transition"
+                    >
+                      📖 Терминдерді түсіндір
+                    </button>
+                    <button 
+                      onClick={() => handleSendAiQuery("Маған бұл сұрақты шешуге бағыт беретін бір мысал келтірші.")}
+                      className="bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 shadow-sm transition"
+                    >
+                      🎯 Ұқсас мысал келтір
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {chatHistories[currentQuestionId]?.map((msg, idx) => (
+                <div 
+                  key={idx} 
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`
+                    max-w-[85%] rounded-2xl px-4 py-2.5 text-xs shadow-sm leading-relaxed whitespace-pre-wrap
+                    ${msg.role === 'user' 
+                      ? 'bg-blue-600 text-white rounded-br-none' 
+                      : 'bg-white text-slate-800 border border-slate-100 rounded-bl-none'}
+                  `}>
+                    {msg.role === 'user' ? (
+                      msg.content
+                    ) : (
+                      <MarkdownRenderer content={msg.content} />
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {aiLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white text-slate-500 border border-slate-100 rounded-2xl rounded-bl-none px-4 py-3 text-xs shadow-sm flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    <span className="font-semibold text-slate-400">ИИ жауап дайындап жатыр...</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Input Bar */}
+            <div className="p-3 border-t border-slate-200 bg-white flex items-center gap-2 shrink-0">
+              <input 
+                type="text" 
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !aiLoading) {
+                    handleSendAiQuery();
+                  }
+                }}
+                disabled={aiLoading}
+                placeholder="Сұрақ бойынша көмек сұраңыз..."
+                className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-slate-50"
+              />
+              <button 
+                onClick={() => handleSendAiQuery()}
+                disabled={aiLoading || !aiQuery.trim()}
+                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-xl disabled:opacity-50 transition shrink-0"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
     </div>
   );
 };
