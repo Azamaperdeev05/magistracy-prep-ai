@@ -29,10 +29,10 @@ export const SUBJECTS: Record<SubjectId, SubjectConfig> = {
   [SubjectId.ALGO]: {
     id: SubjectId.ALGO,
     name: "Алгоритмдер және деректер құрылымы",
-    totalQuestions: 5,
-    maxScore: 5,
+    totalQuestions: 30,
+    maxScore: 30,
     isProfile: true,
-    description: "C++, Stack/Queue, Graphs, Big O. (1 балл)",
+    description: "A(жеңіл)=9, B(орташа)=12, C(қиын)=9. Бір дұрыс жауап. (1 балл)",
     topics: [
       "Программалау негіздері (C++)",
       "Деректер құрылымы (Stack, Queue, Tree)",

@@ -124,10 +124,47 @@ const generateDbQuestions = (count: number): Question[] => {
 
   return shuffle(selected).slice(0, count);
 };
+// ALGO spec: 10 topics, 3 questions each = 30 total
+// (A=9, B=12, C=9 difficulty distribution is from the spec but questions
+//  currently don't have reliable difficulty tags, so we pick by topic count)
+const ALGO_TOPIC_DISTRIBUTION: { topic: string; count: number }[] = [
+  { topic: 'Негізгі процедуралық-бағытталған алгоритмдік тіл', count: 3 },
+  { topic: 'Алгоритмдік тіл операторлары', count: 3 },
+  { topic: 'Алгоритмдердің әртүрлі құрылымдарын бағдарламалау', count: 3 },
+  { topic: 'Функциялар және рекурсивті функциялар', count: 3 },
+  { topic: 'Сұрыптау және іздеу алгоритмдері', count: 3 },
+  { topic: 'Алгоритмді бағалау', count: 3 },
+  { topic: 'Сызықтық мәліметтер құрылымы', count: 3 },
+  { topic: 'Хэш кестелері және хэш функциялары', count: 3 },
+  { topic: 'Ағаш және екілік үйінділер', count: 3 },
+  { topic: 'Графтар және графтар алгоритмдері', count: 3 },
+];
+
+const generateAlgoQuestions = (count: number): Question[] => {
+  const algoQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === SubjectId.ALGO);
+  const selected: Question[] = [];
+  const selectedIds = new Set<string>();
+
+  for (const spec of ALGO_TOPIC_DISTRIBUTION) {
+    const key = spec.topic.slice(0, 15);
+    const pool = algoQuestions.filter(q => q.topic?.includes(key) && !selectedIds.has(q.id));
+    const picked = pickRandom(pool, spec.count);
+    picked.forEach(q => selectedIds.add(q.id));
+    selected.push(...picked);
+  }
+
+  // Fill any gaps if a topic didn't have enough questions
+  if (selected.length < count) {
+    const remaining = algoQuestions.filter(q => !selectedIds.has(q.id));
+    selected.push(...pickRandom(remaining, count - selected.length));
+  }
+
+  return shuffle(selected).slice(0, count);
+};
 
 export const generateQuestionsForSubject = async (
   subjectId: SubjectId, 
-  count: number = 5 
+  count: number = 30 
 ): Promise<Question[]> => {
   if (subjectId === SubjectId.ENGLISH) {
     return generateEnglishQuestions(count);
@@ -139,6 +176,10 @@ export const generateQuestionsForSubject = async (
 
   if (subjectId === SubjectId.DB) {
     return generateDbQuestions(count);
+  }
+
+  if (subjectId === SubjectId.ALGO) {
+    return generateAlgoQuestions(count);
   }
 
   const subjectQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === subjectId);
