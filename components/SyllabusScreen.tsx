@@ -65,16 +65,16 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto flex-1 w-full flex flex-col lg:flex-row gap-6 p-6">
+      <div className="max-w-7xl mx-auto flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 sm:p-6 overflow-hidden">
         {/* Sidebar Tabs */}
-        <aside className="w-full lg:w-64 space-y-2 shrink-0">
-          <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Пәндер</div>
+        <aside className="w-full lg:w-64 flex lg:flex-col overflow-x-auto lg:overflow-x-visible py-2 lg:py-0 gap-2 lg:gap-2 shrink-0 mb-2 lg:mb-0 scrollbar-none">
+          <div className="hidden lg:block text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Пәндер</div>
           {subjects.map((sub) => (
             <button
               key={sub.id}
               onClick={() => navigate(`/program/${sub.id}`)}
               className={`
-                w-full flex items-center p-3 rounded-xl transition-all duration-200
+                flex items-center p-3 rounded-xl transition-all duration-200 whitespace-nowrap shrink-0 lg:w-full
                 ${currentSubject === sub.id 
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
                   : 'bg-white text-slate-600 hover:bg-white hover:shadow-md border border-slate-100'}
@@ -90,8 +90,8 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
 
         {/* Sub-sidebar for Chapters (Only for DB and Algo) */}
         {hasChapters && chapters && (
-          <aside className="w-full lg:w-80 space-y-1.5 shrink-0 max-h-[calc(100vh-140px)] overflow-y-auto pr-1">
-            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Тақырыптар бойынша оқулық</div>
+          <aside className="w-full lg:w-80 flex lg:flex-col overflow-x-auto lg:overflow-x-visible py-2 lg:py-0 gap-1.5 lg:gap-1.5 shrink-0 max-h-[120px] lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto pr-1 mb-2 lg:mb-0 scrollbar-none">
+            <div className="hidden lg:block text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Тақырыптар бойынша оқулық</div>
             {Object.keys(chapters).map((key) => {
               const ch = chapters[key];
               const isActive = activeChapter === key;
@@ -100,7 +100,7 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
                   key={key}
                   onClick={() => setActiveChapter(key)}
                   className={`
-                    w-full text-left p-3 rounded-xl border transition text-xs font-semibold
+                    text-left p-3 rounded-xl border transition text-xs font-semibold whitespace-nowrap shrink-0 lg:w-full lg:whitespace-normal
                     ${isActive 
                       ? 'bg-blue-50/70 border-blue-200 text-blue-700 font-bold' 
                       : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-50/50'}
@@ -121,7 +121,7 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
               <p>Жүктелуде...</p>
             </div>
           ) : (
-            <div className="flex-1 overflow-y-auto p-6 md:p-10 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 scrollbar-hide">
               <div className="max-w-3xl mx-auto">
                 {hasChapters && currentChapter ? (
                   <MarkdownRenderer content={currentChapter.content} />

@@ -254,7 +254,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-36 pb-20">
+      <section className="relative pt-28 md:pt-36 pb-12 md:pb-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
             <motion.div 
@@ -271,7 +271,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className={`text-5xl md:text-7xl font-extrabold mb-8 leading-[1.05] tracking-tight uppercase ${
+              className={`text-3xl sm:text-5xl md:text-7xl font-extrabold mb-8 leading-[1.05] tracking-tight uppercase ${
                 isDarkMode ? 'text-white' : 'text-slate-900'
               }`}
             >
@@ -282,7 +282,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             <motion.p 
               {...fadeInUp}
               transition={{ delay: 0.1 }}
-              className={`text-base md:text-lg mb-10 max-w-2xl leading-relaxed ${textMuted}`}
+              className={`text-sm sm:text-base md:text-lg mb-10 max-w-2xl leading-relaxed ${textMuted}`}
             >
               Магистратураға дайындықтың кәсіби деңгейі. Сұрақтар базасы үнемі жаңартылып, толықтырылып отырады (қазіргі таңда 800+ сұрақ). Listening аудиолары, ИИ көмекшісі және терең аналитика.
             </motion.p>
@@ -292,7 +292,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               transition={{ delay: 0.15 }}
               className="relative w-full max-w-md mt-4"
             >
-               <div className={`p-1 border rounded-2xl flex flex-col md:flex-row gap-2 ${
+               <div className={`p-1.5 sm:p-1 border rounded-2xl flex flex-col sm:flex-row gap-2 ${
                  isDarkMode ? 'bg-[#0f1219] border-slate-800/80 shadow-2xl' : 'bg-white border-slate-200 shadow-lg'
                }`}>
                  <input 
@@ -300,14 +300,14 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                    value={name}
                    onChange={(e) => { setName(e.target.value); if(error) setError(false); }}
                    placeholder="Аты-жөніңізді жазыңыз"
-                   className={`flex-1 px-5 py-3.5 bg-transparent outline-none font-bold tracking-wide text-sm ${
+                   className={`flex-1 px-5 py-3 bg-transparent outline-none font-bold tracking-wide text-sm ${
                      isDarkMode ? 'text-white placeholder-slate-600' : 'text-slate-800 placeholder-slate-400'
                    } ${error ? 'bg-red-500/5 rounded-xl' : ''}`}
                  />
                  <button 
                    onClick={handleStart}
                    disabled={isLoading}
-                   className="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-md hover:shadow-blue-500/20 disabled:opacity-50"
+                   className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-md hover:shadow-blue-500/20 disabled:opacity-50 whitespace-nowrap"
                  >
                    {isLoading ? 'Жүктелуде...' : <>Тестіні Бастау <ChevronRight className="w-4 h-4"/></>}
                  </button>
@@ -351,7 +351,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* Master Card - English */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-8 p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              className={`md:col-span-8 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -380,7 +380,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* Small Card - TGO */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-4 p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -402,7 +402,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* Small Card - Logic/Algo */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-4 p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -422,7 +422,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             </motion.div>
 
             {/* Stats Card */}
-            <div className={`md:col-span-4 p-8 border rounded-3xl flex flex-col items-center justify-center text-center ${cardBg}`}>
+            <div className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col items-center justify-center text-center ${cardBg}`}>
               <div className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">80%</div>
               <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Грантқа түсу көрсеткіші</div>
               <p className="text-[11px] text-slate-500 mt-4 max-w-[200px] leading-relaxed">Бізбен дайындалған студенттердің басым бөлігі мемлекеттік грант иегері атанды.</p>
@@ -431,7 +431,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* Small Card - DB */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-4 p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -470,7 +470,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               <motion.div 
                 key={i}
                 whileHover={{ y: -4 }}
-                className={`p-8 rounded-3xl border transition-all ${cardBg}`}
+                className={`p-6 sm:p-8 rounded-3xl border transition-all ${cardBg}`}
               >
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 border ${
                   isDarkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-100 text-blue-600'

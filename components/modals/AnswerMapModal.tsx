@@ -84,7 +84,7 @@ const AnswerMapModal: React.FC<AnswerMapModalProps> = ({
                   </span>
                 </div>
                 
-                <div className="grid grid-cols-10 gap-1.5">
+                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1.5">
                   {subjectQuestions.map((q, idx) => {
                     const isAnswered = answers[q.id] && answers[q.id].length > 0;
                     const isCurrent = q.id === currentQuestionId;

@@ -222,6 +222,39 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
               </div>
             </div>
 
+            {/* Answer Matrix */}
+            {detailInfo && detailInfo.questions.length > 0 && (
+              <div className="bg-slate-900/30 border border-slate-800 rounded-3xl p-6 mb-8 text-left">
+                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Сұрақтар торшасы (өту үшін нөмірді басыңыз):</h4>
+                <div className="flex flex-wrap gap-2.5">
+                  {detailInfo.questions.map((q, i) => {
+                    const userAns = detailInfo.answers[q.id] || [];
+                    const isCorrect = scoreQuestion(q, userAns).correct;
+                    return (
+                      <button
+                        key={q.id}
+                        onClick={() => {
+                          const element = document.getElementById(`q-history-review-${q.id}`);
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }}
+                        className={`
+                          w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm transition-all active:scale-95 hover:scale-105 shrink-0
+                          ${isCorrect 
+                            ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-950/20' 
+                            : 'bg-rose-500 hover:bg-rose-600 shadow-rose-950/20'}
+                        `}
+                        title={`Сұрақ №${i + 1}`}
+                      >
+                        {i + 1}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Questions List */}
             {(!detailInfo || detailInfo.questions.length === 0) ? (
               <div className="text-center py-16 bg-slate-900/20 border border-dashed border-slate-800 rounded-2xl">
@@ -247,7 +280,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
                     .map(o => o.text);
 
                   return (
-                    <div key={q.id} className="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 space-y-4 text-left relative overflow-hidden">
+                    <div key={q.id} id={`q-history-review-${q.id}`} className="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 space-y-4 text-left relative overflow-hidden scroll-mt-20">
                       <div className="flex justify-between items-start gap-4">
                         <div className="font-bold text-slate-200 text-base leading-relaxed">
                           Сұрақ №{qIdx + 1}: <CodeAwareText text={q.text} />

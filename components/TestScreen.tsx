@@ -385,32 +385,31 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
               </div>
 
               {/* Main Question Card Area */}
-              <div className="flex-1 overflow-y-auto bg-white p-4 md:px-8 md:py-6">
+              <div className="flex-1 overflow-y-auto bg-white p-4 pb-24 md:px-8 md:py-6 md:pb-6">
                   <div className="max-w-6xl mx-auto h-full flex flex-col">
                       
                       {/* Nav Bar - Mobile Responsive */}
-                      <div className="flex flex-col md:flex-row items-center justify-between pb-4 border-b-2 border-slate-200 mb-4 md:mb-6 gap-3 md:gap-0">
-                          <button 
-                              onClick={handlePrev}
-                              disabled={currentIndex === 0}
-                              className="w-full md:w-auto bg-[#3498DB] text-white px-4 md:px-5 py-2 rounded-[4px] text-sm font-bold shadow hover:bg-[#2980B9] disabled:opacity-50 disabled:shadow-none transition-colors order-2 md:order-1"
-                          >
-                              &lt; Алдыңғы
-                          </button>
-                          
-                          <div className="text-center order-1 md:order-2">
-                             <div className="text-sm md:text-lg font-bold text-slate-800 uppercase tracking-tight">
+                      <div className="flex flex-col sm:flex-row items-center justify-between pb-4 border-b-2 border-slate-200 mb-4 md:mb-6 gap-3 md:gap-0 w-full">
+                          <div className="text-center w-full sm:w-auto">
+                             <div className="text-base sm:text-lg font-extrabold text-slate-800 uppercase tracking-tight">
                                 {SUBJECTS[currentSubjectId].name}
                              </div>
-                             <span className="text-slate-500 font-semibold text-xs md:hidden">Сұрақ {currentIndex + 1}/{currentSubjectQuestions.length}</span>
+                             <span className="text-slate-500 font-semibold text-xs sm:hidden">Сұрақ {currentIndex + 1}/{currentSubjectQuestions.length}</span>
                           </div>
 
-                          <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto order-3">
-                              <span className="hidden md:inline text-slate-500 font-semibold text-sm">Сұрақ № {currentIndex + 1}</span>
+                          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                              <button 
+                                  onClick={handlePrev}
+                                  disabled={currentIndex === 0}
+                                  className="flex-1 sm:flex-none bg-[#3498DB] text-white px-4 py-2 rounded-[4px] text-sm font-bold shadow hover:bg-[#2980B9] disabled:opacity-50 disabled:shadow-none transition-colors"
+                              >
+                                  &lt; Алдыңғы
+                              </button>
+                              <span className="hidden sm:inline text-slate-500 font-semibold text-sm whitespace-nowrap">Сұрақ {currentIndex + 1}/{currentSubjectQuestions.length}</span>
                               <button 
                                   onClick={handleNext}
                                   disabled={currentIndex === currentSubjectQuestions.length - 1}
-                                  className="flex-1 md:flex-none bg-[#3498DB] text-white px-4 md:px-6 py-2 rounded-[4px] text-sm font-bold shadow hover:bg-[#2980B9] disabled:opacity-50 disabled:shadow-none transition-colors"
+                                  className="flex-1 sm:flex-none bg-[#3498DB] text-white px-4 py-2 rounded-[4px] text-sm font-bold shadow hover:bg-[#2980B9] disabled:opacity-50 disabled:shadow-none transition-colors"
                               >
                                   Келесі &gt;
                               </button>
@@ -514,7 +513,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                             </div>
                           )}
 
-                          <div className="grid gap-4 max-w-4xl">
+                          <div className="grid gap-3 max-w-4xl">
                               {currentQuestion.options.map((option, idx) => {
                                   const isSelected = (answers[currentQuestionId] || []).includes(option.id);
                                   const letter = String.fromCharCode(65 + idx);
@@ -523,17 +522,22 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                                       <div 
                                           key={option.id}
                                           onClick={() => handleAnswer(option.id)}
-                                          className="flex items-start gap-4 p-2 rounded hover:bg-slate-50 cursor-pointer group select-none transition-colors"
+                                          className={`
+                                              flex items-start gap-4 p-4 rounded-xl cursor-pointer select-none transition-all duration-200 border-2 text-left
+                                              ${isSelected 
+                                                  ? 'border-[#3498DB] bg-blue-50/40 shadow-sm' 
+                                                  : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'}
+                                          `}
                                       >
                                           {/* Checkbox Square Style for ALL Types */}
                                           <div className={`
-                                              w-6 h-6 border-2 flex items-center justify-center bg-white rounded-[3px] shadow-sm mt-0.5
-                                              ${isSelected ? 'border-[#3498DB] bg-blue-50' : 'border-gray-300 group-hover:border-[#3498DB]'}
+                                              w-5 h-5 border-2 flex items-center justify-center bg-white rounded-[3px] shadow-sm mt-0.5 shrink-0 transition-colors
+                                              ${isSelected ? 'border-[#3498DB] bg-blue-50' : 'border-slate-300'}
                                           `}>
-                                              {isSelected && <div className="w-3.5 h-3.5 bg-[#3498DB] rounded-[1px]"></div>}
+                                              {isSelected && <div className="w-2.5 h-2.5 bg-[#3498DB] rounded-[1px]"></div>}
                                           </div>
 
-                                          <div className="text-lg text-slate-800 font-serif leading-snug pt-0.5">
+                                          <div className="text-base sm:text-lg text-slate-800 font-serif leading-snug pt-0.5">
                                               <span className="font-bold mr-2 uppercase">{letter})</span>
                                               <CodeAwareText text={option.text} />
                                           </div>
@@ -627,7 +631,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       {/* AI ASSISTANT DRAWER */}
       <div className={`
         fixed top-0 h-full w-full sm:w-[450px] bg-white border-l border-slate-200 shadow-2xl z-[100]
-        flex flex-col
+        flex flex-col transition-all duration-300 ease-in-out
       `}
         style={{
           right: showAiAssistant ? 0 : '-100%',

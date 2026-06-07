@@ -284,53 +284,55 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         )}
 
         {/* Section: Нұсқалар саны кестесі (Replica NTC layout) */}
-        <div className="max-w-3xl mx-auto mb-10 overflow-hidden rounded-sm border border-slate-700 bg-white">
-          <table className="w-full border-collapse text-sm text-center">
-            <thead>
-              <tr className="border-b border-slate-700 bg-white">
-                <th colSpan={5} className="p-3 font-extrabold text-[#1e293b] tracking-wider uppercase text-center border-b border-slate-700">
-                  НҰСҚАЛАР САНЫ
-                </th>
-              </tr>
-              <tr className="bg-white border-b border-slate-700">
-                <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs w-12">№</th>
-                <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs">ПӘН</th>
-                <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs w-24">БАРЛЫҒЫ</th>
-                <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs w-32">ҚОЛДАНЫЛҒАН</th>
-                <th className="p-2 font-extrabold text-slate-800 text-xs w-32">ҚОЛДАНЫЛМАҒАН</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-700 text-slate-800 font-semibold bg-white">
-              <tr className="hover:bg-slate-50/50">
-                <td className="p-3 border-r border-slate-700">1</td>
-                <td className="p-3 border-r border-slate-700 text-center">Ағылшын тілі</td>
-                <td className="p-3 border-r border-slate-700">5</td>
-                <td className="p-3 border-r border-slate-700">1</td>
-                <td className="p-3">4</td>
-              </tr>
-              <tr className="hover:bg-slate-50/50">
-                <td className="p-3 border-r border-slate-700">2</td>
-                <td className="p-3 border-r border-slate-700 text-center">Оқу дайындығын анықтайтын тест</td>
-                <td className="p-3 border-r border-slate-700">5</td>
-                <td className="p-3 border-r border-slate-700">1</td>
-                <td className="p-3">4</td>
-              </tr>
-              <tr className="hover:bg-slate-50/50">
-                <td className="p-3 border-r border-slate-700">3</td>
-                <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile1}</td>
-                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 5 : 0}</td>
-                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 1 : 0}</td>
-                <td className="p-3">{['M094'].includes(selectedGopCode) ? 4 : 0}</td>
-              </tr>
-              <tr className="hover:bg-slate-50/50">
-                <td className="p-3 border-r border-slate-700">4</td>
-                <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile2}</td>
-                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 5 : 0}</td>
-                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 1 : 0}</td>
-                <td className="p-3">{['M094'].includes(selectedGopCode) ? 4 : 0}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="max-w-3xl mx-auto mb-10 overflow-x-auto border border-slate-700 rounded-sm bg-white scrollbar-thin">
+          <div className="min-w-[600px]">
+            <table className="w-full border-collapse text-sm text-center">
+              <thead>
+                <tr className="border-b border-slate-700 bg-white">
+                  <th colSpan={5} className="p-3 font-extrabold text-[#1e293b] tracking-wider uppercase text-center border-b border-slate-700">
+                    НҰСҚАЛАР САНЫ
+                  </th>
+                </tr>
+                <tr className="bg-white border-b border-slate-700">
+                  <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs w-12">№</th>
+                  <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs">ПӘН</th>
+                  <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs w-24">БАРЛЫҒЫ</th>
+                  <th className="p-2 border-r border-slate-700 font-extrabold text-slate-800 text-xs w-32">ҚОЛДАНЫЛҒАН</th>
+                  <th className="p-2 font-extrabold text-slate-800 text-xs w-32">ҚОЛДАНЫЛМАҒАН</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700 text-slate-800 font-semibold bg-white">
+                <tr className="hover:bg-slate-50/50">
+                  <td className="p-3 border-r border-slate-700">1</td>
+                  <td className="p-3 border-r border-slate-700 text-center">Ағылшын тілі</td>
+                  <td className="p-3 border-r border-slate-700">5</td>
+                  <td className="p-3 border-r border-slate-700">1</td>
+                  <td className="p-3">4</td>
+                </tr>
+                <tr className="hover:bg-slate-50/50">
+                  <td className="p-3 border-r border-slate-700">2</td>
+                  <td className="p-3 border-r border-slate-700 text-center">Оқу дайындығын анықтайтын тест</td>
+                  <td className="p-3 border-r border-slate-700">5</td>
+                  <td className="p-3 border-r border-slate-700">1</td>
+                  <td className="p-3">4</td>
+                </tr>
+                <tr className="hover:bg-slate-50/50">
+                  <td className="p-3 border-r border-slate-700">3</td>
+                  <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile1}</td>
+                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 5 : 0}</td>
+                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 1 : 0}</td>
+                  <td className="p-3">{['M094'].includes(selectedGopCode) ? 4 : 0}</td>
+                </tr>
+                <tr className="hover:bg-slate-50/50">
+                  <td className="p-3 border-r border-slate-700">4</td>
+                  <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile2}</td>
+                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 5 : 0}</td>
+                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 1 : 0}</td>
+                  <td className="p-3">{['M094'].includes(selectedGopCode) ? 4 : 0}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Start Button */}

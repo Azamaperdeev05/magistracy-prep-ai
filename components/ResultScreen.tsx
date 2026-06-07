@@ -230,34 +230,39 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
                      })}
                    </div>
 
-                   {/* Answer Matrix */}
-                   <div className="mt-8 overflow-x-auto">
-                     <table className="w-full text-xs font-bold">
-                        <thead>
-                          <tr className="text-gray-400 uppercase tracking-widest border-b border-gray-200">
-                            <th className="py-3 text-left">Сұрақ:</th>
-                            {result.questions.map((_, i) => <th key={i} className="px-2 text-center">{i+1}</th>)}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-4 text-slate-500">Нәтиже:</td>
-                            {result.questions.map((q, i) => {
-                              const isCorrect = scoreQuestion(q, answers[q.id] || []).correct;
-                              return (
-                                <td key={i} className="px-2 text-center">
-                                  {isCorrect ? <CheckCircle className="w-5 h-5 text-green-500 mx-auto" /> : <XCircle className="w-5 h-5 text-red-400 mx-auto" />}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        </tbody>
-                     </table>
-                   </div>
+                    {/* Answer Matrix */}
+                    <div className="mt-8 text-left">
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Сұрақтар торшасы (өту үшін нөмірді басыңыз):</h4>
+                      <div className="flex flex-wrap gap-2.5">
+                        {result.questions.map((q, i) => {
+                          const isCorrect = scoreQuestion(q, answers[q.id] || []).correct;
+                          return (
+                            <button
+                              key={q.id}
+                              onClick={() => {
+                                const element = document.getElementById(`q-review-${q.id}`);
+                                if (element) {
+                                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+                              }}
+                              className={`
+                                w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm transition-all active:scale-95 hover:scale-105 shrink-0
+                                ${isCorrect 
+                                  ? 'bg-green-500 hover:bg-green-600 shadow-green-100' 
+                                  : 'bg-red-500 hover:bg-red-600 shadow-red-100'}
+                              `}
+                              title={`Сұрақ №${i + 1}`}
+                            >
+                              {i + 1}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
 
                    {/* Detailed Questions Review */}
                    <div className="mt-8 space-y-6">
-                     <h4 className="text-lg font-black text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
+                     <h4 className="text-lg font-black text-slate-800 mb-4 border-b pb-2 flex items-center gap-2 text-left">
                        <BrainCircuit className="w-5 h-5 text-indigo-500" />
                        Сұрақтарды талдау:
                      </h4>
@@ -275,7 +280,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
                          .map(o => o.text);
 
                        return (
-                         <div key={q.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 text-left">
+                         <div key={q.id} id={`q-review-${q.id}`} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 text-left scroll-mt-20">
                            <div className="flex justify-between items-start gap-4">
                              <div className="font-bold text-slate-800 text-base leading-relaxed">
                                Сұрақ №{qIdx + 1}: <CodeAwareText text={q.text} />
