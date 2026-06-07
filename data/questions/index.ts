@@ -2,8 +2,6 @@ import { Question } from '../../types';
 
 import { m001PedagogikaQuestions } from './m001/pedagogika';
 import { m001PsychologyQuestions } from './m001/psychology';
-import { m002PedagogikaQuestions } from './m002/pedagogika';
-import { m002SpeechDevQuestions } from './m002/speech-dev';
 
 import { algo1ProcedureLanguageQuestions } from './algo/1-procedure-language/procedureLanguage';
 import { algo2OperatorsAndStructureQuestions } from './algo/2-operators-and-structure/operatorsAndStructure';
@@ -62,8 +60,6 @@ import { tgoCriticalThinkingWorkProblemsQuestions } from './tgo/critical-thinkin
 export const STATIC_QUESTIONS: Question[] = [
   ...m001PedagogikaQuestions,
   ...m001PsychologyQuestions,
-  ...m002PedagogikaQuestions,
-  ...m002SpeechDevQuestions,
   ...algo1ProcedureLanguageQuestions,
   ...algo2OperatorsAndStructureQuestions,
   ...algo3ProgrammingStructuresQuestions,

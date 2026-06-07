@@ -111,16 +111,8 @@ const RootApp: React.FC = () => {
       const p1 = generateQuestionsForSubject(SubjectId.ENGLISH, SUBJECTS[SubjectId.ENGLISH].totalQuestions);
       const p2 = generateQuestionsForSubject(SubjectId.TGO, SUBJECTS[SubjectId.TGO].totalQuestions);
 
-      let p3Subject = SubjectId.ALGO;
-      let p4Subject = SubjectId.DB;
-
-      if (updatedUser?.specialty_code === 'M001') {
-        p3Subject = SubjectId.M001_PEDAGOGIKA;
-        p4Subject = SubjectId.M001_PSYCHOLOGY;
-      } else if (updatedUser?.specialty_code === 'M002') {
-        p3Subject = SubjectId.M002_PEDAGOGIKA;
-        p4Subject = SubjectId.M002_SPEECH_DEV;
-      }
+      const p3Subject = SubjectId.ALGO;
+      const p4Subject = SubjectId.DB;
 
       const p3 = generateQuestionsForSubject(p3Subject, SUBJECTS[p3Subject].totalQuestions);
       const p4 = generateQuestionsForSubject(p4Subject, SUBJECTS[p4Subject].totalQuestions);

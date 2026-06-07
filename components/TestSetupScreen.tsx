@@ -127,7 +127,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
     };
 
     // If specialty is not implemented yet, warn the user
-    if (!['M094', 'M001', 'M002'].includes(selectedGop.code)) {
+    if (!['M094'].includes(selectedGop.code)) {
       showConfirm(
         `«${selectedGop.name}» мамандығының сұрақтары әзірлену үстінде.\n\nТестке дайындықты IT бағытының (M094 - Ақпараттық технологиялар) профильдік сұрақтары арқылы жалғастыруды қалайсыз ба?`,
         saveAndStart,
@@ -263,7 +263,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               onChange={(e) => handleGopChange(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
-              {SPECIALTIES.filter(spec => ['M094', 'M001', 'M002'].includes(spec.code)).map((spec) => (
+              {SPECIALTIES.filter(spec => ['M094'].includes(spec.code)).map((spec) => (
                 <option key={spec.code} value={spec.code}>
                   {spec.code} - {spec.name}
                 </option>
@@ -274,7 +274,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         </div>
 
         {/* Specialty warning banner */}
-        {!['M094', 'M001', 'M002'].includes(selectedGopCode) && (
+        {!['M094'].includes(selectedGopCode) && (
           <div className="max-w-3xl mx-auto mb-8 bg-amber-50 border border-amber-300/70 rounded-xl p-4 flex gap-3 text-amber-800 text-sm font-semibold leading-relaxed shadow-sm">
             <Info className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
             <div>
@@ -318,16 +318,16 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               <tr className="hover:bg-slate-50/50">
                 <td className="p-3 border-r border-slate-700">3</td>
                 <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile1}</td>
-                <td className="p-3 border-r border-slate-700">{['M094', 'M001', 'M002'].includes(selectedGopCode) ? 5 : 0}</td>
-                <td className="p-3 border-r border-slate-700">{['M094', 'M001', 'M002'].includes(selectedGopCode) ? 1 : 0}</td>
-                <td className="p-3">{['M094', 'M001', 'M002'].includes(selectedGopCode) ? 4 : 0}</td>
+                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 5 : 0}</td>
+                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 1 : 0}</td>
+                <td className="p-3">{['M094'].includes(selectedGopCode) ? 4 : 0}</td>
               </tr>
               <tr className="hover:bg-slate-50/50">
                 <td className="p-3 border-r border-slate-700">4</td>
                 <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile2}</td>
-                <td className="p-3 border-r border-slate-700">{['M094', 'M001', 'M002'].includes(selectedGopCode) ? 5 : 0}</td>
-                <td className="p-3 border-r border-slate-700">{['M094', 'M001', 'M002'].includes(selectedGopCode) ? 1 : 0}</td>
-                <td className="p-3">{['M094', 'M001', 'M002'].includes(selectedGopCode) ? 4 : 0}</td>
+                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 5 : 0}</td>
+                <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 1 : 0}</td>
+                <td className="p-3">{['M094'].includes(selectedGopCode) ? 4 : 0}</td>
               </tr>
             </tbody>
           </table>

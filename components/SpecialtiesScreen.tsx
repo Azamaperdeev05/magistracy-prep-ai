@@ -49,7 +49,7 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
   };
 
   const filteredSpecialties = SPECIALTIES.filter(spec => {
-    if (!['M094', 'M001', 'M002'].includes(spec.code)) return false;
+    if (!['M094'].includes(spec.code)) return false;
 
     const query = searchQuery.toLowerCase();
     return (
@@ -123,7 +123,7 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
                 </div>
               </div>
             </div>
-            {!['M094', 'M001', 'M002'].includes(currentUser.specialty_code || '') && (
+            {!['M094'].includes(currentUser.specialty_code || '') && (
               <div className="flex items-start gap-2.5 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-4 max-w-md">
                 <Info className="w-5 h-5 text-amber-500 shrink-0 mt-0.5 animate-bounce" />
                 <p className="text-xs text-amber-400/90 leading-relaxed font-semibold">
@@ -162,7 +162,7 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
                 ) : (
                   filteredSpecialties.map((spec) => {
                     const isSelected = currentUser?.specialty_code === spec.code;
-                    const isReady = ['M094', 'M001', 'M002'].includes(spec.code);
+                    const isReady = ['M094'].includes(spec.code);
 
                     return (
                       <tr 
