@@ -189,18 +189,18 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               type="text" 
               value={patronymic} 
               onChange={(e) => setPatronymic(e.target.value)} 
-              placeholder="Әкесінің атыңызды енгізіңіз (міндетті емес)"
+              placeholder="Әкесінің атын енгізіңіз (міндетті емес)"
               className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
           </div>
 
-          <div className="flex items-center">Электронды мекен-жайыңыз</div>
+          <div className="flex items-center">Электрондық пошта</div>
           <div>
             <input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Электронды поштаңызды енгізіңіз"
+              placeholder="Электрондық поштаңызды енгізіңіз"
               className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
           </div>
@@ -216,47 +216,43 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-x-8 gap-y-5 max-w-3xl mx-auto mb-10 text-sm font-bold text-slate-700">
-          <div className="flex items-center">Язык сдачи тестирования</div>
+          <div className="flex items-center">Тестілеу тапсыру тілі</div>
           <div className="relative w-full max-w-md">
             <select 
               value={testLang} 
               onChange={(e) => setTestLang(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
-              <option value="қазақша">қазақша</option>
-              <option value="орысша">орысша</option>
+              <option value="қазақша">Қазақша</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
           </div>
 
-          <div className="flex items-center">Иностранный язык</div>
+          <div className="flex items-center">Шет тілі</div>
           <div className="relative w-full max-w-md">
             <select 
               value={foreignLang} 
               onChange={(e) => setForeignLang(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
-              <option value="ағылшын">ағылшын</option>
-              <option value="неміс">неміс</option>
-              <option value="француз">француз</option>
+              <option value="ағылшын">Ағылшын тілі</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
           </div>
 
-          <div className="flex items-center">Язык сдачи ТГО</div>
+          <div className="flex items-center">ОДАТ (ТГО) тапсыру тілі</div>
           <div className="relative w-full max-w-md">
             <select 
               value={tgoLang} 
               onChange={(e) => setTgoLang(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
-              <option value="қазақша">қазақша</option>
-              <option value="орысша">орысша</option>
+              <option value="қазақша">Қазақша</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
           </div>
 
-          <div className="flex items-center">ГОП</div>
+          <div className="flex items-center">Мамандықтар тобы (БББТ / ГОП)</div>
           <div className="relative w-full max-w-md">
             <select 
               value={selectedGopCode} 
