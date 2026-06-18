@@ -303,7 +303,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                    value={name}
                    onChange={(e) => { setName(e.target.value); if(error) setError(false); }}
                    placeholder="Аты-жөніңізді жазыңыз"
-                   className={`flex-1 px-5 py-3 bg-transparent outline-none font-bold tracking-wide text-sm ${
+                   className={`flex-1 px-5 py-3 bg-transparent outline-none font-bold tracking-wide text-base md:text-sm ${
                      isDarkMode ? 'text-white placeholder-slate-600' : 'text-slate-800 placeholder-slate-400'
                    } ${error ? 'bg-red-500/5 rounded-xl' : ''}`}
                  />
@@ -592,7 +592,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       <AnimatePresence>
         {isProfileOpen && (
           <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[250] p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[250] p-4 overflow-y-auto"
             onClick={() => setIsProfileOpen(false)}
           >
             <motion.div 

@@ -212,7 +212,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               value={lastName} 
               onChange={(e) => setLastName(e.target.value)} 
               placeholder="Тегіңізді енгізіңіз"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
+              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
           </div>
 
@@ -223,7 +223,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               value={firstName} 
               onChange={(e) => setFirstName(e.target.value)} 
               placeholder="Атыңызды енгізіңіз"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
+              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
           </div>
 
@@ -234,7 +234,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               value={patronymic} 
               onChange={(e) => setPatronymic(e.target.value)} 
               placeholder="Әкесінің атын енгізіңіз (міндетті емес)"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
+              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
           </div>
 
@@ -245,7 +245,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               placeholder="Электрондық поштаңызды енгізіңіз"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
+              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
           </div>
         </div>
@@ -265,7 +265,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             <select 
               value={testLang} 
               onChange={(e) => setTestLang(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
+              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
               <option value="қазақша">Қазақша</option>
             </select>
@@ -277,7 +277,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             <select 
               value={foreignLang} 
               onChange={(e) => setForeignLang(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
+              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
               <option value="ағылшын">Ағылшын тілі</option>
             </select>
@@ -289,7 +289,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             <select 
               value={tgoLang} 
               onChange={(e) => setTgoLang(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
+              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
               <option value="қазақша">Қазақша</option>
             </select>
@@ -301,7 +301,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             <select 
               value={selectedGopCode} 
               onChange={(e) => handleGopChange(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
+              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
               {SPECIALTIES.filter(spec => ['M094'].includes(spec.code)).map((spec) => (
                 <option key={spec.code} value={spec.code}>

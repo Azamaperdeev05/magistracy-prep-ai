@@ -2,6 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { registerSW } from 'virtual:pwa-register';
+import { initGlobalLogger } from './services/loggerService';
+
+// Initialize global client error logging
+initGlobalLogger();
 
 // Register Service Worker for PWA
 registerSW({ immediate: true });

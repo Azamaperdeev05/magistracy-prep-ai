@@ -22,5 +22,11 @@ service cloud.firestore {
       allow create: if request.auth != null && request.auth.uid == userId && 
                      request.resource.data.is_premium == false;
     }
+
+    // 4. Клиенттік қателер (client_errors коллекциясы)
+    match /client_errors/{document} {
+      allow create: if true; // Кез келген клиент қателікті жаза алады
+      allow read, update, delete: if false; // Ешкім оқи не өшіре алмайды (тек әкімші)
+    }
   }
 }
