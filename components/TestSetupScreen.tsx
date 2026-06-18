@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SPECIALTIES, Specialty } from '../data/specialties';
-import { getSavedUser, updateUserProfileFields, UserProfile } from '../services/authService';
+import { getSavedUser, getProfile, getHistory, updateUserProfileFields, UserProfile, HistoryItem } from '../services/authService';
 import { ArrowLeft, Info, ChevronDown } from 'lucide-react';
 import ConfirmModal from './modals/ConfirmModal';
+import UpgradeModal from './modals/UpgradeModal';
 
 interface TestSetupScreenProps {
   onStart: (name: string) => Promise<void>;
@@ -12,7 +13,34 @@ interface TestSetupScreenProps {
 
 const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading }) => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(getSavedUser());
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const navigate = useNavigate();
+
+  // Load the latest profile on mount to get current premium status
+  useEffect(() => {
+    const fetchLatestProfile = async () => {
+      try {
+        const profile = await getProfile();
+        if (profile) {
+          setCurrentUser(profile);
+        }
+      } catch (err) {
+        console.error("Error fetching latest profile on mount:", err);
+      }
+    };
+    fetchLatestProfile();
+
+    const fetchHistory = async () => {
+      try {
+        const list = await getHistory();
+        setHistory(list);
+      } catch (err) {
+        console.error("Failed to load history on setup mount:", err);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,7 +88,12 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   const [testLang, setTestLang] = useState(currentUser?.test_lang || 'қазақша');
   const [foreignLang, setForeignLang] = useState(currentUser?.foreign_lang || 'ағылшын');
   const [tgoLang, setTgoLang] = useState(currentUser?.tgo_lang || 'қазақша');
-  const [selectedGopCode, setSelectedGopCode] = useState(currentUser?.specialty_code || 'M094');
+
+  const allowedGopCodes = ['M094'];
+  const [selectedGopCode, setSelectedGopCode] = useState(() => {
+    const code = currentUser?.specialty_code;
+    return code && allowedGopCodes.includes(code) ? code : 'M094';
+  });
 
   // Split name on load or whenever currentUser changes
   useEffect(() => {
@@ -87,7 +120,13 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
       if (currentUser.test_lang) setTestLang(currentUser.test_lang);
       if (currentUser.foreign_lang) setForeignLang(currentUser.foreign_lang);
       if (currentUser.tgo_lang) setTgoLang(currentUser.tgo_lang);
-      if (currentUser.specialty_code) setSelectedGopCode(currentUser.specialty_code);
+      
+      if (currentUser.specialty_code) {
+        const code = currentUser.specialty_code;
+        setSelectedGopCode(allowedGopCodes.includes(code) ? code : 'M094');
+      } else {
+        setSelectedGopCode('M094');
+      }
     }
   }, [currentUser]);
 
@@ -98,6 +137,11 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   };
 
   const handleContinue = async () => {
+    if (!currentUser?.is_premium && history.length >= 1) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     if (!lastName.trim() || !firstName.trim()) {
       showAlert('Тегі мен Аты өрістерін толтыру қажет');
       return;
@@ -353,6 +397,12 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             confirmText={modalConfig.confirmText}
           />
         )}
+
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          userEmail={currentUser?.email || ''}
+        />
       </div>
     </div>
   );

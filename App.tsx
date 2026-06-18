@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'r
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { generateQuestionsForSubject } from './services/apiService';
-import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, deleteUserAccountAndHistory } from './services/authService';
+import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields } from './services/authService';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import AuthScreen from './components/AuthScreen';
@@ -17,6 +17,7 @@ import SpecialtiesScreen from './components/SpecialtiesScreen';
 import TestSetupScreen from './components/TestSetupScreen';
 import ConsentGateScreen from './components/ConsentGateScreen';
 import ConfirmModal from './components/modals/ConfirmModal';
+import UpgradeModal from './components/modals/UpgradeModal';
 
 const RootApp: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(getSavedUser());
@@ -24,6 +25,7 @@ const RootApp: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
+  const [showGlobalUpgradeModal, setShowGlobalUpgradeModal] = useState(false);
   const navigate = useNavigate();
 
   // Confirm Modal state
@@ -197,25 +199,12 @@ const RootApp: React.FC = () => {
               onViewPrep={() => navigate('/prep')}
               onViewSpecialties={() => navigate('/specialties')}
               userName={user.full_name}
+              userEmail={user.email}
+              isPremium={user.is_premium}
+              onUpgrade={() => setShowGlobalUpgradeModal(true)}
               specialtyCode={user.specialty_code}
               specialtyName={user.specialty_name}
               onLogout={handleLogout}
-              onDeleteAccount={() => {
-                triggerConfirm(
-                  "Аккаунтыңызды және барлық тест нәтижелеріңізді деректер базасынан біржола өшіруді қалайсыз ба?\nБұл әрекетті кері қайтару мүмкін емес.",
-                  async () => {
-                    try {
-                      await deleteUserAccountAndHistory();
-                      setUser(null);
-                      navigate('/');
-                    } catch (error: any) {
-                      triggerAlert(error.message || "Деректерді өшіру кезінде қате орын алды", () => {}, "Қате орын алды");
-                    }
-                  },
-                  true,
-                  "Өшіру"
-                );
-              }}
             />
           } 
         />
@@ -292,6 +281,11 @@ const RootApp: React.FC = () => {
         cancelText={confirmConfig?.cancelText}
         isAlert={confirmConfig?.isAlert}
         title={confirmConfig?.title}
+      />
+      <UpgradeModal
+        isOpen={showGlobalUpgradeModal}
+        onClose={() => setShowGlobalUpgradeModal(false)}
+        userEmail={user?.email || ''}
       />
     </div>
   );

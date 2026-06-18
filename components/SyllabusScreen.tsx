@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Book, Globe, Brain, Database, Info, Loader2 } from 'lucide-react';
+import { ChevronLeft, Book, Globe, Brain, Database, Info, Loader2, Lock } from 'lucide-react';
 import { SubjectId } from '../types';
 import { SUBJECTS } from '../constants';
 import { getSyllabus } from '../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';
 import { DB_TEXTBOOK, ALGO_TEXTBOOK, ENGLISH_TEXTBOOK, TGO_TEXTBOOK } from '../data/textbooks';
+import { getSavedUser, getProfile, UserProfile } from '../services/authService';
+import UpgradeModal from './modals/UpgradeModal';
 
 interface SyllabusScreenProps {
   onBack: () => void;
@@ -19,6 +21,23 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeChapter, setActiveChapter] = useState<string>('1');
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(getSavedUser());
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  // Fetch the latest profile on mount to get premium status
+  useEffect(() => {
+    const fetchLatestProfile = async () => {
+      try {
+        const profile = await getProfile();
+        if (profile) {
+          setCurrentUser(profile);
+        }
+      } catch (err) {
+        console.error("Error fetching latest profile on mount:", err);
+      }
+    };
+    fetchLatestProfile();
+  }, []);
 
   useEffect(() => {
     setActiveChapter('1');
@@ -95,10 +114,19 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
             {Object.keys(chapters).map((key) => {
               const ch = chapters[key];
               const isActive = activeChapter === key;
+              const isFreeChapter = key === '1' || key === '2';
+              const isLocked = !isFreeChapter && !currentUser?.is_premium;
+
               return (
                 <button
                   key={key}
-                  onClick={() => setActiveChapter(key)}
+                  onClick={() => {
+                    if (isLocked) {
+                      setShowUpgradeModal(true);
+                    } else {
+                      setActiveChapter(key);
+                    }
+                  }}
                   className={`
                     text-left p-3 rounded-xl border transition text-xs font-semibold whitespace-nowrap shrink-0 lg:w-full lg:whitespace-normal
                     ${isActive 
@@ -106,7 +134,10 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
                       : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-50/50'}
                   `}
                 >
-                  {ch.title}
+                  <div className="flex items-center justify-between gap-2 w-full">
+                    <span className="truncate lg:whitespace-normal">{ch.title}</span>
+                    {isLocked && <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
+                  </div>
                 </button>
               );
             })}
@@ -133,6 +164,12 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
           )}
         </main>
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        userEmail={currentUser?.email || ''}
+      />
     </div>
   );
 };

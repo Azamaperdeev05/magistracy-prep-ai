@@ -5,7 +5,7 @@ import {
   Award, Zap, Target, GraduationCap, TrendingUp, Shield, 
   Menu, X, Sparkles, ChevronRight, Play, ExternalLink,
   MessageSquare, Star, Users, CheckCircle, LogOut, History, Info,
-  Sun, Moon
+  Sun, Moon, Crown
 } from 'lucide-react';
 import { SUBJECTS } from '../constants';
 import { SubjectId } from '../types';
@@ -18,10 +18,12 @@ interface WelcomeScreenProps {
   onViewPrep: () => void;
   onViewSpecialties: () => void;
   userName?: string;
+  userEmail?: string;
+  isPremium?: boolean;
+  onUpgrade?: () => void;
   specialtyCode?: string;
   specialtyName?: string;
   onLogout?: () => void;
-  onDeleteAccount?: () => void;
 }
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ 
@@ -32,14 +34,17 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   onViewPrep, 
   onViewSpecialties, 
   userName, 
+  userEmail,
+  isPremium,
+  onUpgrade,
   specialtyCode, 
   specialtyName, 
-  onLogout,
-  onDeleteAccount
+  onLogout
 }) => {
   const [name, setName] = useState(userName || '');
   const [error, setError] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   // Theme State: defaults to dark mode
@@ -146,17 +151,20 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 
             {userName && (
               <div className={`flex items-center gap-4 border-l pl-8 ${isDarkMode ? 'border-white/5' : 'border-slate-200'}`}>
-                <div className="flex flex-col text-right">
-                  <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{userName}</span>
-                  {onDeleteAccount && (
-                    <button 
-                      onClick={onDeleteAccount}
-                      className="text-[10px] text-slate-500 hover:text-red-500 font-bold uppercase tracking-wider transition-colors mt-0.5"
-                    >
-                      Деректерді өшіру
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={() => setIsProfileOpen(true)}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border font-bold text-sm transition-all active:scale-95 ${
+                    isDarkMode 
+                      ? 'glass border-white/10 text-slate-300 hover:text-white hover:bg-white/5' 
+                      : 'bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50'
+                  }`}
+                >
+                  <Users className="w-4 h-4 text-blue-500" />
+                  <span>Профиль</span>
+                  {isPremium ? (
+                    <span className="flex items-center justify-center w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  ) : null}
+                </button>
                 <button
                   onClick={onLogout}
                   className={`p-2.5 border text-red-500 rounded-xl hover:bg-red-500/10 transition-all active:scale-95 ${
@@ -226,24 +234,19 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 
                 {userName && (
                   <div className={`pt-6 border-t flex flex-col gap-4 ${isDarkMode ? 'border-white/5' : 'border-slate-200'}`}>
-                    <div className="flex items-center justify-between">
-                      <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{userName}</span>
-                      <div className="flex items-center gap-4">
-                        {onDeleteAccount && (
-                          <button
-                            onClick={() => { onDeleteAccount(); setIsMenuOpen(false); }}
-                            className="text-xs text-slate-500 hover:text-red-500 font-bold uppercase tracking-widest"
-                          >
-                            Деректерді өшіру
-                          </button>
-                        )}
-                        <button
-                          onClick={onLogout}
-                          className="flex items-center gap-2 text-red-500 text-sm font-bold uppercase tracking-widest"
-                        >
-                          <LogOut className="w-4 h-4" /> Шығу
-                        </button>
-                      </div>
+                    <div className="flex flex-col gap-3">
+                      <button
+                        onClick={() => { setIsProfileOpen(true); setIsMenuOpen(false); }}
+                        className={`text-left text-sm font-bold tracking-wider uppercase flex items-center gap-3 ${navBtnText}`}
+                      >
+                        <Users className="w-4 h-4 text-blue-500" /> Профиль {isPremium ? "👑" : ""}
+                      </button>
+                      <button
+                        onClick={onLogout}
+                        className="flex items-center gap-3 text-red-500 text-sm font-bold uppercase tracking-widest text-left"
+                      >
+                        <LogOut className="w-4 h-4" /> Шығу
+                      </button>
                     </div>
                   </div>
                 )}
@@ -584,6 +587,93 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
            </div>
         </div>
       </footer>
+
+      {/* Profile Modal */}
+      <AnimatePresence>
+        {isProfileOpen && (
+          <div 
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[250] p-4"
+            onClick={() => setIsProfileOpen(false)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className={`border rounded-3xl w-full max-w-md overflow-hidden shadow-2xl relative p-6 space-y-6 ${
+                isDarkMode ? 'bg-[#0f1219] border-slate-800' : 'bg-white border-slate-200 text-slate-800'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setIsProfileOpen(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800/50 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Profile Header */}
+              <div className="text-center space-y-2 pt-2">
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto border ${
+                  isPremium 
+                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' 
+                    : 'bg-blue-500/10 border-blue-500/20 text-blue-500'
+                }`}>
+                  {isPremium ? <Crown className="w-8 h-8 animate-bounce" style={{ animationDuration: '3s' }} /> : <Users className="w-8 h-8" />}
+                </div>
+                <h3 className={`text-lg font-black uppercase tracking-wider ${textTitle}`}>Қолданушы Профилі</h3>
+              </div>
+
+              {/* Profile Fields */}
+              <div className={`rounded-2xl p-4 space-y-3.5 text-sm ${
+                isDarkMode ? 'bg-slate-900/50 border border-slate-800/50' : 'bg-slate-50 border border-slate-200/60'
+              }`}>
+                <div className="flex justify-between items-center py-0.5 border-b border-dashed border-slate-800/20">
+                  <span className="text-slate-400 font-semibold text-xs">Аты-жөні:</span>
+                  <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{userName || 'Қолданушы'}</span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 border-b border-dashed border-slate-800/20">
+                  <span className="text-slate-400 font-semibold text-xs">Email:</span>
+                  <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{userEmail || '-'}</span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 border-b border-dashed border-slate-800/20">
+                  <span className="text-slate-400 font-semibold text-xs">Мамандық:</span>
+                  <span className={`font-bold truncate max-w-[200px] ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+                    {specialtyCode ? `${specialtyCode} - ${specialtyName}` : '-'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-0.5">
+                  <span className="text-slate-400 font-semibold text-xs">Жазылым түрі:</span>
+                  {isPremium ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-black uppercase tracking-wider rounded-full shadow-lg shadow-amber-500/5 animate-pulse">
+                      👑 Premium
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-slate-500/10 border border-slate-500/20 text-slate-400 text-[10px] font-black uppercase tracking-wider rounded-full">
+                      Тегін тариф
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-2 pt-2">
+                {!isPremium && (
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      if (onUpgrade) onUpgrade();
+                    }}
+                    className="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs uppercase tracking-wider shadow-lg shadow-amber-950/20"
+                  >
+                    <Crown className="w-4 h-4" /> Premium-ге өту
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

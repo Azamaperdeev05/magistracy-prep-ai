@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Question, SubjectId, UserAnswers } from '../types';
 import { SUBJECTS } from '../constants';
 import { ChevronDown, ChevronUp, CheckCircle, XCircle, Trophy, Home, RotateCcw, BookOpen, TrendingUp, Target, BarChart3, BrainCircuit, AlertTriangle } from 'lucide-react';
-import { saveTestResult } from '../services/authService';
+import { saveTestResult, checkAndIncrementAiLimit } from '../services/authService';
 import { calculateTestResult, scoreQuestion } from '../services/scoringService';
 import { getAiExplanation, AiQuestionContext } from '../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';
@@ -78,6 +78,16 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
     const qId = question.id;
     if (aiExplanations[qId] && !aiExplanations[qId].startsWith('Қателік')) return;
     
+    // Check limit
+    const check = checkAndIncrementAiLimit(10);
+    if (!check.allowed) {
+      setAiExplanations(prev => ({
+        ...prev,
+        [qId]: `⚠️ Күнделікті ИИ сұраныс лимитіңіз бітті (10 сұрақ). Шексіз қолдану үшін Premium жазылымға өтіңіз немесе ертең қайта көріңіз.`
+      }));
+      return;
+    }
+
     setAiExplanations(prev => ({ ...prev, [qId]: 'Жүктелуде... (ИИ жауап дайындап жатыр)' }));
     try {
       const expl = await getAiExplanation(

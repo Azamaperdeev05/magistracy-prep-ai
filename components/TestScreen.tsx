@@ -6,6 +6,7 @@ import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, Bra
 import { askAiQuestion, ChatMessage, getAiExplanation, AiQuestionContext } from '../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';
 import { getTheoryForQuestion } from '../data/textbooks';
+import { checkAndIncrementAiLimit } from '../services/authService';
 
 // Import Modals
 import SectionsModal from './modals/SectionsModal';
@@ -79,6 +80,20 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       setAiQuery('');
     }
     
+    // Check limit
+    const check = checkAndIncrementAiLimit(10);
+    if (!check.allowed) {
+      const limitMsg: ChatMessage = { 
+        role: 'assistant', 
+        content: `⚠️ Күнделікті ИИ сұраныс лимитіңіз бітті (10 сұрақ). Шексіз қолдану үшін Premium жазылымға өтіңіз немесе ертең қайта көріңіз.` 
+      };
+      setChatHistories(prev => ({
+        ...prev,
+        [questionId]: [...(prev[questionId] || []), limitMsg]
+      }));
+      return;
+    }
+
     setAiLoading(true);
     try {
       const optionTexts = currentQuestion.options.map(o => o.text);
@@ -118,6 +133,16 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const handleGenerateAnalysis = async () => {
     if (!currentQuestion || !currentQuestionId) return;
     if (analysisResponses[currentQuestionId] && !analysisResponses[currentQuestionId].startsWith('Қателік')) return;
+
+    // Check limit
+    const check = checkAndIncrementAiLimit(10);
+    if (!check.allowed) {
+      setAnalysisResponses(prev => ({
+        ...prev,
+        [currentQuestionId]: `⚠️ Күнделікті ИИ сұраныс лимитіңіз бітті (10 сұрақ). Шексіз қолдану үшін Premium жазылымға өтіңіз немесе ертең қайта көріңіз.`,
+      }));
+      return;
+    }
 
     setAnalysisLoading(true);
     try {

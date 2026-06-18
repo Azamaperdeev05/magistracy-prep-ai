@@ -19,7 +19,10 @@ import {
   query, 
   where, 
   deleteDoc, 
-  doc 
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc
 } from 'firebase/firestore';
 import { TestResult } from "../types";
 
@@ -49,6 +52,9 @@ export interface UserProfile {
   foreign_lang?: string;
   tgo_lang?: string;
   consent?: UserConsent;
+  is_premium?: boolean;
+  ai_queries_today?: number;
+  ai_queries_date?: string;
 }
 
 export interface AuthResponse {
@@ -232,6 +238,38 @@ export async function getProfile(): Promise<UserProfile> {
 
   const numericId = getOrCreateNumericId(currentUser.uid);
   const savedUser = getSavedUser();
+
+  let isPremium = false;
+  let aiQueriesToday = 0;
+  let aiQueriesDate = "";
+
+  // Synchronize with Firestore database if online/db is ready
+  if (db) {
+    try {
+      const userDocRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        isPremium = !!data.is_premium;
+        aiQueriesToday = data.ai_queries_today || 0;
+        aiQueriesDate = data.ai_queries_date || "";
+      } else {
+        // Create initial document
+        await setDoc(userDocRef, {
+          email: currentUser.email || "",
+          full_name: currentUser.displayName || savedUser?.full_name || 'Қолданушы',
+          is_premium: false,
+          created_at: new Date().toISOString()
+        });
+      }
+    } catch (e) {
+      console.warn("Firestore user sync failed, falling back to local storage:", e);
+      isPremium = !!savedUser?.is_premium;
+      aiQueriesToday = savedUser?.ai_queries_today || 0;
+      aiQueriesDate = savedUser?.ai_queries_date || "";
+    }
+  }
+
   const profile: UserProfile = {
     id: numericId,
     uid: currentUser.uid,
@@ -246,7 +284,10 @@ export async function getProfile(): Promise<UserProfile> {
     test_lang: savedUser?.test_lang,
     foreign_lang: savedUser?.foreign_lang,
     tgo_lang: savedUser?.tgo_lang,
-    consent: savedUser?.consent
+    consent: savedUser?.consent,
+    is_premium: isPremium,
+    ai_queries_today: aiQueriesToday,
+    ai_queries_date: aiQueriesDate
   };
   saveUser(profile);
   return profile;
@@ -399,7 +440,65 @@ export function updateUserProfileFields(fields: Partial<UserProfile>): UserProfi
   };
 
   saveUser(updatedProfile);
+
+  // Sync to Firestore asynchronously
+  if (db && user.uid) {
+    const userDocRef = doc(db, "users", user.uid);
+    const firestoreUpdate: any = {};
+    if (fields.specialty_code !== undefined) firestoreUpdate.specialty_code = fields.specialty_code;
+    if (fields.specialty_name !== undefined) firestoreUpdate.specialty_name = fields.specialty_name;
+    if (fields.last_name !== undefined) firestoreUpdate.last_name = fields.last_name;
+    if (fields.first_name !== undefined) firestoreUpdate.first_name = fields.first_name;
+    if (fields.patronymic !== undefined) firestoreUpdate.patronymic = fields.patronymic;
+    if (fields.test_lang !== undefined) firestoreUpdate.test_lang = fields.test_lang;
+    if (fields.foreign_lang !== undefined) firestoreUpdate.foreign_lang = fields.foreign_lang;
+    if (fields.tgo_lang !== undefined) firestoreUpdate.tgo_lang = fields.tgo_lang;
+    if (fields.is_premium !== undefined) firestoreUpdate.is_premium = fields.is_premium;
+    if (fields.ai_queries_today !== undefined) firestoreUpdate.ai_queries_today = fields.ai_queries_today;
+    if (fields.ai_queries_date !== undefined) firestoreUpdate.ai_queries_date = fields.ai_queries_date;
+    if (fields.consent !== undefined) firestoreUpdate.consent = fields.consent;
+
+    if (Object.keys(firestoreUpdate).length > 0) {
+      updateDoc(userDocRef, firestoreUpdate).catch(err => {
+        console.warn("Async Firestore user update failed:", err);
+      });
+    }
+  }
+
   return updatedProfile;
+}
+
+export function checkAndIncrementAiLimit(maxDailyLimit: number = 10): { allowed: boolean; remaining: number } {
+  const user = getSavedUser();
+  if (!user) return { allowed: false, remaining: 0 };
+
+  // Premium users have no limit
+  if (user.is_premium) {
+    return { allowed: true, remaining: 9999 };
+  }
+
+  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Almaty' }); // YYYY-MM-DD reliably
+  const currentCount = user.ai_queries_today || 0;
+  const lastQueryDate = user.ai_queries_date || "";
+
+  let newCount = currentCount;
+  if (lastQueryDate !== todayStr) {
+    // New day, reset count
+    newCount = 0;
+  }
+
+  if (newCount >= maxDailyLimit) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  // Increment and save
+  newCount += 1;
+  updateUserProfileFields({
+    ai_queries_today: newCount,
+    ai_queries_date: todayStr
+  });
+
+  return { allowed: true, remaining: maxDailyLimit - newCount };
 }
 
 export async function deleteUserAccountAndHistory(): Promise<void> {

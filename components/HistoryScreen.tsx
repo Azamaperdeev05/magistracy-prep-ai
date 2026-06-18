@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   History, 
-  Trash2, 
   ChevronRight, 
   Calendar, 
   Award, 
@@ -17,7 +16,7 @@ import {
   HelpCircle,
   AlertTriangle
 } from 'lucide-react';
-import { getHistory, deleteHistoryItem, HistoryItem } from '../services/authService';
+import { getHistory, HistoryItem } from '../services/authService';
 import { STATIC_QUESTIONS } from '../data/questions';
 import { Question } from '../types';
 import { scoreQuestion } from '../services/scoringService';
@@ -90,20 +89,6 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
     }
   };
 
-  const handleDelete = async (id: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent opening detail view when clicking delete
-    showConfirm('Бұл нәтижені өшіргіңіз келе ме?', async () => {
-      try {
-        await deleteHistoryItem(id);
-        setHistory(prev => prev.filter(item => item.id !== id));
-        if (selectedItem?.id === id) {
-          setSelectedItem(null);
-        }
-      } catch (err: any) {
-        showAlert(err.message || 'Деректерді өшіру кезінде қате орын алды');
-      }
-    }, 'Өшіру');
-  };
 
   const handleRequestExplanation = async (
     q: Question,
@@ -471,13 +456,6 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
                             </div>
                             <div className="text-[10px] uppercase tracking-wider text-slate-600 font-bold">Табыстылық</div>
                           </div>
-                          <button
-                            onClick={(e) => handleDelete(item.id, e)}
-                            className="p-2.5 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-transparent hover:border-red-500/20"
-                            title="Өшіру"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
                           <div className="p-2.5 text-slate-500 group-hover:text-white rounded-xl transition-all border border-transparent group-hover:border-slate-700">
                             <ChevronRight className="w-5 h-5" />
                           </div>

@@ -1,6 +1,7 @@
 import { Question, SubjectId } from "../types";
 import { STATIC_QUESTIONS } from "../data/questions";
 import { SYLLABUS_CONTENT } from "../data/syllabus";
+import { auth } from "../firebase";
 
 const shuffle = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -302,83 +303,27 @@ function buildQuestionContextForAi(ctx: AiQuestionContext): string {
 }
 
 async function callAiCompletions(systemPrompt: string, userPrompt: string, history: ChatMessage[] = []): Promise<string> {
-  const dashscopeKey = process.env.DASHSCOPE_API_KEY || "";
-  const dashscopeUrl = process.env.DASHSCOPE_API_URL || "";
-  const geminiKey = process.env.GEMINI_API_KEY || "";
+  const token = auth && auth.currentUser ? await auth.currentUser.getIdToken() : null;
+  const response = await fetch('/api/explain', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token ? `Bearer ${token}` : ""
+    },
+    body: JSON.stringify({
+      systemPrompt,
+      userPrompt,
+      history
+    })
+  });
 
-  // 1. Try DashScope (Qwen) first
-  if (dashscopeKey) {
-    const url = `${dashscopeUrl.replace(/\/$/, "")}/chat/completions`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${dashscopeKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "qwen3.5-omni-plus-2026-03-15",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...history.map(h => ({ role: h.role, content: h.content })),
-          { role: "user", content: userPrompt }
-        ]
-      })
-    });
-
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(`AI Service error: ${err}`);
-    }
-
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content || "";
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || 'AI қызметінен жауап алу мүмкін болмады.');
   }
 
-  // 2. Fallback to Google Gemini
-  if (geminiKey) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
-    
-    // Map history to Gemini's user/model alternating format
-    const contents: any[] = [];
-    contents.push({
-      role: "user",
-      parts: [{ text: `${systemPrompt}\n\nБастапқы шарттар түсінікті болса, сұхбатты бастайық.` }]
-    });
-    contents.push({
-      role: "model",
-      parts: [{ text: "Түсінікті. Сұрақтарыңызды қойыңыз, мен оларға қазақ тілінде нақты жауап беремін." }]
-    });
-
-    history.forEach(h => {
-      contents.push({
-        role: h.role === "assistant" ? "model" : "user",
-        parts: [{ text: h.content }]
-      });
-    });
-
-    contents.push({
-      role: "user",
-      parts: [{ text: userPrompt }]
-    });
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ contents })
-    });
-
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(`Gemini Service error: ${err}`);
-    }
-
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-  }
-
-  throw new Error("AI API кілті бапталмаған. Жүйе әкімшісіне хабарласыңыз немесе баптауларды тексеріңіз.");
+  const data = await response.json();
+  return data.result || "";
 }
 
 export async function getAiExplanation(

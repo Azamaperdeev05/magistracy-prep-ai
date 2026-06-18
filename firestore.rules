@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Тест тапсыру тарихы (history коллекциясы)
+    match /history/{document} {
+      allow read, delete: if request.auth != null && resource.data.user_uid == request.auth.uid;
+      allow create, update: if request.auth != null && request.resource.data.user_uid == request.auth.uid;
+    }
+    
+    // 2. Сұрақтардағы қателер туралы есептер (reports коллекциясы)
+    match /reports/{document} {
+      allow create: if request.auth != null && request.resource.data.user_uid == request.auth.uid;
+      allow read, update, delete: if false;
+    }
+
+    // 3. Пайдаланушы профилі (users коллекциясы)
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId && 
+                    (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['is_premium']));
+      allow create: if request.auth != null && request.auth.uid == userId && 
+                     request.resource.data.is_premium == false;
+    }
+  }
+}
