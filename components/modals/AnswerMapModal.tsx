@@ -22,12 +22,14 @@ const AnswerMapModal: React.FC<AnswerMapModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  // Group questions by subject
+  // Group questions by subject, only keep subjects that have questions in this test session
   const subjectList = Object.values(SUBJECTS);
-  const questionsBySubject = subjectList.map(subject => ({
-    subject,
-    questions: questions.filter(q => q.subjectId === subject.id),
-  }));
+  const questionsBySubject = subjectList
+    .map(subject => ({
+      subject,
+      questions: questions.filter(q => q.subjectId === subject.id),
+    }))
+    .filter(item => item.questions.length > 0);
 
   const totalAnswered = questions.filter(q => answers[q.id] && answers[q.id].length > 0).length;
   const totalQuestions = questions.length;

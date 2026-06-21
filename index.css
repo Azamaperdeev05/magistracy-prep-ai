@@ -213,3 +213,8 @@ body {
 .animate-bounce-subtle {
   animation: bounce-subtle 3s ease-in-out infinite;
 }
+
+/* Prevent double-tap to zoom on mobile browsers for interactive elements */
+html, body, button, select, input, a, [role="button"], .cursor-pointer {
+  touch-action: manipulation;
+}

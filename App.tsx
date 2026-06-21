@@ -22,9 +22,25 @@ import UpgradeModal from './components/modals/UpgradeModal';
 const RootApp: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(getSavedUser());
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<Question[]>(() => {
+    const saved = localStorage.getItem('active_test_questions');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error("Error parsing saved active_test_questions:", e);
+      return [];
+    }
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
+  const [userAnswers, setUserAnswers] = useState<UserAnswers>(() => {
+    const saved = localStorage.getItem('active_test_answers');
+    try {
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error("Error parsing saved active_test_answers:", e);
+      return {};
+    }
+  });
   const [showGlobalUpgradeModal, setShowGlobalUpgradeModal] = useState(false);
   const navigate = useNavigate();
 
@@ -92,6 +108,18 @@ const RootApp: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    try {
+      if (questions && questions.length > 0) {
+        localStorage.setItem('active_test_questions', JSON.stringify(questions));
+      } else {
+        localStorage.removeItem('active_test_questions');
+      }
+    } catch (e) {
+      console.error("Error setting active_test_questions to localStorage:", e);
+    }
+  }, [questions]);
+
   const handleAuthSuccess = (userData: { id: number; email: string; full_name: string }) => {
     setUser(userData as UserProfile);
     navigate('/home');
@@ -128,6 +156,7 @@ const RootApp: React.FC = () => {
         return;
       }
 
+      localStorage.removeItem('active_test_answers');
       setQuestions(allQuestions);
       setUserAnswers({});
       navigate('/test');
@@ -141,16 +170,24 @@ const RootApp: React.FC = () => {
 
   const handleFinishTest = (answers: UserAnswers) => {
     setUserAnswers(answers);
+    try {
+      localStorage.setItem('active_test_answers', JSON.stringify(answers));
+    } catch (e) {
+      console.error("Error saving active_test_answers on finish:", e);
+    }
     navigate('/result');
   };
 
   const handleRestart = () => {
     setQuestions([]);
     setUserAnswers({});
+    localStorage.removeItem('active_test_questions');
+    localStorage.removeItem('active_test_answers');
     navigate('/home');
   };
 
   const handlePracticeWrong = (wrongQuestions: Question[]) => {
+    localStorage.removeItem('active_test_answers');
     setQuestions(wrongQuestions);
     setUserAnswers({});
     navigate('/test');

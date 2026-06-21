@@ -42,7 +42,20 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const navigate = useNavigate();
 
   // State
-  const [answers, setAnswers] = useState<UserAnswers>({});
+  const [answers, setAnswers] = useState<UserAnswers>(() => {
+    const saved = localStorage.getItem('active_test_answers');
+    try {
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error("Error parsing saved active_test_answers:", e);
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('active_test_answers', JSON.stringify(answers));
+  }, [answers]);
+
   const [chatHistories, setChatHistories] = useState<Record<string, ChatMessage[]>>({});
   const [showAiAssistant, setShowAiAssistant] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
