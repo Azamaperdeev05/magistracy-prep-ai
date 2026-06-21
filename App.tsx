@@ -242,6 +242,8 @@ const RootApp: React.FC = () => {
               specialtyCode={user.specialty_code}
               specialtyName={user.specialty_name}
               onLogout={handleLogout}
+              hasActiveTest={questions.length > 0}
+              onResume={() => navigate('/test')}
             />
           } 
         />

@@ -24,6 +24,8 @@ interface WelcomeScreenProps {
   specialtyCode?: string;
   specialtyName?: string;
   onLogout?: () => void;
+  hasActiveTest?: boolean;
+  onResume?: () => void;
 }
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ 
@@ -39,7 +41,9 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   onUpgrade,
   specialtyCode, 
   specialtyName, 
-  onLogout
+  onLogout,
+  hasActiveTest,
+  onResume
 }) => {
   const [name, setName] = useState(userName || '');
   const [error, setError] = useState(false);
@@ -295,6 +299,29 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               transition={{ delay: 0.15 }}
               className="relative w-full max-w-md mt-4"
             >
+               {hasActiveTest && (
+                 <div className={`mb-5 p-4 border rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 w-full text-left ${
+                   isDarkMode ? 'bg-blue-600/10 border-blue-500/20' : 'bg-blue-50/80 border-blue-200/80 shadow-sm'
+                 }`}>
+                   <div className="flex items-start gap-3">
+                     <Clock className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                     <div>
+                       <h4 className={`text-xs font-black uppercase tracking-wider ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                         Аяқталмаған тест бар
+                       </h4>
+                       <p className={`text-[11px] font-semibold mt-0.5 leading-relaxed ${textMuted}`}>
+                         Сізде белсенді тест сессиясының прогресі сақталған.
+                       </p>
+                     </div>
+                   </div>
+                   <button
+                     onClick={onResume}
+                     className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5 whitespace-nowrap uppercase tracking-wider"
+                   >
+                     Жалғастыру <ArrowRight className="w-3.5 h-3.5" />
+                   </button>
+                 </div>
+               )}
                <div className={`p-1.5 sm:p-1 border rounded-2xl flex flex-col sm:flex-row gap-2 ${
                  isDarkMode ? 'bg-[#0f1219] border-slate-800/80 shadow-2xl' : 'bg-white border-slate-200 shadow-lg'
                }`}>
