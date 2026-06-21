@@ -231,7 +231,7 @@ const RootApp: React.FC = () => {
             <WelcomeScreen 
               onStart={() => navigate('/test-setup')} 
               isLoading={isLoading} 
-              onViewProgram={() => navigate('/program')}
+              onViewProgram={(subId) => navigate(subId ? `/program/${subId}` : '/program')}
               onViewHistory={() => navigate('/history')}
               onViewPrep={() => navigate('/prep')}
               onViewSpecialties={() => navigate('/specialties')}

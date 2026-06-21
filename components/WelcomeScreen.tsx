@@ -13,7 +13,7 @@ import { SubjectId } from '../types';
 interface WelcomeScreenProps {
   onStart: (name: string) => void;
   isLoading: boolean;
-  onViewProgram: () => void;
+  onViewProgram: (subjectId?: string) => void;
   onViewHistory: () => void;
   onViewPrep: () => void;
   onViewSpecialties: () => void;
@@ -381,7 +381,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* Master Card - English */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-8 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              onClick={() => onViewProgram('english')}
+              className={`md:col-span-8 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] cursor-pointer hover:border-blue-500/50 hover:shadow-lg transition-all duration-300 ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -399,18 +400,19 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
               <div className="mt-8 flex items-center justify-between">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{SUBJECTS[SubjectId.ENGLISH].totalQuestions} сұрақ</span>
-                <button className={`w-10 h-10 rounded-full border flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all ${
+                <div className={`w-10 h-10 rounded-full border flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all ${
                   isDarkMode ? 'border-slate-800 text-slate-300' : 'border-slate-200 text-slate-700'
                 }`}>
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </div>
               </div>
             </motion.div>
 
             {/* Small Card - TGO */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              onClick={() => onViewProgram('tgo')}
+              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] cursor-pointer hover:border-blue-500/50 hover:shadow-lg transition-all duration-300 ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -425,14 +427,19 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
               <div className="flex items-center justify-between mt-8">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{SUBJECTS[SubjectId.TGO].totalQuestions} сұрақ</span>
-                <ArrowRight className="w-4 h-4 text-slate-500" />
+                <div className={`w-8 h-8 rounded-full border flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all ${
+                  isDarkMode ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-500'
+                }`}>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
               </div>
             </motion.div>
 
             {/* Small Card - Logic/Algo */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              onClick={() => onViewProgram('algo')}
+              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] cursor-pointer hover:border-blue-500/50 hover:shadow-lg transition-all duration-300 ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -447,7 +454,11 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
               <div className="flex items-center justify-between mt-8">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{SUBJECTS[SubjectId.ALGO].totalQuestions} сұрақ</span>
-                <ArrowRight className="w-4 h-4 text-slate-500" />
+                <div className={`w-8 h-8 rounded-full border flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all ${
+                  isDarkMode ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-500'
+                }`}>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
               </div>
             </motion.div>
 
@@ -461,7 +472,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* Small Card - DB */}
             <motion.div 
               whileHover={{ y: -2 }}
-              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] ${cardBg}`}
+              onClick={() => onViewProgram('db')}
+              className={`md:col-span-4 p-6 sm:p-8 border rounded-3xl flex flex-col justify-between min-h-[280px] cursor-pointer hover:border-blue-500/50 hover:shadow-lg transition-all duration-300 ${cardBg}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -476,7 +488,11 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
               <div className="flex items-center justify-between mt-8">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{SUBJECTS[SubjectId.DB].totalQuestions} сұрақ</span>
-                <ArrowRight className="w-4 h-4 text-slate-500" />
+                <div className={`w-8 h-8 rounded-full border flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all ${
+                  isDarkMode ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-500'
+                }`}>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
               </div>
             </motion.div>
           </div>
