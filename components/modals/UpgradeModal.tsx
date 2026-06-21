@@ -9,7 +9,15 @@ interface UpgradeModalProps {
 }
 
 const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, userEmail }) => {
+  const [copied, setCopied] = React.useState(false);
+
   if (!isOpen) return null;
+
+  const handleCopyPhone = () => {
+    navigator.clipboard.writeText('77478501822');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSendWhatsapp = () => {
     const managerPhone = '77478501822'; // Support/Manager WhatsApp Number
@@ -103,9 +111,20 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, userEmail 
 
               <div className="h-px bg-slate-800/50 w-2/3 mx-auto" />
 
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-slate-400">Каспи аударымы:</div>
-                <div className="text-lg font-black text-white">+7 747 850 1822</div>
+              <div 
+                className="space-y-1 cursor-pointer hover:bg-slate-800/30 p-2 rounded-xl transition-all select-all"
+                onClick={handleCopyPhone}
+                title="Көшіру үшін басыңыз"
+              >
+                <div className="text-xs font-bold text-slate-400">Каспи аударымы (Көшіру үшін басыңыз):</div>
+                <div className="text-lg font-black text-white flex items-center justify-center gap-2">
+                  <span>+7 747 850 1822</span>
+                  {copied ? (
+                    <span className="text-[10px] text-green-400 font-bold bg-green-500/10 px-2 py-0.5 rounded-md animate-pulse">Көшірілді!</span>
+                  ) : (
+                    <span className="text-[9px] text-slate-500 border border-slate-800 px-1.5 py-0.5 rounded bg-slate-950/40 font-normal">көшіру</span>
+                  )}
+                </div>
                 <div className="text-xs text-slate-500 font-semibold">(Азамат П.)</div>
               </div>
 
@@ -114,6 +133,12 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, userEmail 
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
                   Төлем жасаған соң, чекті төмендегі батырманы басып бізге жіберіңіз. 5 минут ішінде жазылым белсендіріледі.
                 </p>
+              </div>
+
+              <div className="h-px bg-slate-800/50 w-2/3 mx-auto" />
+
+              <div className="text-xs text-slate-500 font-semibold">
+                Жүйедегі поштаңыз: <span className="font-bold text-slate-400 select-all">{userEmail}</span>
               </div>
             </div>
 

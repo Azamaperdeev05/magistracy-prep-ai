@@ -50,6 +50,15 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const handleCopyEmail = () => {
+    if (userEmail) {
+      navigator.clipboard.writeText(userEmail);
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    }
+  };
 
   // Theme State: defaults to dark mode
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -677,7 +686,18 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 </div>
                 <div className="flex justify-between items-center py-0.5 border-b border-dashed border-slate-800/20">
                   <span className="text-slate-400 font-semibold text-xs">Email:</span>
-                  <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{userEmail || '-'}</span>
+                  <div 
+                    onClick={handleCopyEmail}
+                    className="flex items-center gap-1.5 cursor-pointer hover:bg-slate-800/20 px-2 py-0.5 rounded-md transition-all select-all"
+                    title="Көшіру үшін басыңыз"
+                  >
+                    <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{userEmail || '-'}</span>
+                    {emailCopied ? (
+                      <span className="text-[10px] text-green-400 font-bold bg-green-500/10 px-1.5 py-0.5 rounded animate-pulse">Көшірілді!</span>
+                    ) : (
+                      <span className="text-[9px] text-slate-500 border border-slate-800 px-1 py-0.2 rounded bg-slate-950/40">көшіру</span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center py-0.5 border-b border-dashed border-slate-800/20">
                   <span className="text-slate-400 font-semibold text-xs">Мамандық:</span>
