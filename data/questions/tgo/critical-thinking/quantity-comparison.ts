@@ -1946,5 +1946,46 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "topic": "Салыстыру есептері",
   "difficulty": "medium",
   "hint": "Шамаларды есептейік: \n- A = 2 2/3 = 8/3 ≈ 2.67\n- B = 1 3/4 = 7/4 = 1.75\n- C = 2 1/6 = 13/6 ≈ 2.17\n\nЕнді нұсқаларды тексерейік:\n- AB = A · B = 8/3 · 7/4 = 14/3 ≈ 4.67\n- BC = B · C = 7/4 · 13/6 = 91/24 ≈ 3.79\n- AC = A · C = 8/3 · 13/6 = 52/9 ≈ 5.78\n\nC нұсқасында: AB > C => 4.67 > 2.17 (дұрыс). Демек, жауабы: AB > C."
+},
+{
+  "id": "tgo-quantity-comparison-equations",
+  "subjectId": "tgo",
+  "text": "a және b — ның мәндерін теңдіктерден тауып, шамаларды салыстырыңыз:",
+  "chartData": {
+    "type": "tgo_comparison_equations",
+    "eq1Num": "18",
+    "eq1Den": "37",
+    "eq1Val": "111",
+    "eq2Num": "11",
+    "eq2Den": "15",
+    "eq2Val": "105",
+    "colAExpr": "3a - b",
+    "colBExpr": "2a + b"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-equations-a",
+      "text": "A = B"
+    },
+    {
+      "id": "tgo-quantity-comparison-equations-b",
+      "text": "A > B"
+    },
+    {
+      "id": "tgo-quantity-comparison-equations-c",
+      "text": "A < B"
+    },
+    {
+      "id": "tgo-quantity-comparison-equations-d",
+      "text": "A + B ≤ A"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-equations-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. а мәнін табамыз:\n   18/37 = a/111 => 111 саны 37-ден 3 есе үлкен. Демек, a = 18 · 3 = 54.\n2. b мәнін табамыз:\n   b/105 = 11/15 => 105 саны 15-тен 7 есе үлкен. Демек, b = 11 · 7 = 77.\n3. Шамаларды есептейміз:\n   - А шамасы: 3a - b = 3(54) - 77 = 162 - 77 = 85.\n   - В шамасы: 2a + b = 2(54) + 77 = 108 + 77 = 185.\n\n85 < 185 болғандықтан, А < В."
 }
 ] as Question[];

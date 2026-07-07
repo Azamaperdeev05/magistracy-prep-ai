@@ -836,6 +836,90 @@ const TgoInequalityFraction: React.FC = () => {
   );
 };
 
+const TgoEquationSystem: React.FC<Extract<ChartData, { type: 'tgo_equation_system' }>> = ({ eq1, eq2 }) => {
+  return (
+    <ExamFigureFrame className="p-6 bg-white border border-slate-200">
+      <div className="flex items-center justify-center font-serif text-3xl font-bold select-none text-[#1e293b]">
+        {/* Large curly brace */}
+        <span className="text-6xl font-extralight mr-2 align-middle text-slate-800" style={{ transform: 'translateY(-2px)' }}>{'{'}</span>
+        {/* Equations stack */}
+        <div className="flex flex-col gap-2.5 text-left leading-none py-1">
+          <span>{eq1}</span>
+          <span>{eq2}</span>
+        </div>
+      </div>
+    </ExamFigureFrame>
+  );
+};
+
+const TgoComparisonEquations: React.FC<Extract<ChartData, { type: 'tgo_comparison_equations' }>> = ({
+  eq1Num, eq1Den, eq1Val,
+  eq2Num, eq2Den, eq2Val,
+  colAExpr, colBExpr
+}) => {
+  return (
+    <ExamFigureFrame className="p-6 bg-white border border-slate-200 space-y-6">
+      {/* Equations */}
+      <div className="flex flex-wrap items-center justify-center gap-10 font-serif text-2xl font-bold select-none text-[#1e293b]">
+        {/* Equation 1 */}
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center justify-center">
+            <span className="pb-0.5 px-1 border-b-2 border-slate-900 leading-none">{eq1Num}</span>
+            <span className="pt-0.5 px-1 leading-none">{eq1Den}</span>
+          </div>
+          <span>=</span>
+          <div className="flex flex-col items-center justify-center">
+            <span className="pb-0.5 px-1 border-b-2 border-slate-900 leading-none">a</span>
+            <span className="pt-0.5 px-1 leading-none">{eq1Val}</span>
+          </div>
+        </div>
+        
+        {/* AND / және */}
+        <span className="text-slate-500 font-semibold text-lg">және</span>
+
+        {/* Equation 2 */}
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center justify-center">
+            <span className="pb-0.5 px-1 border-b-2 border-slate-900 leading-none">b</span>
+            <span className="pt-0.5 px-1 leading-none">{eq2Val}</span>
+          </div>
+          <span>=</span>
+          <div className="flex flex-col items-center justify-center">
+            <span className="pb-0.5 px-1 border-b-2 border-slate-900 leading-none">{eq2Num}</span>
+            <span className="pt-0.5 px-1 leading-none">{eq2Den}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison Table */}
+      <div className="max-w-md mx-auto border border-slate-400 rounded-lg overflow-hidden bg-slate-50/50 shadow-sm">
+        <table className="w-full text-center border-collapse">
+          <thead>
+            <tr className="bg-slate-100 border-b border-slate-400">
+              <th className="py-2.5 px-4 font-serif text-base font-bold text-slate-800 border-r border-slate-400 w-1/2">
+                А шамасы
+              </th>
+              <th className="py-2.5 px-4 font-serif text-base font-bold text-slate-800 w-1/2">
+                В шамасы
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="py-5 px-4 border-r border-slate-400 bg-white font-serif text-2xl font-bold text-slate-700">
+                {colAExpr}
+              </td>
+              <td className="py-5 px-4 bg-white font-serif text-2xl font-bold text-slate-700">
+                {colBExpr}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ExamFigureFrame>
+  );
+};
+
 // Main ChartRenderer Component
 const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
   switch (chartData.type) {
@@ -879,6 +963,10 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoAngleBisector />;
     case 'tgo_inequality_fraction':
       return <TgoInequalityFraction />;
+    case 'tgo_equation_system':
+      return <TgoEquationSystem {...chartData} />;
+    case 'tgo_comparison_equations':
+      return <TgoComparisonEquations {...chartData} />;
     default:
       return null;
   }

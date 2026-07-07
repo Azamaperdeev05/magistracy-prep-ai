@@ -79,7 +79,14 @@ export type ChartData =
       colC: { header: string; whole?: string; num: string; den: string };
     }
   | { type: 'tgo_angle_bisector' }
-  | { type: 'tgo_inequality_fraction' };
+  | { type: 'tgo_inequality_fraction' }
+  | { type: 'tgo_equation_system'; eq1: string; eq2: string }
+  | {
+      type: 'tgo_comparison_equations';
+      eq1Num: string; eq1Den: string; eq1Val: string;
+      eq2Num: string; eq2Den: string; eq2Val: string;
+      colAExpr: string; colBExpr: string;
+    };
 
 export type TgoVisualData =
   | { type: 'triangle_bc'; totalBase: number; rightBase: number; leftHeight: number }

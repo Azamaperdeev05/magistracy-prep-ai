@@ -1591,5 +1591,78 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "type": "SINGLE",
   "topic": "Алгебра",
   "difficulty": "medium"
+},
+{
+  "id": "tgo-algebra-equation-system-solve",
+  "subjectId": "tgo",
+  "text": "Берілген теңдеулер жүйесінен x және y мәндерін табыңыз:",
+  "chartData": {
+    "type": "tgo_equation_system",
+    "eq1": "y + 3x = 1",
+    "eq2": "y + x - 2 = 5"
+  },
+  "options": [
+    {
+      "id": "tgo-algebra-equation-system-solve-a",
+      "text": "x = -5, y = 5"
+    },
+    {
+      "id": "tgo-algebra-equation-system-solve-b",
+      "text": "x = -3, y = 10"
+    },
+    {
+      "id": "tgo-algebra-equation-system-solve-c",
+      "text": "x = -2, y = 5"
+    },
+    {
+      "id": "tgo-algebra-equation-system-solve-d",
+      "text": "x = -2, y = 8"
+    },
+    {
+      "id": "tgo-algebra-equation-system-solve-e",
+      "text": "x = -1, y = 9"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-equation-system-solve-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "medium",
+  "hint": "Теңдеулер жүйесін шешу:\n1. Екінші теңдеуді түрлендіреміз:\n   y + x - 2 = 5 => y + x = 7\n2. Бірінші теңдеуден екінші теңдеуді азайтамыз:\n   (y + 3x) - (y + x) = 1 - 7\n   2x = -6 => x = -3\n3. x-тің мәнін қойып, y-ті табамыз:\n   y + (-3) = 7 => y = 10\n\nДемек, шешімі: x = -3, y = 10."
+},
+{
+  "id": "tgo-algebra-decimal-equation",
+  "subjectId": "tgo",
+  "text": "Теңдеуді шешіңіз:\n-1,22 · x = 6,1",
+  "options": [
+    {
+      "id": "tgo-algebra-decimal-equation-a",
+      "text": "-5"
+    },
+    {
+      "id": "tgo-algebra-decimal-equation-b",
+      "text": "1"
+    },
+    {
+      "id": "tgo-algebra-decimal-equation-c",
+      "text": "4"
+    },
+    {
+      "id": "tgo-algebra-decimal-equation-d",
+      "text": "-3"
+    },
+    {
+      "id": "tgo-algebra-decimal-equation-e",
+      "text": "-2"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-decimal-equation-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "easy",
+  "hint": "Теңдеуді шешу:\n-1,22 · x = 6,1\nx = 6,1 / (-1,22)\nx = -5."
 }
 ] as Question[];

@@ -1587,5 +1587,39 @@ export const tgoCriticalThinkingPercentagesQuestions = [
   "type": "SINGLE",
   "topic": "Пайыздар",
   "difficulty": "medium"
+},
+{
+  "id": "tgo-percentages-operator-tests",
+  "subjectId": "tgo",
+  "text": "Оператор бірінші күні компьютерде берілген тестінің 35%-ын терді. Екінші күні берілген тестінің 40%-ын терді. Екі күндік жұмыстан кейін теруге текстінің қанша пайызы қалғанын анықтаңыз.",
+  "options": [
+    {
+      "id": "tgo-percentages-operator-tests-a",
+      "text": "25%"
+    },
+    {
+      "id": "tgo-percentages-operator-tests-b",
+      "text": "39%"
+    },
+    {
+      "id": "tgo-percentages-operator-tests-c",
+      "text": "15%"
+    },
+    {
+      "id": "tgo-percentages-operator-tests-d",
+      "text": "49%"
+    },
+    {
+      "id": "tgo-percentages-operator-tests-e",
+      "text": "65%"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-percentages-operator-tests-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Пайыздар",
+  "difficulty": "easy",
+  "hint": "Есептің шешімі:\n1. Екі күнде терілген жалпы пайыз: 35% + 40% = 75%.\n2. Теруге қалған тестінің пайызы: 100% - 75% = 25%."
 }
 ] as Question[];
