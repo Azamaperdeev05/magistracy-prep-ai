@@ -1698,5 +1698,39 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "medium",
   "hint": "Теңдеуді шешу қадамдары:\n1. Жақшаларды ашамыз:\n   2x + 3x + 18 + 6x - 6 = 15 - 5x - 1\n2. Ұқсас мүшелерді біріктіреміз:\n   11x + 12 = 14 - 5x\n3. Айнымалыларды бір жаққа, сандарды екінші жаққа жинаймыз:\n   11x + 5x = 14 - 12\n   16x = 2\n4. x-ті табамыз:\n   x = 2/16 = 1/8 = 0,125."
+},
+{
+  "id": "tgo-algebra-decimal-product-comparison",
+  "subjectId": "tgo",
+  "text": "Дұрыс жауапты анықтаңыз:\nA = 6,2 · 2,1\nB = 4,1 · 1,2\nC = 2,2 · 7,1",
+  "options": [
+    {
+      "id": "tgo-algebra-decimal-product-comparison-a",
+      "text": "B > A > C"
+    },
+    {
+      "id": "tgo-algebra-decimal-product-comparison-b",
+      "text": "B < A < C"
+    },
+    {
+      "id": "tgo-algebra-decimal-product-comparison-c",
+      "text": "A < B < C"
+    },
+    {
+      "id": "tgo-algebra-decimal-product-comparison-d",
+      "text": "C < A < B"
+    },
+    {
+      "id": "tgo-algebra-decimal-product-comparison-e",
+      "text": "C < B < A"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-decimal-product-comparison-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "easy",
+  "hint": "Шешуі:\nӘр шаманың мәнін есептейміз:\n- A = 6,2 · 2,1 = 13,02\n- B = 4,1 · 1,2 = 4,92\n- C = 2,2 · 7,1 = 15,62\n\nОларды өсу ретімен орналастырсақ:\n4,92 < 13,02 < 15,62 => B < A < C."
 }
 ] as Question[];

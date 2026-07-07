@@ -1672,5 +1672,35 @@ export const tgoCriticalThinkingInequalitiesQuestions = [
   "topic": "Теңсіздіктер",
   "difficulty": "medium",
   "hint": "Теңсіздікті шешу қадамдары:\n1. Екі жағын да 2-ге көбейтеміз:\n   3 · (6 + 4x) ≤ 2 · (-2x + 5)\n   18 + 12x ≤ -4x + 10\n2. Белгісіз айнымалыларды сол жаққа, бос мүшелерді оң жаққа жинаймыз:\n   12x + 4x ≤ 10 - 18\n   16x ≤ -8\n3. 16-ға бөлеміз:\n   x ≤ -8/16\n   x ≤ -0,5\n\nДемек, шешімі: (-∞; -0,5]."
+},
+{
+  "id": "tgo-inequalities-quadratic-simple",
+  "subjectId": "tgo",
+  "text": "(y + 6)(y - 6) < 64 теңсіздігінің шешімі",
+  "options": [
+    {
+      "id": "tgo-inequalities-quadratic-simple-a",
+      "text": "(-10; 10]"
+    },
+    {
+      "id": "tgo-inequalities-quadratic-simple-b",
+      "text": "(-∞; -10) ∪ (10; +∞)"
+    },
+    {
+      "id": "tgo-inequalities-quadratic-simple-c",
+      "text": "(-10; 10)"
+    },
+    {
+      "id": "tgo-inequalities-quadratic-simple-d",
+      "text": "(-∞; -10] ∪ [10; +∞)"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-inequalities-quadratic-simple-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Теңсіздіктер",
+  "difficulty": "easy",
+  "hint": "Теңсіздікті шешу:\n(y + 6)(y - 6) < 64\ny² - 36 < 64\ny² < 100\n|y| < 10 => -10 < y < 10\n\nДемек, шешімі интервал түрінде: (-10; 10)."
 }
 ] as Question[];
