@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers, QuestionType } from '../types';
 import { SUBJECTS } from '../constants';
-import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, BrainCircuit, X, Send, AlertTriangle } from 'lucide-react';
+import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, BrainCircuit, X, Send, AlertTriangle, Clock } from 'lucide-react';
 import { askAiQuestion, ChatMessage, getAiExplanation, AiQuestionContext } from '../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';
 import { getTheoryForQuestion } from '../data/textbooks';
-import { checkAndIncrementAiLimit } from '../services/authService';
+import { checkAndIncrementAiLimit, UserProfile } from '../services/authService';
 
 // Import Modals
 import SectionsModal from './modals/SectionsModal';
@@ -24,7 +24,7 @@ interface TestScreenProps {
   questions: Question[];
   durationMinutes: number;
   onFinish: (answers: UserAnswers) => void;
-  userName: string;
+  user: UserProfile;
 }
 
 const buildAiQuestionContext = (question: Question): AiQuestionContext => ({
@@ -37,9 +37,64 @@ const buildAiQuestionContext = (question: Question): AiQuestionContext => ({
   chartData: question.chartData,
 });
 
-const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onFinish, userName }) => {
+const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onFinish, user }) => {
   const { subjectId, qIndex } = useParams<{ subjectId: string; qIndex: string }>();
   const navigate = useNavigate();
+  const userName = user.full_name;
+
+  // Timer State
+  const [isTimerEnabled, setIsTimerEnabled] = useState(() => {
+    if (!user.is_premium) return true; // Free users: timer is mandatory
+    const saved = localStorage.getItem('is_timer_enabled');
+    return saved !== 'false';
+  });
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const durationSeconds = durationMinutes * 60;
+    const savedStart = localStorage.getItem('active_test_start_time');
+    if (savedStart) {
+      const elapsed = Math.floor((Date.now() - Number(savedStart)) / 1000);
+      return Math.max(0, durationSeconds - elapsed);
+    } else {
+      const now = Date.now().toString();
+      localStorage.setItem('active_test_start_time', now);
+      return durationSeconds;
+    }
+  });
+
+  const submitTestResult = (finalAnswers = answers) => {
+    localStorage.removeItem('active_test_start_time');
+    localStorage.removeItem('active_test_answers');
+    onFinish(finalAnswers);
+  };
+
+  useEffect(() => {
+    if (!isTimerEnabled) return;
+    if (timeLeft <= 0) {
+      submitTestResult();
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          submitTestResult();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isTimerEnabled, timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h > 0 ? h + ':' : ''}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   // State
   const [answers, setAnswers] = useState<UserAnswers>(() => {
@@ -98,7 +153,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
     if (!check.allowed) {
       const limitMsg: ChatMessage = { 
         role: 'assistant', 
-        content: `⚠️ Күнделікті ИИ сұраныс лимитіңіз бітті (10 сұрақ). Шексіз қолдану үшін Premium жазылымға өтіңіз немесе ертең қайта көріңіз.` 
+        content: `⚠️ ИИ Мұғалім көмегі мен сұрақ түсіндірмелері тек Premium жазылушыларға қолжетімді. Платформаның барлық мүмкіндігін ашу үшін Premium тарифке өтіңіз.` 
       };
       setChatHistories(prev => ({
         ...prev,
@@ -152,7 +207,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
     if (!check.allowed) {
       setAnalysisResponses(prev => ({
         ...prev,
-        [currentQuestionId]: `⚠️ Күнделікті ИИ сұраныс лимитіңіз бітті (10 сұрақ). Шексіз қолдану үшін Premium жазылымға өтіңіз немесе ертең қайта көріңіз.`,
+        [currentQuestionId]: `⚠️ ИИ Мұғалім көмегі мен сұрақ түсіндірмелері тек Premium жазылушыларға қолжетімді. Платформаның барлық мүмкіндігін ашу үшін Premium тарифке өтіңіз.`,
       }));
       return;
     }
@@ -310,7 +365,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
     } else {
       triggerConfirm(
         "Бұл соңғы пән. Тестті аяқтауға сенімдісіз бе?",
-        () => onFinish(answers),
+        () => submitTestResult(answers),
         "Аяқтау"
       );
     }
@@ -319,7 +374,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const handleFinish = () => {
     triggerConfirm(
       "Тестті аяқтауға сенімдісіз бе?",
-      () => onFinish(answers),
+      () => submitTestResult(answers),
       "Аяқтау"
     );
   };
@@ -353,6 +408,25 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                  <span>{userName || 'Пердеев Азамат'}</span>
               </div>
           </div>
+
+          {/* Timer Display */}
+          <div className="flex items-center gap-2.5 bg-black/10 border border-white/10 px-3 py-1 rounded-full text-xs font-black shadow-inner">
+            <Clock className="w-4 h-4 text-sky-200" />
+            <span className="font-mono text-white tracking-widest">{isTimerEnabled ? formatTime(timeLeft) : 'Шектеусіз'}</span>
+            {user.is_premium && (
+              <button
+                onClick={() => {
+                  const nextVal = !isTimerEnabled;
+                  setIsTimerEnabled(nextVal);
+                  localStorage.setItem('is_timer_enabled', String(nextVal));
+                }}
+                className="px-2 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded text-[10px] uppercase font-bold active:scale-95 transition"
+              >
+                {isTimerEnabled ? 'Өшіру' : 'Қосу'}
+              </button>
+            )}
+          </div>
+
           <button 
               onClick={handleNextSubject}
               className="bg-white text-[#348FE2] px-2 md:px-4 py-1 rounded-[3px] text-[10px] md:text-xs font-bold hover:bg-slate-50 transition shadow-sm uppercase tracking-tight whitespace-nowrap"

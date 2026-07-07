@@ -17,6 +17,7 @@ import SpecialtiesScreen from './components/SpecialtiesScreen';
 import TestSetupScreen from './components/TestSetupScreen';
 import ConsentGateScreen from './components/ConsentGateScreen';
 import AdminScreen from './components/AdminScreen';
+import { Shield } from 'lucide-react';
 import ConfirmModal from './components/modals/ConfirmModal';
 import UpgradeModal from './components/modals/UpgradeModal';
 
@@ -221,6 +222,46 @@ const RootApp: React.FC = () => {
     );
   }
 
+  // If device limit exceeded, show the Device Lock page!
+  if (user.is_device_limit_exceeded) {
+    return (
+      <div className="min-h-screen bg-[#07090d] flex items-center justify-center p-6 text-center select-none text-slate-200">
+        <div className="bg-[#0f1219] border border-red-500/25 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6">
+          <div className="w-16 h-16 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl flex items-center justify-center mx-auto animate-pulse">
+            <Shield className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black text-white tracking-tight uppercase">Құрылғы саны шектеулі</h2>
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Қауіпсіздік жүйесі</p>
+          </div>
+          <p className="text-sm text-slate-400 font-medium leading-relaxed">
+            Сливки және аккаунтты таратуды қорғау мақсатында бір профильге ең көбі **2 құрылғы** байлауға рұқсат етілген. 
+            Сіз бұл шектеуден асып кеттіңіз.
+          </p>
+          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-4 text-xs text-left text-slate-500 font-semibold space-y-1">
+            <div>• Құрылғыңыз өзгерді ме?</div>
+            <div>• Басқа браузер немесе режиммен кірдіңіз бе?</div>
+            <div>• Ескі құрылғыларды нөлдету үшін әкімшімен хабарласыңыз.</div>
+          </div>
+          <div className="pt-2 flex flex-col gap-3">
+            <a 
+              href="mailto:azamaperdeev05@gmail.com" 
+              className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-[0.98] block text-center"
+            >
+              Әкімшіге хабарласу
+            </a>
+            <button 
+              onClick={handleLogout}
+              className="w-full py-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-400 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all active:scale-[0.98]"
+            >
+              Аккаунттан шығу
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Authenticated: show main app
   return (
     <div className="font-sans">
@@ -297,7 +338,7 @@ const RootApp: React.FC = () => {
                 questions={questions} 
                 durationMinutes={EXAM_DURATION_MINUTES} 
                 onFinish={handleFinishTest}
-                userName={user.full_name}
+                user={user}
               />
             ) : (
               <Navigate to="/home" replace />

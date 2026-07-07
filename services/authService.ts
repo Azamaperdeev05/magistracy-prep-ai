@@ -55,6 +55,8 @@ export interface UserProfile {
   is_premium?: boolean;
   ai_queries_today?: number;
   ai_queries_date?: string;
+  active_devices?: string[];
+  is_device_limit_exceeded?: boolean;
 }
 
 export interface AuthResponse {
@@ -227,6 +229,15 @@ export async function logout(): Promise<void> {
   removeToken();
 }
 
+export function getDeviceId(): string {
+  let deviceId = localStorage.getItem('magistracy_device_id');
+  if (!deviceId) {
+    deviceId = 'dev_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem('magistracy_device_id', deviceId);
+  }
+  return deviceId;
+}
+
 /** Профиль алу */
 export async function getProfile(): Promise<UserProfile> {
   ensureFirebaseReady();
@@ -242,6 +253,10 @@ export async function getProfile(): Promise<UserProfile> {
   let isPremium = false;
   let aiQueriesToday = 0;
   let aiQueriesDate = "";
+  let activeDevices: string[] = [];
+  let isDeviceLimitExceeded = false;
+
+  const currentDeviceId = getDeviceId();
 
   // Synchronize with Firestore database if online/db is ready
   if (db) {
@@ -253,12 +268,30 @@ export async function getProfile(): Promise<UserProfile> {
         isPremium = !!data.is_premium;
         aiQueriesToday = data.ai_queries_today || 0;
         aiQueriesDate = data.ai_queries_date || "";
+        activeDevices = data.active_devices || [];
+
+        // Check device limit (Max: 2)
+        if (activeDevices.includes(currentDeviceId)) {
+          // Device is already registered
+        } else {
+          if (activeDevices.length < 2) {
+            // Register new device ID
+            const updatedDevices = [...activeDevices, currentDeviceId];
+            await updateDoc(userDocRef, { active_devices: updatedDevices });
+            activeDevices = updatedDevices;
+          } else {
+            // Exceeded limit!
+            isDeviceLimitExceeded = true;
+          }
+        }
       } else {
-        // Create initial document
+        // Create initial document and bind current device
+        activeDevices = [currentDeviceId];
         await setDoc(userDocRef, {
           email: currentUser.email || "",
           full_name: currentUser.displayName || savedUser?.full_name || 'Қолданушы',
           is_premium: false,
+          active_devices: activeDevices,
           created_at: new Date().toISOString()
         });
       }
@@ -267,6 +300,8 @@ export async function getProfile(): Promise<UserProfile> {
       isPremium = !!savedUser?.is_premium;
       aiQueriesToday = savedUser?.ai_queries_today || 0;
       aiQueriesDate = savedUser?.ai_queries_date || "";
+      activeDevices = savedUser?.active_devices || [];
+      isDeviceLimitExceeded = !!savedUser?.is_device_limit_exceeded;
     }
   }
 
@@ -287,7 +322,9 @@ export async function getProfile(): Promise<UserProfile> {
     consent: savedUser?.consent,
     is_premium: isPremium,
     ai_queries_today: aiQueriesToday,
-    ai_queries_date: aiQueriesDate
+    ai_queries_date: aiQueriesDate,
+    active_devices: activeDevices,
+    is_device_limit_exceeded: isDeviceLimitExceeded
   };
   saveUser(profile);
   return profile;
@@ -472,33 +509,12 @@ export function checkAndIncrementAiLimit(maxDailyLimit: number = 10): { allowed:
   const user = getSavedUser();
   if (!user) return { allowed: false, remaining: 0 };
 
-  // Premium users have no limit
-  if (user.is_premium) {
-    return { allowed: true, remaining: 9999 };
-  }
-
-  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Almaty' }); // YYYY-MM-DD reliably
-  const currentCount = user.ai_queries_today || 0;
-  const lastQueryDate = user.ai_queries_date || "";
-
-  let newCount = currentCount;
-  if (lastQueryDate !== todayStr) {
-    // New day, reset count
-    newCount = 0;
-  }
-
-  if (newCount >= maxDailyLimit) {
+  // AI is strictly premium-only
+  if (!user.is_premium) {
     return { allowed: false, remaining: 0 };
   }
 
-  // Increment and save
-  newCount += 1;
-  updateUserProfileFields({
-    ai_queries_today: newCount,
-    ai_queries_date: todayStr
-  });
-
-  return { allowed: true, remaining: maxDailyLimit - newCount };
+  return { allowed: true, remaining: 9999 };
 }
 
 export async function deleteUserAccountAndHistory(): Promise<void> {
