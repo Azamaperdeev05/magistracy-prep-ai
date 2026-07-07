@@ -1732,5 +1732,73 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "easy",
   "hint": "Шешуі:\nӘр шаманың мәнін есептейміз:\n- A = 6,2 · 2,1 = 13,02\n- B = 4,1 · 1,2 = 4,92\n- C = 2,2 · 7,1 = 15,62\n\nОларды өсу ретімен орналастырсақ:\n4,92 < 13,02 < 15,62 => B < A < C."
+},
+{
+  "id": "tgo-algebra-fraction-equation-y",
+  "subjectId": "tgo",
+  "text": "Теңдеуді шешіңдер:\ny/2 – y/8 = y/8 + 1",
+  "options": [
+    {
+      "id": "tgo-algebra-fraction-equation-y-a",
+      "text": "y = 2"
+    },
+    {
+      "id": "tgo-algebra-fraction-equation-y-b",
+      "text": "y = – 4"
+    },
+    {
+      "id": "tgo-algebra-fraction-equation-y-c",
+      "text": "y = 4"
+    },
+    {
+      "id": "tgo-algebra-fraction-equation-y-d",
+      "text": "y = – 2"
+    },
+    {
+      "id": "tgo-algebra-fraction-equation-y-e",
+      "text": "y = 3"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-fraction-equation-y-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "medium",
+  "hint": "Теңдеуді шешу:\ny/2 - y/8 = y/8 + 1\n\n1. Белгісіз айнымалылары бар барлық мүшелерді сол жаққа өткіземіз:\n   y/2 - y/8 - y/8 = 1\n   y/2 - 2y/8 = 1\n   y/2 - y/4 = 1\n2. Бөлшектерді жою үшін теңдеудің екі жағын да 4-ке көбейтеміз:\n   2y - y = 4\n   y = 4."
+},
+{
+  "id": "tgo-algebra-quadratic-roots-sum",
+  "subjectId": "tgo",
+  "text": "Теңдеудің түбірлерінің қосындысын табыңдар.\nx² – 7x + 6 = 0",
+  "options": [
+    {
+      "id": "tgo-algebra-quadratic-roots-sum-a",
+      "text": "9"
+    },
+    {
+      "id": "tgo-algebra-quadratic-roots-sum-b",
+      "text": "8"
+    },
+    {
+      "id": "tgo-algebra-quadratic-roots-sum-c",
+      "text": "6"
+    },
+    {
+      "id": "tgo-algebra-quadratic-roots-sum-d",
+      "text": "5"
+    },
+    {
+      "id": "tgo-algebra-quadratic-roots-sum-e",
+      "text": "7"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-quadratic-roots-sum-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "easy",
+  "hint": "Теориялық шешуі:\nВиет теоремасы бойынша келтірілген квадраттық теңдеуде (x² + px + q = 0) түбірлердің қосындысы қарсы таңбамен алынған екінші коэффициентке тең:\nx₁ + x₂ = -p\n\nx² - 7x + 6 = 0 теңдеуінде p = -7, демек:\nx₁ + x₂ = -(-7) = 7.\n\nТүбірлерін тікелей тауып тексеру:\nx² - 7x + 6 = (x - 6)(x - 1) = 0 => түбірлері x₁ = 6 және x₂ = 1.\nОлардың қосындысы: 6 + 1 = 7."
 }
 ] as Question[];

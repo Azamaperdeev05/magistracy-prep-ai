@@ -2717,5 +2717,123 @@ export const tgoCriticalThinkingTablesAndGraphsQuestions = [
   "topic": "Кестелер мен графиктер",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. Барлық адамдардың орташа жүгіру уақытын табамыз:\n   Орташа мән = (14,1 + 18,2 + 15,5 + 16,2 + 22,4) / 5 = 86,4 / 5 = 17,28 секунд.\n2. Ең аз уақыт жүгірген адамды анықтаймыз:\n   Назерке = 14,1 секунд.\n3. Орташа мән мен ең аз уақыттың айырмасын табамыз:\n   17,28 - 14,1 = 3,18 секунд."
+},
+{
+  "id": "tgo-tables-and-graphs-mean-table-missing",
+  "subjectId": "tgo",
+  "text": "Бағанды салыстырыңыз:",
+  "chartData": {
+    "type": "table",
+    "headers": [
+      "Бірінші сан",
+      "Екінші сан",
+      "Үшінші сан",
+      "Арифметикалық орта"
+    ],
+    "rows": [
+      [
+        "?",
+        4,
+        3,
+        3
+      ],
+      [
+        21,
+        15,
+        33,
+        "?"
+      ],
+      [
+        "?",
+        6,
+        9,
+        9
+      ]
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-mean-table-missing-a",
+      "text": "4; 22; 12"
+    },
+    {
+      "id": "tgo-tables-and-graphs-mean-table-missing-b",
+      "text": "2; 22; 15"
+    },
+    {
+      "id": "tgo-tables-and-graphs-mean-table-missing-c",
+      "text": "2; 25; 12"
+    },
+    {
+      "id": "tgo-tables-and-graphs-mean-table-missing-d",
+      "text": "2; 22; 12"
+    },
+    {
+      "id": "tgo-tables-and-graphs-mean-table-missing-e",
+      "text": "2; 23; 12"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-mean-table-missing-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. 1-ші жолдағы жетіспейтін бірінші санды (x₁) табамыз:\n   (x₁ + 4 + 3) / 3 = 3 => x₁ + 7 = 9 => x₁ = 2.\n2. 2-ші жолдағы орташа мәнді (m₂) есептейміз:\n   m₂ = (21 + 15 + 33) / 3 = 69 / 3 = 23.\n3. 3-ші жолдағы жетіспейтін бірінші санды (x₃) табамыз:\n   (x₃ + 6 + 9) / 3 = 9 => x₃ + 15 = 27 => x₃ = 12.\n\nСонымен, жетіспейтін мәндер сәйкесінше: 2; 23; 12."
+},
+{
+  "id": "tgo-tables-and-graphs-students-pie-chart",
+  "subjectId": "tgo",
+  "text": "Диаграммада 10-сынып оқушыларының сандық құрамы көрсетілген. Мектептегі барлық 10-сынып оқушыларының саны 200 болса, 10 «Б» және 10 «В» сыныптарында барлығы неше оқушы бар екенін табыңыз.",
+  "chartData": {
+    "type": "pie",
+    "data": [
+      30,
+      25,
+      20,
+      25
+    ],
+    "labels": [
+      "10 «А» (30%)",
+      "10 «Ә» (25%)",
+      "10 «В» (20%)",
+      "10 «Б» (25%)"
+    ],
+    "colors": [
+      "#3b82f6",
+      "#ef4444",
+      "#10b981",
+      "#8b5cf6"
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-students-pie-chart-a",
+      "text": "100"
+    },
+    {
+      "id": "tgo-tables-and-graphs-students-pie-chart-b",
+      "text": "90"
+    },
+    {
+      "id": "tgo-tables-and-graphs-students-pie-chart-c",
+      "text": "80"
+    },
+    {
+      "id": "tgo-tables-and-graphs-students-pie-chart-d",
+      "text": "70"
+    },
+    {
+      "id": "tgo-tables-and-graphs-students-pie-chart-e",
+      "text": "110"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-students-pie-chart-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. 10 «В» сыныбының пайызын табамыз (секторлардың қосындысы 100% болуы тиіс):\n   100% - (30% + 25% + 25%) = 100% - 80% = 20%.\n2. 10 «Б» және 10 «В» сыныптарындағы оқушылардың жалпы үлесі:\n   25% (10 Б) + 20% (10 В) = 45%.\n3. Жалпы 200 оқушының 45%-ын есептейміз:\n   200 · 0,45 = 90 оқушы."
 }
 ] as Question[];

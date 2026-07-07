@@ -2115,5 +2115,135 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "topic": "Салыстыру есептері",
   "difficulty": "easy",
   "hint": "Шешуі:\n1. А шамасының теңдеуін шешеміз:\n   7x - 49 = 343\n   7x = 343 + 49\n   7x = 392\n   x = 56\n   Сонымен, А шамасы = 56.\n\n2. В шамасының теңдеуін шешеміз:\n   (24 + 2x) ÷ 4 = 7\n   24 + 2x = 7 · 4\n   24 + 2x = 28\n   2x = 4\n   x = 2\n   Сонымен, В шамасы = 2.\n\n3. Шамаларды салыстырамыз:\n   56 > 2, яғни А шамасы үлкен."
+},
+{
+  "id": "tgo-quantity-comparison-exponents-negative",
+  "subjectId": "tgo",
+  "text": "Бағанды салыстырыңыз:",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": {
+      "header": "А шамасы",
+      "content": "– 2⁴"
+    },
+    "columnB": {
+      "header": "В шамасы",
+      "content": "– 4²"
+    },
+    "question": "Бағанды салыстырыңыз:"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-exponents-negative-a",
+      "text": "Берілген мәлімет жеткіліксіз"
+    },
+    {
+      "id": "tgo-quantity-comparison-exponents-negative-b",
+      "text": "А шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-exponents-negative-c",
+      "text": "Шамалар тең"
+    },
+    {
+      "id": "tgo-quantity-comparison-exponents-negative-d",
+      "text": "В шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-exponents-negative-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "easy",
+  "hint": "Шешуі:\n1. А шамасы: -2⁴ = -(2⁴) = -16.\n2. В шамасы: -4² = -(4²) = -16.\n3. Салыстырамыз: -16 = -16, яғни шамалар тең."
+},
+{
+  "id": "tgo-quantity-comparison-triangle-circle",
+  "subjectId": "tgo",
+  "text": "Берілген кестедегі мәлімет бойынша дұрыс тұжырымды көрсетіңіз",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": {
+      "header": "А шамасы",
+      "content": "Тең қабырғалы үшбұрыштың периметрі 27 см. Үшбұрыштың қабырғасын табу"
+    },
+    "columnB": {
+      "header": "В шамасы",
+      "content": "Дөңгелек ауданы 100π см². Дөңгелек радиусын табыңыз."
+    },
+    "question": "Берілген кестедегі мәлімет бойынша дұрыс тұжырымды көрсетіңіз"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-triangle-circle-a",
+      "text": "A = B"
+    },
+    {
+      "id": "tgo-quantity-comparison-triangle-circle-b",
+      "text": "2A > B"
+    },
+    {
+      "id": "tgo-quantity-comparison-triangle-circle-c",
+      "text": "A < B"
+    },
+    {
+      "id": "tgo-quantity-comparison-triangle-circle-d",
+      "text": "A = 2B"
+    },
+    {
+      "id": "tgo-quantity-comparison-triangle-circle-e",
+      "text": "A > B"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-triangle-circle-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. А шамасын табамыз:\n   Тең қабырғалы үшбұрыштың периметрі P = 3a = 27 см => қабырғасы a = 27 / 3 = 9 см.\n   Сонымен, А шамасы = 9.\n\n2. В шамасын табамыз:\n   Дөңгелек ауданы S = πR² = 100π см² => R² = 100 => радиусы R = 10 см.\n   Сонымен, В шамасы = 10.\n\n3. Тұжырымдарды тексереміз:\n   9 < 10, яғни A < B. Бұл C нұсқасына сәйкес келеді."
+},
+{
+  "id": "tgo-quantity-comparison-fractions-sum-ratio",
+  "subjectId": "tgo",
+  "text": "Бағанды салыстырыңыз:",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": {
+      "header": "А шамасы",
+      "content": "3/4 + 3/5"
+    },
+    "columnB": {
+      "header": "В шамасы",
+      "content": "3/4 : 6/16"
+    },
+    "question": "Бағанды салыстырыңыз:"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-fractions-sum-ratio-a",
+      "text": "Берілген мәлімет жеткіліксіз"
+    },
+    {
+      "id": "tgo-quantity-comparison-fractions-sum-ratio-b",
+      "text": "А шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-fractions-sum-ratio-c",
+      "text": "Шамалар тең"
+    },
+    {
+      "id": "tgo-quantity-comparison-fractions-sum-ratio-d",
+      "text": "В шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-fractions-sum-ratio-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. А шамасы:\n   3/4 + 3/5 = (15 + 12) / 20 = 27/20 = 1.35.\n2. В шамасы:\n   3/4 : 6/16 = 3/4 · 16/6 = (3 · 16) / (4 · 6) = 48/24 = 2.\n3. Салыстырамыз: 1.35 < 2, яғни В шамасы үлкен."
 }
 ] as Question[];
