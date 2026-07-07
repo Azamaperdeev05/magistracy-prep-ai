@@ -1664,5 +1664,39 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "easy",
   "hint": "Теңдеуді шешу:\n-1,22 · x = 6,1\nx = 6,1 / (-1,22)\nx = -5."
+},
+{
+  "id": "tgo-algebra-brackets-equation",
+  "subjectId": "tgo",
+  "text": "Теңдеуді шешіңіз:\n2x + 3(x + 6) + 6(x - 1) = 5(3 - x) - 1",
+  "options": [
+    {
+      "id": "tgo-algebra-brackets-equation-a",
+      "text": "0,125"
+    },
+    {
+      "id": "tgo-algebra-brackets-equation-b",
+      "text": "0,425"
+    },
+    {
+      "id": "tgo-algebra-brackets-equation-c",
+      "text": "0,525"
+    },
+    {
+      "id": "tgo-algebra-brackets-equation-d",
+      "text": "0,225"
+    },
+    {
+      "id": "tgo-algebra-brackets-equation-e",
+      "text": "0,325"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-brackets-equation-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "medium",
+  "hint": "Теңдеуді шешу қадамдары:\n1. Жақшаларды ашамыз:\n   2x + 3x + 18 + 6x - 6 = 15 - 5x - 1\n2. Ұқсас мүшелерді біріктіреміз:\n   11x + 12 = 14 - 5x\n3. Айнымалыларды бір жаққа, сандарды екінші жаққа жинаймыз:\n   11x + 5x = 14 - 12\n   16x = 2\n4. x-ті табамыз:\n   x = 2/16 = 1/8 = 0,125."
 }
 ] as Question[];
