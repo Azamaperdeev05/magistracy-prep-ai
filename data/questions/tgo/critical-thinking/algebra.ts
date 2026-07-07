@@ -1898,5 +1898,39 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "easy",
   "hint": "Шешуі:\nЕкінші санды табу үшін қосындыдан бірінші санды азайтамыз:\n20,6 - 13,8 = 6,8.\n\nДемек, екінші санның мәні 6,8."
+},
+{
+  "id": "tgo-algebra-exponents-equality-mn",
+  "subjectId": "tgo",
+  "text": "Егер m және n оң бүтін сандар үшін 2¹⁸ · 3ᵐ = 12ⁿ теңдігі орындалса, онда m санының мәнін табыңыз.",
+  "options": [
+    {
+      "id": "tgo-algebra-exponents-equality-mn-a",
+      "text": "16"
+    },
+    {
+      "id": "tgo-algebra-exponents-equality-mn-b",
+      "text": "18"
+    },
+    {
+      "id": "tgo-algebra-exponents-equality-mn-c",
+      "text": "4"
+    },
+    {
+      "id": "tgo-algebra-exponents-equality-mn-d",
+      "text": "8"
+    },
+    {
+      "id": "tgo-algebra-exponents-equality-mn-e",
+      "text": "9"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-exponents-equality-mn-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. 12-ні жай көбейткіштерге жіктейміз:\n   12 = 2² · 3\n\n2. Онда теңдіктің оң жағын жазамыз:\n   12ⁿ = (2² · 3)ⁿ = 2²ⁿ · 3ⁿ\n\n3. Бастапқы теңдікке қоямыз:\n   2¹⁸ · 3ᵐ = 2²ⁿ · 3ⁿ\n\n4. Дәреже көрсеткіштерін теңестіреміз:\n   - 2 үшін: 18 = 2n → n = 9\n   - 3 үшін: m = n\n\n5. Олай болса, m = 9."
 }
 ] as Question[];

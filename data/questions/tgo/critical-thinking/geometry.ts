@@ -2040,5 +2040,69 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "easy",
   "hint": "Шешуі:\nСандық түзуде нүктелер солдан оңға қарай орналасады: R, S, T(-1), U(0), V(1).\nСол жағында орналасқан нүкте ең кіші координатаға ие болады.\nR — ең сол жақтағы нүкте, демек оның координатасы ең кіші."
+},
+{
+  "id": "tgo-geometry-circle-sectors-a-value",
+  "subjectId": "tgo",
+  "text": "Дөңгелек секторларға бөлінген. Берілген бұрыштары: a°, b° - a°/2, a°/2 + 2b°, 2a° - 2b°, 2a° - b°.\na° бұрышының мәнін табыңыз.",
+  "options": [
+    {
+      "id": "tgo-geometry-circle-sectors-a-value-a",
+      "text": "72"
+    },
+    {
+      "id": "tgo-geometry-circle-sectors-a-value-b",
+      "text": "70"
+    },
+    {
+      "id": "tgo-geometry-circle-sectors-a-value-c",
+      "text": "68"
+    },
+    {
+      "id": "tgo-geometry-circle-sectors-a-value-d",
+      "text": "75"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-circle-sectors-a-value-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "medium",
+  "hint": "Шешуі:\nДөңгелектің толық бұрышы 360°-қа тең. Барлық сектор бұрыштарының қосындысын 360°-қа теңестіреміз:\n\na + (b - a/2) + (2a - b) + (a/2 + 2b) + (2a - 2b) = 360\n\na + b - a/2 + 2a - b + a/2 + 2b + 2a - 2b = 360\n\nҰқсас мүшелерді біріктіреміз:\n- a мүшелері: a - a/2 + 2a + a/2 + 2a = 5a\n- b мүшелері: b - b + 2b - 2b = 0\n\n5a = 360\na = 72.\n\nДемек, a° бұрышының мәні 72."
+},
+{
+  "id": "tgo-geometry-circle-inscribed-diameter-angle",
+  "subjectId": "tgo",
+  "text": "AB және CD — диаметр болса, онда x° — бұрыштың мәнін табыңыз. (Берілген бұрыш AOC = 32°, x бұрышы — ADC бұрышы)",
+  "options": [
+    {
+      "id": "tgo-geometry-circle-inscribed-diameter-angle-a",
+      "text": "16"
+    },
+    {
+      "id": "tgo-geometry-circle-inscribed-diameter-angle-b",
+      "text": "32"
+    },
+    {
+      "id": "tgo-geometry-circle-inscribed-diameter-angle-c",
+      "text": "36"
+    },
+    {
+      "id": "tgo-geometry-circle-inscribed-diameter-angle-d",
+      "text": "13"
+    },
+    {
+      "id": "tgo-geometry-circle-inscribed-diameter-angle-e",
+      "text": "58"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-circle-inscribed-diameter-angle-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. AOC бұрышы — орталық бұрыш, ол AC доғасына тіреледі. Сондықтан AC доғасының шамасы 32°-қа тең.\n2. ADC бұрышы (яғни x°) — іштей сызылған бұрыш. Ол да сол AC доғасына тіреледі.\n3. Іштей сызылған бұрыштың шамасы оған сәйкес келетін орталық бұрыштың немесе тірелетін доғасының жартысына тең:\n   x = AOC / 2 = 32 / 2 = 16°."
 }
 ] as Question[];

@@ -2937,5 +2937,49 @@ export const tgoCriticalThinkingTablesAndGraphsQuestions = [
   "topic": "Кестелер мен графиктер",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. Диаграммадан емтихан ұпайларын анықтаймыз:\n   50, 20, 70, 50, 30.\n2. Бұл ұпайлардың арифметикалық ортасын есептейміз:\n   Орташа мән = (50 + 20 + 70 + 50 + 30) / 5 = 220 / 5 = 44."
+},
+{
+  "id": "tgo-tables-and-graphs-park-trees-pie-chart",
+  "subjectId": "tgo",
+  "text": "Диаграммада барлығы 500 түп ағаш отырғызылған саябақ көрсетілген. Қарағай ағашының санын табыңыз.",
+  "chartData": {
+    "type": "pie",
+    "data": [23, 25, 27, 25],
+    "labels": [
+      "Қарағай (23%)",
+      "Қайың (25%)",
+      "Емен (27%)",
+      "Басқа ағаштар (25%)"
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-park-trees-pie-chart-a",
+      "text": "105"
+    },
+    {
+      "id": "tgo-tables-and-graphs-park-trees-pie-chart-b",
+      "text": "115"
+    },
+    {
+      "id": "tgo-tables-and-graphs-park-trees-pie-chart-c",
+      "text": "95"
+    },
+    {
+      "id": "tgo-tables-and-graphs-park-trees-pie-chart-d",
+      "text": "125"
+    },
+    {
+      "id": "tgo-tables-and-graphs-park-trees-pie-chart-e",
+      "text": "135"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-park-trees-pie-chart-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "easy",
+  "hint": "Шешуі:\n1. Қарағай ағашының үлесі диаграмма бойынша 23% құрайды.\n2. Барлық ағаш саны — 500.\n3. Қарағай ағаштарының санын табамыз:\n   500 · 23% = 500 · 0,23 = 115 ағаш."
 }
 ] as Question[];
