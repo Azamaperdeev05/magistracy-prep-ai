@@ -2608,8 +2608,59 @@ export const tgoCriticalThinkingTablesAndGraphsQuestions = [
   "correctOptionIds": [
     "tgo-tables-and-graphs-generated-044-b"
   ],
+  "difficulty": "medium"
+},
+{
+  "id": "tgo-tables-and-graphs-crime-seasons",
+  "subjectId": "tgo",
+  "text": "Жоғарыдағы кестеде бір жылда болған қылмыс саны, мезгілмен көрсетілген. Қыс және көктем мезгілінде болған қылмыстар санының айырымы?",
+  "chartData": {
+    "type": "table",
+    "headers": [
+      "Мезгіл",
+      "Қыс",
+      "Көктем",
+      "Жаз",
+      "Күз"
+    ],
+    "rows": [
+      [
+        "Қылмыс саны",
+        602,
+        785,
+        690,
+        594
+      ]
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-crime-seasons-a",
+      "text": "181"
+    },
+    {
+      "id": "tgo-tables-and-graphs-crime-seasons-b",
+      "text": "184"
+    },
+    {
+      "id": "tgo-tables-and-graphs-crime-seasons-c",
+      "text": "185"
+    },
+    {
+      "id": "tgo-tables-and-graphs-crime-seasons-d",
+      "text": "183"
+    },
+    {
+      "id": "tgo-tables-and-graphs-crime-seasons-e",
+      "text": "182"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-crime-seasons-d"
+  ],
   "type": "SINGLE",
   "topic": "Кестелер мен графиктер",
-  "difficulty": "medium"
+  "difficulty": "easy",
+  "hint": "Есептің шешімі:\n1. Көктем мезгіліндегі қылмыс саны: 785.\n2. Қыс мезгіліндегі қылмыс саны: 602.\n3. Олардың айырымы: 785 - 602 = 183."
 }
 ] as Question[];

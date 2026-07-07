@@ -1799,7 +1799,7 @@ export const tgoCriticalThinkingGeometryQuestions = [
 {
   "id": "tgo-geometry-coordinate-line",
   "subjectId": "tgo",
-  "text": "Суретте көрсетілген түзудің теңдеуін анықтаңыз.",
+  "text": "Түзудің теңдеуін жазыңыз",
   "chartData": {
     "type": "tgo_coordinate_line"
   },
@@ -1865,5 +1865,45 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "easy",
   "hint": "Биссектриса бұрышты қақ бөледі. Сондықтан ABD бұрышы мен CBD бұрыштары өзара тең: ∠CBD = ∠ABD = 40°."
+},
+{
+  "id": "tgo-geometry-circle-perimeter",
+  "subjectId": "tgo",
+  "text": "Берілген шеңбердің периметрін табыңыз",
+  "chartData": {
+    "type": "circle",
+    "radius": 5,
+    "label": "R = 5 см",
+    "showCenter": true
+  },
+  "options": [
+    {
+      "id": "tgo-geometry-circle-perimeter-a",
+      "text": "12π см"
+    },
+    {
+      "id": "tgo-geometry-circle-perimeter-b",
+      "text": "15π см"
+    },
+    {
+      "id": "tgo-geometry-circle-perimeter-c",
+      "text": "9π см"
+    },
+    {
+      "id": "tgo-geometry-circle-perimeter-d",
+      "text": "10π см"
+    },
+    {
+      "id": "tgo-geometry-circle-perimeter-e",
+      "text": "5π см"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-circle-perimeter-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "easy",
+  "hint": "Шеңбердің периметрі (ұзындығы) формуласы:\nC = 2πR\n\nРадиусы R = 5 см болғандықтан:\nC = 2 · π · 5 = 10π см."
 }
 ] as Question[];
