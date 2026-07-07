@@ -2662,5 +2662,60 @@ export const tgoCriticalThinkingTablesAndGraphsQuestions = [
   "topic": "Кестелер мен графиктер",
   "difficulty": "easy",
   "hint": "Есептің шешімі:\n1. Көктем мезгіліндегі қылмыс саны: 785.\n2. Қыс мезгіліндегі қылмыс саны: 602.\n3. Олардың айырымы: 785 - 602 = 183."
+},
+{
+  "id": "tgo-tables-and-graphs-runners-time",
+  "subjectId": "tgo",
+  "text": "Жоғарыдағы кестеде, белгілі бір қашықтықты жүгіру уақыты көрсетілген. Ең аз уақыт жүгірген адамда, барлығының орта шамасынан жуықтай алғанда неше секундқа айырмашылық бар?",
+  "chartData": {
+    "type": "table",
+    "headers": [
+      "Аты",
+      "Назерке",
+      "Қарлығаш",
+      "Сауле",
+      "Баян",
+      "Марал"
+    ],
+    "rows": [
+      [
+        "Жүгіру уақыты (секунд)",
+        14.1,
+        18.2,
+        15.5,
+        16.2,
+        22.4
+      ]
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-runners-time-a",
+      "text": "6,54"
+    },
+    {
+      "id": "tgo-tables-and-graphs-runners-time-b",
+      "text": "7,4"
+    },
+    {
+      "id": "tgo-tables-and-graphs-runners-time-c",
+      "text": "9,16"
+    },
+    {
+      "id": "tgo-tables-and-graphs-runners-time-d",
+      "text": "5,42"
+    },
+    {
+      "id": "tgo-tables-and-graphs-runners-time-e",
+      "text": "3,18"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-runners-time-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. Барлық адамдардың орташа жүгіру уақытын табамыз:\n   Орташа мән = (14,1 + 18,2 + 15,5 + 16,2 + 22,4) / 5 = 86,4 / 5 = 17,28 секунд.\n2. Ең аз уақыт жүгірген адамды анықтаймыз:\n   Назерке = 14,1 секунд.\n3. Орташа мән мен ең аз уақыттың айырмасын табамыз:\n   17,28 - 14,1 = 3,18 секунд."
 }
 ] as Question[];
