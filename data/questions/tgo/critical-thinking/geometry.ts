@@ -1795,5 +1795,42 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "medium",
   "hint": "Үшбұрыш теңсіздігі: екі қабырғаның айырмасынан үлкен, қосындысынан кіші болуы керек."
+},
+{
+  "id": "tgo-geometry-coordinate-line",
+  "subjectId": "tgo",
+  "text": "Суретте көрсетілген түзудің теңдеуін анықтаңыз.",
+  "chartData": {
+    "type": "tgo_coordinate_line"
+  },
+  "options": [
+    {
+      "id": "tgo-geometry-coordinate-line-a",
+      "text": "y = x - 2"
+    },
+    {
+      "id": "tgo-geometry-coordinate-line-b",
+      "text": "y = -x"
+    },
+    {
+      "id": "tgo-geometry-coordinate-line-c",
+      "text": "y = 2x"
+    },
+    {
+      "id": "tgo-geometry-coordinate-line-d",
+      "text": "y = x"
+    },
+    {
+      "id": "tgo-geometry-coordinate-line-e",
+      "text": "y = -2x - 1"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-coordinate-line-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "medium",
+  "hint": "Түзу координаттар басынан (0,0) өтеді, сондықтан оның бос мүшесі жоқ және x өскен сайын y-те тура солай өседі (1,1; 2,2; т.б.). Демек, теңдеу: y = x."
 }
 ] as Question[];

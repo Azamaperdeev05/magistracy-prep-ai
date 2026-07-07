@@ -662,6 +662,80 @@ const TgoSquareMosaic: React.FC<Extract<ChartData, { type: 'tgo_square_mosaic' }
   );
 };
 
+const TgoCoordinateLine: React.FC = () => {
+  const size = 320;
+  const center = 160;
+  const unit = 22;
+
+  // Grid lines
+  const gridLines = [];
+  for (let i = -5; i <= 5; i++) {
+    if (i === 0) continue;
+    const pos = center + i * unit;
+    // vertical grid line
+    gridLines.push(
+      <line key={`v-${i}`} x1={pos} y1={25} x2={pos} y2={295} stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2,2" />
+    );
+    // horizontal grid line
+    gridLines.push(
+      <line key={`h-${i}`} x1={25} y1={pos} x2={295} y2={pos} stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2,2" />
+    );
+  }
+
+  // Axis labels
+  const labels = [];
+  for (let i = -5; i <= 5; i++) {
+    if (i === 0) continue;
+    const pos = center + i * unit;
+    // X-axis label
+    labels.push(
+      <text key={`x-lbl-${i}`} x={pos} y={center + 14} fontSize="10" fontFamily="serif" textAnchor="middle" fill="#475569" fontWeight="bold">
+        {i}
+      </text>
+    );
+    // Y-axis label
+    labels.push(
+      <text key={`y-lbl-${i}`} x={center - 8} y={pos + 3.5} fontSize="10" fontFamily="serif" textAnchor="end" fill="#475569" fontWeight="bold">
+        {i}
+      </text>
+    );
+  }
+
+  // Line y = x: from x = -5.2 to x = 5.2
+  const x1 = center - 5.2 * unit;
+  const y1 = center + 5.2 * unit;
+  const x2 = center + 5.2 * unit;
+  const y2 = center - 5.2 * unit;
+
+  return (
+    <ExamFigureFrame className="p-4 bg-white">
+      <svg viewBox="0 0 320 320" className="w-full max-w-sm mx-auto select-none">
+        {/* Draw Grid */}
+        {gridLines}
+
+        {/* X Axis */}
+        <line x1="20" y1={center} x2="300" y2={center} stroke="#0f172a" strokeWidth="1.5" />
+        <polygon points="300,156 308,160 300,164" fill="#0f172a" />
+        <text x="312" y={center + 4} fontSize="12" fontFamily="serif" fontStyle="italic" fontWeight="bold" fill="#0f172a">x</text>
+
+        {/* Y Axis */}
+        <line x1={center} y1="300" x2={center} y2="20" stroke="#0f172a" strokeWidth="1.5" />
+        <polygon points="156,20 160,12 164,20" fill="#0f172a" />
+        <text x={center - 12} y="15" fontSize="12" fontFamily="serif" fontStyle="italic" fontWeight="bold" fill="#0f172a">y</text>
+
+        {/* Origin 0 */}
+        <text x={center + 5} y={center + 12} fontSize="11" fontFamily="serif" fill="#0f172a" fontWeight="bold">0</text>
+
+        {/* Axis Ticks Labels */}
+        {labels}
+
+        {/* The straight line y = x */}
+        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    </ExamFigureFrame>
+  );
+};
+
 // Main ChartRenderer Component
 const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
   switch (chartData.type) {
@@ -697,6 +771,8 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoInscribedSquare {...chartData} />;
     case 'tgo_square_mosaic':
       return <TgoSquareMosaic {...chartData} />;
+    case 'tgo_coordinate_line':
+      return <TgoCoordinateLine />;
     default:
       return null;
   }

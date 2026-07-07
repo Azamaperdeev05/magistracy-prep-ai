@@ -70,7 +70,8 @@ export type ChartData =
   | { type: 'tgo_shaded_rectangle'; widthParts: { label: string; value: number }[]; heightParts: { label: string; value: number }[] }
   | { type: 'tgo_triangle_sides'; leftSide: string; rightSide: string; baseLabel: string }
   | { type: 'tgo_inscribed_square'; radiusLabel: string }
-  | { type: 'tgo_square_mosaic'; unitAreaLabel: string };
+  | { type: 'tgo_square_mosaic'; unitAreaLabel: string }
+  | { type: 'tgo_coordinate_line' };
 
 export type TgoVisualData =
   | { type: 'triangle_bc'; totalBase: number; rightBase: number; leftHeight: number }
