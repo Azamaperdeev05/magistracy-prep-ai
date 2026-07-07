@@ -2835,5 +2835,107 @@ export const tgoCriticalThinkingTablesAndGraphsQuestions = [
   "topic": "Кестелер мен графиктер",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. 10 «В» сыныбының пайызын табамыз (секторлардың қосындысы 100% болуы тиіс):\n   100% - (30% + 25% + 25%) = 100% - 80% = 20%.\n2. 10 «Б» және 10 «В» сыныптарындағы оқушылардың жалпы үлесі:\n   25% (10 Б) + 20% (10 В) = 45%.\n3. Жалпы 200 оқушының 45%-ын есептейміз:\n   200 · 0,45 = 90 оқушы."
+},
+{
+  "id": "tgo-tables-and-graphs-median-diagram",
+  "subjectId": "tgo",
+  "text": "Диаграмма көрсеткішінен мәліметтер медианасы.",
+  "chartData": {
+    "type": "bar",
+    "data": [
+      100,
+      200,
+      300,
+      400,
+      500
+    ],
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-median-diagram-a",
+      "text": "100"
+    },
+    {
+      "id": "tgo-tables-and-graphs-median-diagram-b",
+      "text": "200"
+    },
+    {
+      "id": "tgo-tables-and-graphs-median-diagram-c",
+      "text": "300"
+    },
+    {
+      "id": "tgo-tables-and-graphs-median-diagram-d",
+      "text": "400"
+    },
+    {
+      "id": "tgo-tables-and-graphs-median-diagram-e",
+      "text": "500"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-median-diagram-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. Диаграммадан сәйкес мәліметтер жиынын анықтаймыз:\n   {100, 200, 300, 400, 500}.\n2. Жиын өсу ретімен орналасқандықтан, медианасы ортасында орналасқан үшінші сан болады:\n   Медиана = 300."
+},
+{
+  "id": "tgo-tables-and-graphs-exam-scores-mean",
+  "subjectId": "tgo",
+  "text": "Төмендегі бір сыныптың физика пәні бойынша емтихан нәтижелері (ұпай) көрсетілген болса, бұл ұпайлардың арифметикалық ортасын табыңыз.",
+  "chartData": {
+    "type": "bar",
+    "data": [
+      50,
+      20,
+      70,
+      50,
+      30
+    ],
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-exam-scores-mean-a",
+      "text": "54"
+    },
+    {
+      "id": "tgo-tables-and-graphs-exam-scores-mean-b",
+      "text": "64"
+    },
+    {
+      "id": "tgo-tables-and-graphs-exam-scores-mean-c",
+      "text": "36"
+    },
+    {
+      "id": "tgo-tables-and-graphs-exam-scores-mean-d",
+      "text": "25"
+    },
+    {
+      "id": "tgo-tables-and-graphs-exam-scores-mean-e",
+      "text": "44"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-exam-scores-mean-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. Диаграммадан емтихан ұпайларын анықтаймыз:\n   50, 20, 70, 50, 30.\n2. Бұл ұпайлардың арифметикалық ортасын есептейміз:\n   Орташа мән = (50 + 20 + 70 + 50 + 30) / 5 = 220 / 5 = 44."
 }
 ] as Question[];

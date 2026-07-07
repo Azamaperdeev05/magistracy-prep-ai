@@ -1800,5 +1800,69 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "easy",
   "hint": "Теориялық шешуі:\nВиет теоремасы бойынша келтірілген квадраттық теңдеуде (x² + px + q = 0) түбірлердің қосындысы қарсы таңбамен алынған екінші коэффициентке тең:\nx₁ + x₂ = -p\n\nx² - 7x + 6 = 0 теңдеуінде p = -7, демек:\nx₁ + x₂ = -(-7) = 7.\n\nТүбірлерін тікелей тауып тексеру:\nx² - 7x + 6 = (x - 6)(x - 1) = 0 => түбірлері x₁ = 6 және x₂ = 1.\nОлардың қосындысы: 6 + 1 = 7."
+},
+{
+  "id": "tgo-algebra-brackets-linear-equation",
+  "subjectId": "tgo",
+  "text": "Теңдеуді шешіңдер:\n3(x + 5) = 7 – 5x",
+  "options": [
+    {
+      "id": "tgo-algebra-brackets-linear-equation-a",
+      "text": "x = 3"
+    },
+    {
+      "id": "tgo-brackets-linear-equation-b",
+      "text": "x = – 2"
+    },
+    {
+      "id": "tgo-brackets-linear-equation-c",
+      "text": "x = 1"
+    },
+    {
+      "id": "tgo-brackets-linear-equation-d",
+      "text": "x = – 1"
+    },
+    {
+      "id": "tgo-brackets-linear-equation-e",
+      "text": "x = 2"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-brackets-linear-equation-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "easy",
+  "hint": "Теңдеуді шешу қадамдары:\n1. Сол жақтағы жақшаны ашамыз:\n   3x + 15 = 7 - 5x\n2. Белгісіз айнымалылары бар мүшелерді сол жаққа, сандарды оң жаққа жинаймыз:\n   3x + 5x = 7 - 15\n   8x = -8\n3. x-ті табамыз:\n   x = -8 / 8 = -1."
+},
+{
+  "id": "tgo-algebra-expression-values-comparison",
+  "subjectId": "tgo",
+  "text": "Мәндерді салыстырыңыз:\na = 5 · 2 – 4\nb = 5 · 22 – 44\nc = 5 · 222 – 444",
+  "options": [
+    {
+      "id": "tgo-algebra-expression-values-comparison-a",
+      "text": "a шамасы b, c - дан үлкен"
+    },
+    {
+      "id": "tgo-algebra-expression-values-comparison-b",
+      "text": "b шамасы a, c - дан үлкен"
+    },
+    {
+      "id": "tgo-algebra-expression-values-comparison-c",
+      "text": "c шамасы a, b - дан үлкен"
+    },
+    {
+      "id": "tgo-algebra-expression-values-comparison-d",
+      "text": "Барлық шамалар тең"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-expression-values-comparison-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "easy",
+  "hint": "Шешуі:\nӘр шаманың мәнін есептейміз:\n- a = 5 · 2 - 4 = 10 - 4 = 6\n- b = 5 · 22 - 44 = 110 - 44 = 66\n- c = 5 · 222 - 444 = 1110 - 444 = 666\n\nСалыстырамыз: 6 < 66 < 666 => c шамасы a, b-дан үлкен."
 }
 ] as Question[];

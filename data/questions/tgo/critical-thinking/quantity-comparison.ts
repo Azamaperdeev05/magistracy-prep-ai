@@ -2245,5 +2245,89 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "topic": "Салыстыру есептері",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. А шамасы:\n   3/4 + 3/5 = (15 + 12) / 20 = 27/20 = 1.35.\n2. В шамасы:\n   3/4 : 6/16 = 3/4 · 16/6 = (3 · 16) / (4 · 6) = 48/24 = 2.\n3. Салыстырамыз: 1.35 < 2, яғни В шамасы үлкен."
+},
+{
+  "id": "tgo-quantity-comparison-interval-sums",
+  "subjectId": "tgo",
+  "text": "Бағанды салыстырыңыз:",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": {
+      "header": "А шамасы",
+      "content": "(-2; 4) – бүтін сандардың қосындысы"
+    },
+    "columnB": {
+      "header": "В шамасы",
+      "content": "(-3; 5) – натурал сандардың қосындысы"
+    },
+    "question": "Бағанды салыстырыңыз:"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-interval-sums-a",
+      "text": "Берілген мәлімет жеткіліксіз"
+    },
+    {
+      "id": "tgo-quantity-comparison-interval-sums-b",
+      "text": "А шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-interval-sums-c",
+      "text": "Шамалар тең"
+    },
+    {
+      "id": "tgo-quantity-comparison-interval-sums-d",
+      "text": "В шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-interval-sums-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. А шамасы:\n   (-2; 4) ашық аралығындағы бүтін сандар: -1, 0, 1, 2, 3.\n   Олардың қосындысы: -1 + 0 + 1 + 2 + 3 = 5.\n   А шамасы = 5.\n\n2. В шамасы:\n   (-3; 5) ашық аралығындағы натурал сандар (оң бүтін сандар): 1, 2, 3, 4.\n   Олардың қосындысы: 1 + 2 + 3 + 4 = 10.\n   В шамасы = 10.\n\n3. Шамаларды салыстырамыз:\n   5 < 10, яғни В шамасы үлкен."
+},
+{
+  "id": "tgo-quantity-comparison-percent-values",
+  "subjectId": "tgo",
+  "text": "Бағанды салыстырыңыз:",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": {
+      "header": "А шамасы",
+      "content": "780 санының 50%-ы"
+    },
+    "columnB": {
+      "header": "В шамасы",
+      "content": "850 санының 45%-ы"
+    },
+    "question": "Бағанды салыстырыңыз:"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-percent-values-a",
+      "text": "Берілген мәлімет жеткіліксіз"
+    },
+    {
+      "id": "tgo-quantity-comparison-percent-values-b",
+      "text": "А шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-percent-values-c",
+      "text": "Шамалар тең"
+    },
+    {
+      "id": "tgo-quantity-comparison-percent-values-d",
+      "text": "В шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-percent-values-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "easy",
+  "hint": "Шешуі:\n1. А шамасы:\n   780 санының 50%-ы = 780 · 0,50 = 390.\n2. В шамасы:\n   850 санының 45%-ы = 850 · 0,45 = 382,5.\n3. Шамаларды салыстырамыз:\n   390 > 382,5, яғни А шамасы үлкен."
 }
 ] as Question[];

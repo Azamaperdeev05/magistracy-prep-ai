@@ -1702,5 +1702,39 @@ export const tgoCriticalThinkingInequalitiesQuestions = [
   "topic": "Теңсіздіктер",
   "difficulty": "easy",
   "hint": "Теңсіздікті шешу:\n(y + 6)(y - 6) < 64\ny² - 36 < 64\ny² < 100\n|y| < 10 => -10 < y < 10\n\nДемек, шешімі интервал түрінде: (-10; 10)."
+},
+{
+  "id": "tgo-inequalities-brackets-linear",
+  "subjectId": "tgo",
+  "text": "Теңсіздікті шешіңдер:\n5(z+2)+14<6-z",
+  "options": [
+    {
+      "id": "tgo-inequalities-brackets-linear-a",
+      "text": "z<4"
+    },
+    {
+      "id": "tgo-inequalities-brackets-linear-b",
+      "text": "z<-3"
+    },
+    {
+      "id": "tgo-inequalities-brackets-linear-c",
+      "text": "z>-4"
+    },
+    {
+      "id": "tgo-inequalities-brackets-linear-d",
+      "text": "z≥-3"
+    },
+    {
+      "id": "tgo-inequalities-brackets-linear-e",
+      "text": "z≤-6"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-inequalities-brackets-linear-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Теңсіздіктер",
+  "difficulty": "medium",
+  "hint": "Теңсіздікті шешу қадамдары:\n1. Жақшаны ашамыз:\n   5z + 10 + 14 < 6 - z\n   5z + 24 < 6 - z\n2. Белгісіз айнымалылары бар мүшелерді сол жаққа, сандарды оң жаққа жинаймыз:\n   5z + z < 6 - 24\n   6z < -18\n3. Шешімін табамыз:\n   z < -3."
 }
 ] as Question[];
