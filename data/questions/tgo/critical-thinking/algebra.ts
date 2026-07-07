@@ -1932,5 +1932,39 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. 12-ні жай көбейткіштерге жіктейміз:\n   12 = 2² · 3\n\n2. Онда теңдіктің оң жағын жазамыз:\n   12ⁿ = (2² · 3)ⁿ = 2²ⁿ · 3ⁿ\n\n3. Бастапқы теңдікке қоямыз:\n   2¹⁸ · 3ᵐ = 2²ⁿ · 3ⁿ\n\n4. Дәреже көрсеткіштерін теңестіреміз:\n   - 2 үшін: 18 = 2n → n = 9\n   - 3 үшін: m = n\n\n5. Олай болса, m = 9."
+},
+{
+  "id": "tgo-algebra-anar-shynar-apples",
+  "subjectId": "tgo",
+  "text": "Анар мен Шынар барлығы 96 алма терді. Анардың терген алмалары Шынар терген алмалардан 1 ⅖ есе артық. Анар қанша алма тергенін табыңыз.",
+  "options": [
+    {
+      "id": "tgo-algebra-anar-shynar-apples-a",
+      "text": "62"
+    },
+    {
+      "id": "tgo-algebra-anar-shynar-apples-b",
+      "text": "60"
+    },
+    {
+      "id": "tgo-algebra-anar-shynar-apples-c",
+      "text": "40"
+    },
+    {
+      "id": "tgo-algebra-anar-shynar-apples-d",
+      "text": "54"
+    },
+    {
+      "id": "tgo-algebra-anar-shynar-apples-e",
+      "text": "56"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-anar-shynar-apples-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. Шынардың терген алмалар санын x деп белгілейміз.\n2. Анардың терген алмалары 1 ⅖ = 1,4 есе артық, яғни 1,4x.\n3. Барлығы 96 алма:\n   x + 1,4x = 96\n   2,4x = 96\n   x = 96 / 2,4 = 40 (Шынар терген алма саны)\n4. Анардың терген алма санын табамыз:\n   1,4 · 40 = 56 алма."
 }
 ] as Question[];

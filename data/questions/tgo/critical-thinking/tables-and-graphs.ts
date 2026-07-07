@@ -2981,5 +2981,48 @@ export const tgoCriticalThinkingTablesAndGraphsQuestions = [
   "topic": "Кестелер мен графиктер",
   "difficulty": "easy",
   "hint": "Шешуі:\n1. Қарағай ағашының үлесі диаграмма бойынша 23% құрайды.\n2. Барлық ағаш саны — 500.\n3. Қарағай ағаштарының санын табамыз:\n   500 · 23% = 500 · 0,23 = 115 ағаш."
+},
+{
+  "id": "tgo-tables-and-graphs-music-venn",
+  "subjectId": "tgo",
+  "text": "50 адамнан сауалнама жүргізгенде 15 адам тек қана классикалық музыканы, 11 адам тек қана рэп және 10 адам рэпті де, классикалық музыканы да тыңдайтындарын айтты. Музыканы тыңдамайтын адам санын табыңыз.",
+  "chartData": {
+    "type": "tgo_venn_exclusive",
+    "leftLabel": "C",
+    "rightLabel": "R",
+    "leftExclusive": 15,
+    "rightExclusive": 11,
+    "intersection": 10,
+    "outside": 14
+  },
+  "options": [
+    {
+      "id": "tgo-tables-and-graphs-music-venn-a",
+      "text": "14"
+    },
+    {
+      "id": "tgo-tables-and-graphs-music-venn-b",
+      "text": "15"
+    },
+    {
+      "id": "tgo-tables-and-graphs-music-venn-c",
+      "text": "16"
+    },
+    {
+      "id": "tgo-tables-and-graphs-music-venn-d",
+      "text": "12"
+    },
+    {
+      "id": "tgo-tables-and-graphs-music-venn-e",
+      "text": "13"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-tables-and-graphs-music-venn-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Кестелер мен графиктер",
+  "difficulty": "easy",
+  "hint": "Шешуі:\n1. Тек қана классикалық музыка тыңдайтындар: 15 адам.\n2. Тек қана рэп тыңдайтындар: 11 адам.\n3. Екеуін де тыңдайтындар (қиылысуы): 10 адам.\n4. Музыка тыңдайтын жалпы адам саны: 15 + 11 + 10 = 36 адам.\n5. Сауалнамаға қатысқан жалпы адам саны: 50 адам.\n6. Музыканы мүлдем тыңдамайтын адам саны: 50 - 36 = 14 адам."
 }
 ] as Question[];

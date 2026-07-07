@@ -2104,5 +2104,43 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. AOC бұрышы — орталық бұрыш, ол AC доғасына тіреледі. Сондықтан AC доғасының шамасы 32°-қа тең.\n2. ADC бұрышы (яғни x°) — іштей сызылған бұрыш. Ол да сол AC доғасына тіреледі.\n3. Іштей сызылған бұрыштың шамасы оған сәйкес келетін орталық бұрыштың немесе тірелетін доғасының жартысына тең:\n   x = AOC / 2 = 32 / 2 = 16°."
+},
+{
+  "id": "tgo-geometry-circle-rectangle-diagonal-sp",
+  "subjectId": "tgo",
+  "text": "Радиусы 3-ке тең шеңбер берілген. OPSR тіктөртбұрышының SP кесіндісінің ұзындығын табыңыз.",
+  "chartData": {
+    "type": "tgo_circle_rectangle_diagonal",
+    "radius": 3
+  },
+  "options": [
+    {
+      "id": "tgo-geometry-circle-rectangle-diagonal-sp-a",
+      "text": "2√2"
+    },
+    {
+      "id": "tgo-geometry-circle-rectangle-diagonal-sp-b",
+      "text": "2√3"
+    },
+    {
+      "id": "tgo-geometry-circle-rectangle-diagonal-sp-c",
+      "text": "3"
+    },
+    {
+      "id": "tgo-geometry-circle-rectangle-diagonal-sp-d",
+      "text": "4"
+    },
+    {
+      "id": "tgo-geometry-circle-rectangle-diagonal-sp-e",
+      "text": "3√2"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-circle-rectangle-diagonal-sp-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. OPSR — тіктөртбұрыш. Тіктөртбұрыштың қасиеті бойынша, оның диагональдары тең болады:\n   SP = OR\n2. O — шеңбердің центрі, ал R — шеңбердің бойындағы нүкте. Демек, OR кесіндісі шеңбердің радиусы болып табылады.\n3. Шеңбердің радиусы 3-ке тең екендігі берілген:\n   OR = 3\n4. Олай болса, SP = OR = 3."
 }
 ] as Question[];

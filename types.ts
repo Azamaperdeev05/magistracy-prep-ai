@@ -67,10 +67,12 @@ export type ChartData =
   | { type: 'tgo_grouped_bar'; title?: string; yMin?: number; yMax?: number; categories: string[]; series: { name: string; color: string; values: number[] }[] }
   | { type: 'tgo_step_perimeter'; widthLabel: string; heightLabel: string }
   | { type: 'tgo_venn'; leftLabel: string; rightLabel: string; leftTotal: number; rightTotal: number; intersection: number; outside?: number }
+  | { type: 'tgo_venn_exclusive'; leftLabel: string; rightLabel: string; leftExclusive: number; rightExclusive: number; intersection: number; outside?: number }
   | { type: 'tgo_shaded_rectangle'; widthParts: { label: string; value: number }[]; heightParts: { label: string; value: number }[] }
   | { type: 'tgo_triangle_sides'; leftSide: string; rightSide: string; baseLabel: string }
   | { type: 'tgo_inscribed_square'; radiusLabel: string }
   | { type: 'tgo_square_mosaic'; unitAreaLabel: string }
+  | { type: 'tgo_circle_rectangle_diagonal'; radius: number }
   | { type: 'tgo_coordinate_line' }
   | {
       type: 'tgo_three_quantities';

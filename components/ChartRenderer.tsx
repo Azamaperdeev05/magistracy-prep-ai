@@ -565,6 +565,39 @@ const TgoVenn: React.FC<Extract<ChartData, { type: 'tgo_venn' }>> = ({ leftLabel
   </ExamFigureFrame>
 );
 
+const TgoVennExclusive: React.FC<Extract<ChartData, { type: 'tgo_venn_exclusive' }>> = ({ leftLabel, rightLabel, leftExclusive, rightExclusive, intersection, outside }) => (
+  <ExamFigureFrame className="p-5">
+    <svg viewBox="0 0 620 360" className="w-full max-w-2xl mx-auto">
+      <rect x="45" y="35" width="530" height="290" fill="white" stroke="black" strokeWidth="2.5" />
+      <circle cx="275" cy="205" r="100" fill="none" stroke="black" strokeWidth="2.5" />
+      <circle cx="395" cy="205" r="100" fill="none" stroke="black" strokeWidth="2.5" />
+      <text x="175" y="70" fontSize="30" fontFamily="serif" fontStyle="italic" textAnchor="middle">{leftLabel}</text>
+      <text x="445" y="70" fontSize="30" fontFamily="serif" fontStyle="italic" textAnchor="middle">{rightLabel}</text>
+      <text x="210" y="215" textAnchor="middle" fontSize="30" fontFamily="serif">{leftExclusive}</text>
+      <text x="335" y="215" textAnchor="middle" fontSize="30" fontFamily="serif">{intersection}</text>
+      <text x="460" y="215" textAnchor="middle" fontSize="30" fontFamily="serif">{rightExclusive}</text>
+      {typeof outside === 'number' && <text x="520" y="275" fontSize="30" fontFamily="serif">{outside}</text>}
+    </svg>
+  </ExamFigureFrame>
+);
+
+const TgoCircleRectangleDiagonal: React.FC<Extract<ChartData, { type: 'tgo_circle_rectangle_diagonal' }>> = ({ radius }) => (
+  <ExamFigureFrame className="p-5">
+    <svg viewBox="0 0 360 360" className="w-full max-w-sm mx-auto">
+      <circle cx="180" cy="180" r="140" fill="none" stroke="black" strokeWidth="2.5" />
+      <line x1="40" y1="180" x2="320" y2="180" stroke="black" strokeWidth="2" />
+      <circle cx="180" cy="180" r="3" fill="black" />
+      <rect x="180" y="94" width="110" height="86" fill="none" stroke="black" strokeWidth="2.5" />
+      <line x1="180" y1="94" x2="290" y2="180" stroke="black" strokeWidth="2.5" />
+      <text x="170" y="200" fontSize="20" fontFamily="serif">O</text>
+      <text x="290" y="200" fontSize="20" fontFamily="serif">P</text>
+      <text x="300" y="90" fontSize="20" fontFamily="serif">R</text>
+      <text x="160" y="94" fontSize="20" fontFamily="serif">S</text>
+    </svg>
+  </ExamFigureFrame>
+);
+
+
 const TgoShadedRectangle: React.FC<Extract<ChartData, { type: 'tgo_shaded_rectangle' }>> = ({ widthParts, heightParts }) => (
   <ExamFigureFrame className="p-5">
     <svg viewBox="0 0 520 300" className="w-full max-w-2xl mx-auto">
@@ -987,6 +1020,10 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoStepPerimeter {...chartData} />;
     case 'tgo_venn':
       return <TgoVenn {...chartData} />;
+    case 'tgo_venn_exclusive':
+      return <TgoVennExclusive {...chartData} />;
+    case 'tgo_circle_rectangle_diagonal':
+      return <TgoCircleRectangleDiagonal {...chartData} />;
     case 'tgo_shaded_rectangle':
       return <TgoShadedRectangle {...chartData} />;
     case 'tgo_triangle_sides':
