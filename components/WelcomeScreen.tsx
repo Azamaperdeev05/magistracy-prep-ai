@@ -26,6 +26,7 @@ interface WelcomeScreenProps {
   onLogout?: () => void;
   hasActiveTest?: boolean;
   onResume?: () => void;
+  onViewAdmin?: () => void;
 }
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ 
@@ -43,7 +44,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   specialtyName, 
   onLogout,
   hasActiveTest,
-  onResume
+  onResume,
+  onViewAdmin
 }) => {
   const [name, setName] = useState(userName || '');
   const [error, setError] = useState(false);
@@ -148,6 +150,14 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             <button onClick={onViewProgram} className={`text-sm font-bold tracking-widest uppercase transition-colors ${navBtnText}`}>Бағдарлама</button>
             <button onClick={onViewHistory} className={`text-sm font-bold tracking-widest uppercase transition-colors ${navBtnText}`}>Тарих</button>
             <a href="#subjects" className={`text-sm font-bold tracking-widest uppercase transition-colors ${navBtnText}`}>Пәндер</a>
+            {userEmail === 'azamaperdeev05@gmail.com' && (
+              <button 
+                onClick={onViewAdmin} 
+                className="text-sm font-black text-amber-500 hover:text-amber-600 transition-colors tracking-widest uppercase flex items-center gap-1.5"
+              >
+                <Shield className="w-4 h-4" /> Әкімші
+              </button>
+            )}
             
             {/* Theme Toggle Button */}
             <button
@@ -244,6 +254,14 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 >
                   <Brain className="w-4 h-4" /> Пәндер
                 </a>
+                {userEmail === 'azamaperdeev05@gmail.com' && (
+                  <button 
+                    onClick={() => { onViewAdmin?.(); setIsMenuOpen(false); }} 
+                    className="text-left text-sm font-black text-amber-500 hover:text-amber-600 transition-colors tracking-wider uppercase flex items-center gap-3"
+                  >
+                    <Shield className="w-4 h-4" /> Әкімшілік
+                  </button>
+                )}
                 
                 {userName && (
                   <div className={`pt-6 border-t flex flex-col gap-4 ${isDarkMode ? 'border-white/5' : 'border-slate-200'}`}>
@@ -730,6 +748,17 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                     className="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs uppercase tracking-wider shadow-lg shadow-amber-950/20"
                   >
                     <Crown className="w-4 h-4" /> Premium-ге өту
+                  </button>
+                )}
+                {userEmail === 'azamaperdeev05@gmail.com' && (
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      if (onViewAdmin) onViewAdmin();
+                    }}
+                    className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold border border-slate-700/60 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs uppercase tracking-wider"
+                  >
+                    <Shield className="w-4 h-4" /> Әкімшілік панель
                   </button>
                 )}
               </div>

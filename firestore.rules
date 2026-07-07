@@ -2,31 +2,41 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // Әкімші ме екенін тексеру (azamaperdeev05@gmail.com)
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email_verified == true && 
+             request.auth.token.email == 'azamaperdeev05@gmail.com';
+    }
+    
     // 1. Тест тапсыру тарихы (history коллекциясы)
     match /history/{document} {
-      allow read, delete: if request.auth != null && resource.data.user_uid == request.auth.uid;
-      allow create, update: if request.auth != null && request.resource.data.user_uid == request.auth.uid;
+      allow read, delete: if isAdmin() || (request.auth != null && resource.data.user_uid == request.auth.uid);
+      allow create: if request.auth != null && request.resource.data.user_uid == request.auth.uid;
+      allow update: if isAdmin(); // Тек әкімші тест нәтижесін өзгерткенді көре алады (қолданушы өз ұпайын қолмен өзгерте алмайды)
     }
     
     // 2. Сұрақтардағы қателер туралы есептер (reports коллекциясы)
     match /reports/{document} {
-      allow create: if request.auth != null && request.resource.data.user_uid == request.auth.uid;
-      allow read, update, delete: if false;
+      allow create: if request.auth != null && 
+                    request.resource.data.user_uid == request.auth.uid &&
+                    request.resource.data.comment.size() < 2000; // DoS қорғаныс
+      allow read, update, delete: if isAdmin();
     }
 
     // 3. Пайдаланушы профилі (users коллекциясы)
     match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow write: if request.auth != null && request.auth.uid == userId && 
-                    (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['is_premium']));
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == userId);
+      allow write: if isAdmin() || (request.auth != null && request.auth.uid == userId && 
+                    (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['is_premium'])));
       allow create: if request.auth != null && request.auth.uid == userId && 
                      request.resource.data.is_premium == false;
     }
 
     // 4. Клиенттік қателер (client_errors коллекциясы)
     match /client_errors/{document} {
-      allow create: if true; // Кез келген клиент қателікті жаза алады
-      allow read, update, delete: if false; // Ешкім оқи не өшіре алмайды (тек әкімші)
+      allow create: if request.resource.data.message.size() < 1000; // DoS қорғаныс
+      allow read, update, delete: if isAdmin();
     }
   }
 }

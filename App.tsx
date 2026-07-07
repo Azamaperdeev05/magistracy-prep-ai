@@ -16,6 +16,7 @@ import PrepScreen from './components/PrepScreen';
 import SpecialtiesScreen from './components/SpecialtiesScreen';
 import TestSetupScreen from './components/TestSetupScreen';
 import ConsentGateScreen from './components/ConsentGateScreen';
+import AdminScreen from './components/AdminScreen';
 import ConfirmModal from './components/modals/ConfirmModal';
 import UpgradeModal from './components/modals/UpgradeModal';
 
@@ -244,6 +245,7 @@ const RootApp: React.FC = () => {
               onLogout={handleLogout}
               hasActiveTest={questions.length > 0}
               onResume={() => navigate('/test')}
+              onViewAdmin={() => navigate('/admin')}
             />
           } 
         />
@@ -275,6 +277,16 @@ const RootApp: React.FC = () => {
               onBack={() => navigate('/home')} 
               onSpecialtyChange={(updatedUser) => setUser(updatedUser)}
             />
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            user.email === 'azamaperdeev05@gmail.com' ? (
+              <AdminScreen onBack={() => navigate('/home')} />
+            ) : (
+              <Navigate to="/home" replace />
+            )
           } 
         />
         <Route 
