@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, Users, History, AlertTriangle, Award, Search, 
   Loader2, CheckCircle2, Calendar, ChevronRight, ArrowLeft, 
-  Crown, MessageSquare, Trash2, RefreshCw, Terminal, Info, Check, X
+  Crown, MessageSquare, Trash2, RefreshCw, Terminal, Info, Check, X, Star
 } from 'lucide-react';
 import { db } from '../firebase';
-import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, addDoc } from 'firebase/firestore';
 import { STATIC_QUESTIONS } from '../data/questions';
 import { Question } from '../types';
 import { scoreQuestion } from '../services/scoringService';
@@ -14,6 +14,16 @@ import CodeAwareText from './CodeAwareText';
 
 interface AdminScreenProps {
   onBack: () => void;
+}
+
+interface UserFeedback {
+  id: string;
+  user_uid: string;
+  user_email: string;
+  user_name: string;
+  comment: string;
+  rating: number;
+  created_at: string;
 }
 
 interface FirestoreUser {
@@ -66,10 +76,11 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
   const [historyItems, setHistoryItems] = useState<AdminHistoryItem[]>([]);
   const [reports, setReports] = useState<UserReport[]>([]);
   const [errorLogs, setErrorLogs] = useState<ClientErrorLog[]>([]);
+  const [feedbacks, setFeedbacks] = useState<UserFeedback[]>([]);
   
   const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'users' | 'history' | 'reports' | 'logs'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'history' | 'reports' | 'logs' | 'feedbacks'>('users');
   const [searchQuery, setSearchQuery] = useState('');
   
   // Drill-down states
@@ -81,7 +92,8 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
     totalUsers: 0,
     premiumUsers: 0,
     totalTests: 0,
-    activeReports: 0
+    activeReports: 0,
+    totalFeedbacks: 0
   });
 
   const fetchData = async () => {
@@ -166,17 +178,36 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
       });
       fetchedLogs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
+      // Fetch all feedbacks
+      const feedbacksSnap = await getDocs(collection(db, "feedbacks"));
+      const fetchedFeedbacks: UserFeedback[] = [];
+      feedbacksSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        fetchedFeedbacks.push({
+          id: docSnap.id,
+          user_uid: data.user_uid || '',
+          user_email: data.user_email || '',
+          user_name: data.user_name || '',
+          comment: data.comment || '',
+          rating: Number(data.rating || 5),
+          created_at: data.created_at || new Date().toISOString()
+        });
+      });
+      fetchedFeedbacks.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
       setUsers(fetchedUsers);
       setHistoryItems(fetchedHistory);
       setReports(fetchedReports);
       setErrorLogs(fetchedLogs);
+      setFeedbacks(fetchedFeedbacks);
 
       // Set stats
       setStats({
         totalUsers: fetchedUsers.length,
         premiumUsers: fetchedUsers.filter(u => u.is_premium).length,
         totalTests: fetchedHistory.length,
-        activeReports: fetchedReports.length
+        activeReports: fetchedReports.length,
+        totalFeedbacks: fetchedFeedbacks.length
       });
 
     } catch (err) {
@@ -265,6 +296,23 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
     }
   };
 
+  // Delete feedback
+  const handleDeleteFeedback = async (feedbackId: string) => {
+    if (!db) return;
+    if (!window.confirm("Бұл кері байланысты өшіруді растайсыз ба?")) return;
+
+    setActionLoading(`feedback-${feedbackId}`);
+    try {
+      await deleteDoc(doc(db, "feedbacks", feedbackId));
+      setFeedbacks(prev => prev.filter(f => f.id !== feedbackId));
+      setStats(prev => ({ ...prev, totalFeedbacks: Math.max(0, prev.totalFeedbacks - 1) }));
+    } catch (err) {
+      console.error("Error deleting feedback:", err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
@@ -300,6 +348,11 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
   const filteredLogs = errorLogs.filter(l => {
     const term = searchQuery.toLowerCase();
     return l.message.toLowerCase().includes(term) || (l.userEmail && l.userEmail.toLowerCase().includes(term));
+  });
+
+  const filteredFeedbacks = feedbacks.filter(f => {
+    const term = searchQuery.toLowerCase();
+    return f.user_name.toLowerCase().includes(term) || f.user_email.toLowerCase().includes(term) || f.comment.toLowerCase().includes(term);
   });
 
   // Reconstruct single history detail view
@@ -352,12 +405,13 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
         </div>
 
         {/* Dashboard Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
             { label: "Жалпы қолданушылар", value: stats.totalUsers, icon: Users, color: "text-blue-500 bg-blue-500/10" },
             { label: "Premium қолданушылар", value: stats.premiumUsers, icon: Crown, color: "text-amber-500 bg-amber-500/10" },
             { label: "Тапсырылған тесттер", value: stats.totalTests, icon: History, color: "text-purple-500 bg-purple-500/10" },
-            { label: "Есептер мен қателер", value: stats.activeReports, icon: AlertTriangle, color: "text-rose-500 bg-rose-500/10" }
+            { label: "Сұрақ есептері", value: stats.activeReports, icon: AlertTriangle, color: "text-rose-500 bg-rose-500/10" },
+            { label: "Кері байланыстар", value: stats.totalFeedbacks, icon: MessageSquare, color: "text-emerald-500 bg-emerald-500/10" }
           ].map((item, i) => (
             <div key={i} className="bg-[#0f1219] border border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-lg">
               <div>
@@ -377,7 +431,8 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
             {[
               { id: 'users', label: 'Қолданушылар', icon: Users },
               { id: 'history', label: 'Тесттер тарихы', icon: History },
-              { id: 'reports', label: 'Сұрақ есептері', icon: MessageSquare },
+              { id: 'reports', label: 'Сұрақ есептері', icon: AlertTriangle },
+              { id: 'feedbacks', label: 'Кері байланыс', icon: MessageSquare },
               { id: 'logs', label: 'Қате журналдары', icon: Terminal }
             ].map(tab => (
               <button
@@ -402,7 +457,8 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
               placeholder={`${
                 activeTab === 'users' ? 'Аты немесе пошта бойынша іздеу...' :
                 activeTab === 'history' ? 'Пошта бойынша іздеу...' :
-                activeTab === 'reports' ? 'Есеп немесе пошта бойынша іздеу...' : 'Қате бойынша іздеу...'
+                activeTab === 'reports' ? 'Есеп немесе пошта бойынша іздеу...' :
+                activeTab === 'feedbacks' ? 'Пікір немесе пошта бойынша іздеу...' : 'Қате бойынша іздеу...'
               }`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -845,6 +901,66 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                             {log.stack}
                           </pre>
                         )}
+                      </div>
+                    ))
+                  )}
+                </motion.div>
+              )}
+
+              {/* TAB 5: FEEDBACKS */}
+              {activeTab === 'feedbacks' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-4 text-left"
+                >
+                  {filteredFeedbacks.length === 0 ? (
+                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-500 font-medium">
+                      Кері байланыс әлі қалдырылмады.
+                    </div>
+                  ) : (
+                    filteredFeedbacks.map(f => (
+                      <div key={f.id} className="bg-[#0f1219] border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div className="flex justify-between items-start gap-4">
+                          <div>
+                            <div className="text-xs text-slate-500 font-bold mb-1 flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5" /> {formatDate(f.created_at)}
+                            </div>
+                            <h4 className="font-extrabold text-sm text-slate-350">
+                              Қолданушы: <span className="text-white">{f.user_name}</span> ({f.user_email})
+                            </h4>
+                            {/* Render rating stars */}
+                            <div className="flex gap-1 mt-1.5">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  className="w-4 h-4"
+                                  style={{
+                                    fill: star <= f.rating ? '#f59e0b' : 'transparent',
+                                    stroke: '#f59e0b',
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteFeedback(f.id)}
+                            disabled={actionLoading === `feedback-${f.id}`}
+                            className="p-2 bg-rose-500/10 hover:bg-rose-500 border border-rose-500/20 hover:border-rose-500 text-rose-400 hover:text-white rounded-lg transition-all"
+                            title="Пікірді өшіру"
+                          >
+                            {actionLoading === `feedback-${f.id}` ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 text-xs text-slate-300 font-semibold leading-relaxed">
+                          "{f.comment}"
+                        </div>
                       </div>
                     ))
                   )}

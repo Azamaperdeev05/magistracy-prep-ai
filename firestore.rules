@@ -38,5 +38,13 @@ service cloud.firestore {
       allow create: if request.resource.data.message.size() < 1000; // DoS қорғаныс
       allow read, update, delete: if isAdmin();
     }
+
+    // 5. Кері байланыс (feedbacks коллекциясы)
+    match /feedbacks/{document} {
+      allow create: if request.auth != null && 
+                    request.resource.data.user_uid == request.auth.uid &&
+                    request.resource.data.comment.size() < 2000; // DoS қорғаныс
+      allow read, update, delete: if isAdmin();
+    }
   }
 }
