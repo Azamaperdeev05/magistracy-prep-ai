@@ -73,6 +73,7 @@ export type ChartData =
   | { type: 'tgo_inscribed_square'; radiusLabel: string }
   | { type: 'tgo_square_mosaic'; unitAreaLabel: string }
   | { type: 'tgo_circle_rectangle_diagonal'; radius: number }
+  | { type: 'tgo_polygon_ef_length' }
   | { type: 'tgo_coordinate_line' }
   | {
       type: 'tgo_three_quantities';

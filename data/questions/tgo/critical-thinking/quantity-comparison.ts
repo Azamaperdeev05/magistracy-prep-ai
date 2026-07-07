@@ -2478,5 +2478,40 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "topic": "Салыстыру есептері",
   "difficulty": "medium",
   "hint": "Шешуі:\nӘр бөлшекті аралас сан түрінде жазамыз:\n   A = 2023/2022 = 1 + 1/2022\n   B = 2024/2023 = 1 + 1/2023\n\nСалыстыру:\n   1/2022 > 1/2023 (бөлімі кіші болған бөлшек үлкен).\n   Демек, 1 + 1/2022 > 1 + 1/2023.\n   А > В → А шамасы үлкен."
+},
+{
+  "id": "tgo-quantity-comparison-parallel-lines-equation-x",
+  "subjectId": "tgo",
+  "text": "А және В шамаларын салыстырыңыз",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": "m ∥ n параллель түзулер арасындағы үшбұрыш берілген. Төбе бұрышы = 40°, m түзуіндегі бұрыштар y және 2x. n түзуіндегі бұрыш 3x.\nx-бұрышының бұрыштық мәні.",
+    "columnB": "(7x + 560) / 6 = 150\nТеңдеуінің шешімі"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-x-a",
+      "text": "A=B"
+    },
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-x-b",
+      "text": "Шамаларды салыстыру мүмкін емес"
+    },
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-x-c",
+      "text": "В шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-x-d",
+      "text": "А шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-parallel-lines-equation-x-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "hard",
+  "hint": "Шешуі:\n1. А шамасы:\n   m ∥ n параллель болғандықтан, ішкі айқыш бұрыштардың теңдігі бойынша: y = 3x.\n   Түзу бойындағы жазыңқы бұрыш құрайтын үш бұрыштың қосындысы 180°:\n   y + 40° + 2x = 180°\n   3x + 40° + 2x = 180°\n   5x = 140°\n   x = 28°\n\n2. В шамасы:\n   (7x + 560) / 6 = 150\n   7x + 560 = 900\n   7x = 340\n   x = 340 / 7 ≈ 48,57\n\n3. Шамаларды салыстырамыз:\n   А = 28\n   В ≈ 48,57\n   Демек, А < В, яғни В шамасы үлкен."
 }
 ] as Question[];

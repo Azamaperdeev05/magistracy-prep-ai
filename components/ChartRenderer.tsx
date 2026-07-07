@@ -598,6 +598,36 @@ const TgoCircleRectangleDiagonal: React.FC<Extract<ChartData, { type: 'tgo_circl
 );
 
 
+const TgoPolygonEfLength: React.FC = () => (
+  <ExamFigureFrame className="p-5">
+    <svg viewBox="0 0 360 360" className="w-full max-w-sm mx-auto">
+      {/* Outer Path of the polygon */}
+      <path d="M 50 300 L 170 300 L 170 180 L 250 180 L 250 20 L 190 100 L 50 100 Z" fill="none" stroke="black" strokeWidth="2.5" />
+      
+      {/* Slanted segment EF indicator (optional, line already drawn by path, but we can highlight it or draw it) */}
+      
+      {/* Dimension labels */}
+      <text x="35" y="205" fontSize="18" fontFamily="serif" textAnchor="end">10</text>
+      <text x="110" y="325" fontSize="18" fontFamily="serif" textAnchor="middle">6</text>
+      <text x="180" y="245" fontSize="18" fontFamily="serif" textAnchor="start">6</text>
+      <text x="210" y="170" fontSize="18" fontFamily="serif" textAnchor="middle">4</text>
+      <text x="260" y="105" fontSize="18" fontFamily="serif" textAnchor="start">8</text>
+      <text x="120" y="90" fontSize="18" fontFamily="serif" textAnchor="middle">7</text>
+      
+      {/* Vertices labels */}
+      <text x="40" y="320" fontSize="16" fontFamily="serif" fontWeight="bold">A</text>
+      <text x="175" y="320" fontSize="16" fontFamily="serif" fontWeight="bold">B</text>
+      <text x="175" y="170" fontSize="16" fontFamily="serif" fontWeight="bold">C</text>
+      <text x="260" y="195" fontSize="16" fontFamily="serif" fontWeight="bold">D</text>
+      <text x="250" y="15" fontSize="16" fontFamily="serif" fontWeight="bold">E</text>
+      <text x="180" y="115" fontSize="16" fontFamily="serif" fontWeight="bold">F</text>
+      <text x="40" y="90" fontSize="16" fontFamily="serif" fontWeight="bold">G</text>
+    </svg>
+  </ExamFigureFrame>
+);
+
+
+
 const TgoShadedRectangle: React.FC<Extract<ChartData, { type: 'tgo_shaded_rectangle' }>> = ({ widthParts, heightParts }) => (
   <ExamFigureFrame className="p-5">
     <svg viewBox="0 0 520 300" className="w-full max-w-2xl mx-auto">
@@ -1024,6 +1054,8 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoVennExclusive {...chartData} />;
     case 'tgo_circle_rectangle_diagonal':
       return <TgoCircleRectangleDiagonal {...chartData} />;
+    case 'tgo_polygon_ef_length':
+      return <TgoPolygonEfLength />;
     case 'tgo_shaded_rectangle':
       return <TgoShadedRectangle {...chartData} />;
     case 'tgo_triangle_sides':
