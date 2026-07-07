@@ -2329,5 +2329,50 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "topic": "Салыстыру есептері",
   "difficulty": "easy",
   "hint": "Шешуі:\n1. А шамасы:\n   780 санының 50%-ы = 780 · 0,50 = 390.\n2. В шамасы:\n   850 санының 45%-ы = 850 · 0,45 = 382,5.\n3. Шамаларды салыстырамыз:\n   390 > 382,5, яғни А шамасы үлкен."
+},
+{
+  "id": "tgo-quantity-comparison-three-fractions-abc",
+  "subjectId": "tgo",
+  "text": "Шамаларды салыстырыңыз",
+  "chartData": {
+    "type": "table",
+    "headers": [
+      "А шамасы",
+      "В шамасы",
+      "С шамасы"
+    ],
+    "rows": [
+      [
+        "2⅔",
+        "1¾",
+        "2⅙"
+      ]
+    ]
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-three-fractions-abc-a",
+      "text": "AB ≤ BC"
+    },
+    {
+      "id": "tgo-quantity-comparison-three-fractions-abc-b",
+      "text": "AC < BC"
+    },
+    {
+      "id": "tgo-quantity-comparison-three-fractions-abc-c",
+      "text": "AB > C"
+    },
+    {
+      "id": "tgo-quantity-comparison-three-fractions-abc-d",
+      "text": "AC < B"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-three-fractions-abc-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. Шамаларды ондық бөлшекке айналдырамыз:\n   A = 2⅔ = 8/3 ≈ 2,667\n   B = 1¾ = 7/4 = 1,75\n   C = 2⅙ = 13/6 ≈ 2,167\n\n2. Әр тұжырымды тексереміз:\n   A) AB ≤ BC → A·B = (8/3)·(7/4) = 56/12 = 14/3 ≈ 4,667\n      B·C = (7/4)·(13/6) = 91/24 ≈ 3,792\n      4,667 > 3,792 → AB > BC, яғни AB ≤ BC ЖАЛҒАН.\n\n   B) AC < BC → A·C = (8/3)·(13/6) = 104/18 = 52/9 ≈ 5,778\n      B·C ≈ 3,792\n      5,778 > 3,792 → AC > BC, яғни AC < BC ЖАЛҒАН.\n\n   C) AB > C → AB = 14/3 ≈ 4,667; C = 13/6 ≈ 2,167\n      4,667 > 2,167 → AB > C ДҰРЫС. ✓\n\n   D) AC < B → AC = 52/9 ≈ 5,778; B = 1,75\n      5,778 > 1,75 → AC > B, яғни AC < B ЖАЛҒАН."
 }
 ] as Question[];

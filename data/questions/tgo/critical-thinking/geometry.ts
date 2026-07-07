@@ -1942,5 +1942,103 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. AOB — жазыңқы бұрыш (бір түзудің бойында жатыр), сондықтан оның жалпы шамасы 180° құрайды:\n   ∠AOD + ∠DOC + ∠COB = 180°\n   2x + 6x + x = 180°\n   9x = 180°\n   x = 20°\n\n2. Сұралған қатынасты табамыз:\n   ∠DOC = 6x\n   ∠BOC (немесе ∠COB) = x\n   Қатынасы: ∠DOC / ∠BOC = 6x / x = 6."
+},
+{
+  "id": "tgo-geometry-abcd-shaded-area",
+  "subjectId": "tgo",
+  "text": "ABCD тіктөртбұрышы берілген. Боялған фигураның ауданы.\n\nAB = 11 (жоғарғы қабырға: AF = 8, FB = 3), AD = 7 (сол қабырға: AE = 5, ED = 2).\nДиагональ BD жүргізілген. Боялған аудан — EFBD төртбұрышы (ABD үшбұрышы минус AEF үшбұрышы).",
+  "options": [
+    {
+      "id": "tgo-geometry-abcd-shaded-area-a",
+      "text": "21,5"
+    },
+    {
+      "id": "tgo-geometry-abcd-shaded-area-b",
+      "text": "23"
+    },
+    {
+      "id": "tgo-geometry-abcd-shaded-area-c",
+      "text": "18,5"
+    },
+    {
+      "id": "tgo-geometry-abcd-shaded-area-d",
+      "text": "16,5"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-abcd-shaded-area-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "hard",
+  "hint": "Шешуі:\n1. Тіктөртбұрыштың өлшемдерін анықтаймыз:\n   AB = AF + FB = 8 + 3 = 11 см\n   AD = AE + ED = 5 + 2 = 7 см\n\n2. BD диагоналы тіктөртбұрышты екі тең үшбұрышқа бөледі:\n   △ABD ауданы = (1/2) · 11 · 7 = 38,5 см²\n\n3. Боялмаған △AEF ауданын табамыз:\n   △AEF — A төбесі (жоғарғы сол), E (сол қабырғада), F (жоғарғы қабырғада) тіктік үшбұрыш.\n   AE = 5, AF = 8 → аудан = (1/2) · 8 · 5 = 20 см²\n\n4. Боялған аудан = △ABD – △AEF:\n   38,5 - 20 = 18,5 см²."
+},
+{
+  "id": "tgo-geometry-shaded-square-in-square",
+  "subjectId": "tgo",
+  "text": "Боялған бөліктің ауданын табыңыз.\nСыртқы шаршы қабырғасы: 10 см.\nІшкі (ақ) шаршы қабырғасы: 7 см.",
+  "options": [
+    {
+      "id": "tgo-geometry-shaded-square-in-square-a",
+      "text": "54 см²"
+    },
+    {
+      "id": "tgo-geometry-shaded-square-in-square-b",
+      "text": "52 см²"
+    },
+    {
+      "id": "tgo-geometry-shaded-square-in-square-c",
+      "text": "51 см²"
+    },
+    {
+      "id": "tgo-geometry-shaded-square-in-square-d",
+      "text": "50 см²"
+    },
+    {
+      "id": "tgo-geometry-shaded-square-in-square-e",
+      "text": "48 см²"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-shaded-square-in-square-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "easy",
+  "hint": "Шешуі:\n1. Сыртқы шаршының ауданы:\n   S₁ = 10² = 100 см²\n2. Ішкі (ақ) шаршының ауданы:\n   S₂ = 7² = 49 см²\n3. Боялған бөліктің ауданы = сыртқы аудан - ішкі аудан:\n   S = 100 - 49 = 51 см²."
+},
+{
+  "id": "tgo-geometry-number-line-smallest",
+  "subjectId": "tgo",
+  "text": "Сандық түзуде R, S, T, U, V нүктелері берілген. T нүктесі -1-де, U нүктесі 0-де, V нүктесі 1-де орналасқан. R және S нүктелері T-нің сол жағында (теріс жағында) орналасқан.\n\nНаименьшая координата относится к точке — Ең кіші координата қай нүктеге тиесілі?",
+  "options": [
+    {
+      "id": "tgo-geometry-number-line-smallest-a",
+      "text": "V"
+    },
+    {
+      "id": "tgo-geometry-number-line-smallest-b",
+      "text": "U"
+    },
+    {
+      "id": "tgo-geometry-number-line-smallest-c",
+      "text": "S"
+    },
+    {
+      "id": "tgo-geometry-number-line-smallest-d",
+      "text": "T"
+    },
+    {
+      "id": "tgo-geometry-number-line-smallest-e",
+      "text": "R"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-number-line-smallest-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "easy",
+  "hint": "Шешуі:\nСандық түзуде нүктелер солдан оңға қарай орналасады: R, S, T(-1), U(0), V(1).\nСол жағында орналасқан нүкте ең кіші координатаға ие болады.\nR — ең сол жақтағы нүкте, демек оның координатасы ең кіші."
 }
 ] as Question[];

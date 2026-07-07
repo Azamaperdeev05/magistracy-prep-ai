@@ -1864,5 +1864,39 @@ export const tgoCriticalThinkingAlgebraQuestions = [
   "topic": "Алгебра",
   "difficulty": "easy",
   "hint": "Шешуі:\nӘр шаманың мәнін есептейміз:\n- a = 5 · 2 - 4 = 10 - 4 = 6\n- b = 5 · 22 - 44 = 110 - 44 = 66\n- c = 5 · 222 - 444 = 1110 - 444 = 666\n\nСалыстырамыз: 6 < 66 < 666 => c шамасы a, b-дан үлкен."
+},
+{
+  "id": "tgo-algebra-two-numbers-sum",
+  "subjectId": "tgo",
+  "text": "Екі санның қосындысы 20,6-ға тең. Бірінші санның мәні 13,8-ге тең болса, екінші санның мәні",
+  "options": [
+    {
+      "id": "tgo-algebra-two-numbers-sum-a",
+      "text": "4,8"
+    },
+    {
+      "id": "tgo-algebra-two-numbers-sum-b",
+      "text": "5,8"
+    },
+    {
+      "id": "tgo-algebra-two-numbers-sum-c",
+      "text": "9,8"
+    },
+    {
+      "id": "tgo-algebra-two-numbers-sum-d",
+      "text": "6,8"
+    },
+    {
+      "id": "tgo-algebra-two-numbers-sum-e",
+      "text": "7,8"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-algebra-two-numbers-sum-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Алгебра",
+  "difficulty": "easy",
+  "hint": "Шешуі:\nЕкінші санды табу үшін қосындыдан бірінші санды азайтамыз:\n20,6 - 13,8 = 6,8.\n\nДемек, екінші санның мәні 6,8."
 }
 ] as Question[];
