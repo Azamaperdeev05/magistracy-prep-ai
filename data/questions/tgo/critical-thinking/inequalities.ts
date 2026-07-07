@@ -1736,5 +1736,69 @@ export const tgoCriticalThinkingInequalitiesQuestions = [
   "topic": "Теңсіздіктер",
   "difficulty": "medium",
   "hint": "Теңсіздікті шешу қадамдары:\n1. Жақшаны ашамыз:\n   5z + 10 + 14 < 6 - z\n   5z + 24 < 6 - z\n2. Белгісіз айнымалылары бар мүшелерді сол жаққа, сандарды оң жаққа жинаймыз:\n   5z + z < 6 - 24\n   6z < -18\n3. Шешімін табамыз:\n   z < -3."
+},
+{
+  "id": "tgo-inequalities-cube-root-difference-squares",
+  "subjectId": "tgo",
+  "text": "(√x³ − 6)(√x³ + 6) ≥ 180 теңсіздігінің шешімі",
+  "options": [
+    {
+      "id": "tgo-inequalities-cube-root-difference-squares-a",
+      "text": "(−6; +∞]"
+    },
+    {
+      "id": "tgo-inequalities-cube-root-difference-squares-b",
+      "text": "[−6; +∞)"
+    },
+    {
+      "id": "tgo-inequalities-cube-root-difference-squares-c",
+      "text": "(6; +∞)"
+    },
+    {
+      "id": "tgo-inequalities-cube-root-difference-squares-d",
+      "text": "[6; +∞)"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-inequalities-cube-root-difference-squares-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Теңсіздіктер",
+  "difficulty": "hard",
+  "hint": "Шешуі:\n1. Қысқаша көбейту формуласын қолданамыз (айырма квадраттарының көбейтіндісі):\n   (√x³ − 6)(√x³ + 6) = (√x³)² − 6² = x³ − 36\n\n2. Теңсіздікті жазамыз:\n   x³ − 36 ≥ 180\n   x³ ≥ 216\n\n3. Текше түбірін табамыз:\n   x ≥ ∛216\n   x ≥ 6\n\nШешімі: [6; +∞)."
+},
+{
+  "id": "tgo-inequalities-abs-value-constraint",
+  "subjectId": "tgo",
+  "text": "Егер |8x − 4| > 5 және x < 1 болса, онда келесі тұжырымдардың арасындағы X-тің қабылдайтын мәні",
+  "options": [
+    {
+      "id": "tgo-inequalities-abs-value-constraint-a",
+      "text": "0,8"
+    },
+    {
+      "id": "tgo-inequalities-abs-value-constraint-b",
+      "text": "0,5"
+    },
+    {
+      "id": "tgo-inequalities-abs-value-constraint-c",
+      "text": "0"
+    },
+    {
+      "id": "tgo-inequalities-abs-value-constraint-d",
+      "text": "0,4"
+    },
+    {
+      "id": "tgo-inequalities-abs-value-constraint-e",
+      "text": "−0,4"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-inequalities-abs-value-constraint-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Теңсіздіктер",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. |8x − 4| > 5 теңсіздігін шешеміз:\n   Жағдай 1: 8x − 4 > 5 → 8x > 9 → x > 9/8 = 1,125\n   Жағдай 2: 8x − 4 < −5 → 8x < −1 → x < −1/8 = −0,125\n\n   Шешімі: x < −0,125 немесе x > 1,125.\n\n2. Қосымша шарт: x < 1.\n   x > 1,125 шартымен x < 1 қиылыспайды.\n   Демек, тек x < −0,125 қалады.\n\n3. Нұсқаларды тексереміз:\n   A) 0,8 — ЖОҚ (0,8 > −0,125)\n   B) 0,5 — ЖОҚ\n   C) 0 — ЖОҚ\n   D) 0,4 — ЖОҚ\n   E) −0,4 — ИӘ (−0,4 < −0,125) ✓\n\nТексеру: |8(−0,4) − 4| = |−3,2 − 4| = |−7,2| = 7,2 > 5 ✓"
 }
 ] as Question[];

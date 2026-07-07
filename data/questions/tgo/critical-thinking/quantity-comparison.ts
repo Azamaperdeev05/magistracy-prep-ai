@@ -2374,5 +2374,109 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "topic": "Салыстыру есептері",
   "difficulty": "medium",
   "hint": "Шешуі:\n1. Шамаларды ондық бөлшекке айналдырамыз:\n   A = 2⅔ = 8/3 ≈ 2,667\n   B = 1¾ = 7/4 = 1,75\n   C = 2⅙ = 13/6 ≈ 2,167\n\n2. Әр тұжырымды тексереміз:\n   A) AB ≤ BC → A·B = (8/3)·(7/4) = 56/12 = 14/3 ≈ 4,667\n      B·C = (7/4)·(13/6) = 91/24 ≈ 3,792\n      4,667 > 3,792 → AB > BC, яғни AB ≤ BC ЖАЛҒАН.\n\n   B) AC < BC → A·C = (8/3)·(13/6) = 104/18 = 52/9 ≈ 5,778\n      B·C ≈ 3,792\n      5,778 > 3,792 → AC > BC, яғни AC < BC ЖАЛҒАН.\n\n   C) AB > C → AB = 14/3 ≈ 4,667; C = 13/6 ≈ 2,167\n      4,667 > 2,167 → AB > C ДҰРЫС. ✓\n\n   D) AC < B → AC = 52/9 ≈ 5,778; B = 1,75\n      5,778 > 1,75 → AC > B, яғни AC < B ЖАЛҒАН."
+},
+{
+  "id": "tgo-quantity-comparison-parallel-lines-equation",
+  "subjectId": "tgo",
+  "text": "А және В шамаларын салыстырыңыз",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": "m ∥ n параллель түзулер арасындағы үшбұрыш берілген. Төбе бұрышы = 50°, m түзуіндегі бұрыштар 4x және 3x.\ny-бұрышының бұрыштық мәні.",
+    "columnB": "(7x + 560) / 6 = 150\nТеңдеуінің шешімі"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-a",
+      "text": "В шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-b",
+      "text": "Шамаларды салыстыру мүмкін емес"
+    },
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-c",
+      "text": "A=B"
+    },
+    {
+      "id": "tgo-quantity-comparison-parallel-lines-equation-d",
+      "text": "А шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-parallel-lines-equation-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "hard",
+  "hint": "Шешуі:\n1. А шамасы (геометрия):\n   m ∥ n параллель түзулер, үшбұрыш төбесі m түзуінде.\n   m түзуінде: 4x + 50° + 3x = 180° (түзу бойындағы бұрыштар)\n   7x = 130° → x = 130/7\n   y = 4x = 520/7 ≈ 74,3° (немесе y = 3x = 390/7 ≈ 55,7°).\n\n2. В шамасы (теңдеу):\n   (7x + 560) / 6 = 150\n   7x + 560 = 900\n   7x = 340\n   x = 340/7 ≈ 48,6.\n\n3. Салыстыру: A ≥ 55,7 > 48,6 = B → А шамасы үлкен."
+},
+{
+  "id": "tgo-quantity-comparison-b-greater-a-m-less-a",
+  "subjectId": "tgo",
+  "text": "Егер b > a және M < a болса, онда келесі тұжырымдардың арасындағы дұрыс тұжырымы",
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-b-greater-a-m-less-a-a",
+      "text": "b − M = −1"
+    },
+    {
+      "id": "tgo-quantity-comparison-b-greater-a-m-less-a-b",
+      "text": "b − a = −1"
+    },
+    {
+      "id": "tgo-quantity-comparison-b-greater-a-m-less-a-c",
+      "text": "a − b = 1"
+    },
+    {
+      "id": "tgo-quantity-comparison-b-greater-a-m-less-a-d",
+      "text": "M − a = 1"
+    },
+    {
+      "id": "tgo-quantity-comparison-b-greater-a-m-less-a-e",
+      "text": "b − M = 1"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-b-greater-a-m-less-a-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\nb > a және M < a болғандықтан, M < a < b.\n\nӘр нұсқаны тексереміз:\nA) b − M = −1 → b < M, бірақ b > M (себебі b > a > M). ЖАЛҒАН.\nB) b − a = −1 → b < a, бірақ b > a. ЖАЛҒАН.\nC) a − b = 1 → a > b, бірақ a < b. ЖАЛҒАН.\nD) M − a = 1 → M > a, бірақ M < a. ЖАЛҒАН.\nE) b − M = 1 → b > M, бұл M < a < b шартымен сәйкес. ✓\n\nТек E) нұсқасы берілген шарттармен қайшы келмейді."
+},
+{
+  "id": "tgo-quantity-comparison-fractions-2023-2024",
+  "subjectId": "tgo",
+  "text": "А және В шамаларын салыстырыңыз",
+  "chartData": {
+    "type": "comparison_table",
+    "columnA": "2023/2022",
+    "columnB": "2024/2023"
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-fractions-2023-2024-a",
+      "text": "A=B"
+    },
+    {
+      "id": "tgo-quantity-comparison-fractions-2023-2024-b",
+      "text": "В шамасы үлкен"
+    },
+    {
+      "id": "tgo-quantity-comparison-fractions-2023-2024-c",
+      "text": "Шамаларды салыстыру мүмкін емес"
+    },
+    {
+      "id": "tgo-quantity-comparison-fractions-2023-2024-d",
+      "text": "А шамасы үлкен"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-fractions-2023-2024-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шешуі:\nӘр бөлшекті аралас сан түрінде жазамыз:\n   A = 2023/2022 = 1 + 1/2022\n   B = 2024/2023 = 1 + 1/2023\n\nСалыстыру:\n   1/2022 > 1/2023 (бөлімі кіші болған бөлшек үлкен).\n   Демек, 1 + 1/2022 > 1 + 1/2023.\n   А > В → А шамасы үлкен."
 }
 ] as Question[];
