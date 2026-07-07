@@ -1895,5 +1895,56 @@ export const tgoCriticalThinkingQuantityComparisonQuestions = [
   "type": "SINGLE",
   "topic": "Салыстыру есептері",
   "difficulty": "medium"
+},
+{
+  "id": "tgo-quantity-comparison-three-fractions",
+  "subjectId": "tgo",
+  "text": "Шамаларды салыстырыңыз",
+  "chartData": {
+    "type": "tgo_three_quantities",
+    "colA": {
+      "header": "A шамасы",
+      "whole": "2",
+      "num": "2",
+      "den": "3"
+    },
+    "colB": {
+      "header": "B шамасы",
+      "whole": "1",
+      "num": "3",
+      "den": "4"
+    },
+    "colC": {
+      "header": "C шамасы",
+      "whole": "2",
+      "num": "1",
+      "den": "6"
+    }
+  },
+  "options": [
+    {
+      "id": "tgo-quantity-comparison-three-fractions-a",
+      "text": "AB ≤ BC"
+    },
+    {
+      "id": "tgo-quantity-comparison-three-fractions-b",
+      "text": "AC < BC"
+    },
+    {
+      "id": "tgo-quantity-comparison-three-fractions-c",
+      "text": "AB > C"
+    },
+    {
+      "id": "tgo-quantity-comparison-three-fractions-d",
+      "text": "AC < B"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-quantity-comparison-three-fractions-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Салыстыру есептері",
+  "difficulty": "medium",
+  "hint": "Шамаларды есептейік: \n- A = 2 2/3 = 8/3 ≈ 2.67\n- B = 1 3/4 = 7/4 = 1.75\n- C = 2 1/6 = 13/6 ≈ 2.17\n\nЕнді нұсқаларды тексерейік:\n- AB = A · B = 8/3 · 7/4 = 14/3 ≈ 4.67\n- BC = B · C = 7/4 · 13/6 = 91/24 ≈ 3.79\n- AC = A · C = 8/3 · 13/6 = 52/9 ≈ 5.78\n\nC нұсқасында: AB > C => 4.67 > 2.17 (дұрыс). Демек, жауабы: AB > C."
 }
 ] as Question[];

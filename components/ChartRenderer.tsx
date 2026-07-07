@@ -736,6 +736,53 @@ const TgoCoordinateLine: React.FC = () => {
   );
 };
 
+const TgoThreeQuantities: React.FC<Extract<ChartData, { type: 'tgo_three_quantities' }>> = ({ colA, colB, colC }) => {
+  const renderFractionValue = (val: { whole?: string; num: string; den: string }) => (
+    <div className="inline-flex items-center font-serif text-3xl font-bold select-none text-[#1e293b]">
+      {val.whole && <span className="mr-1.5">{val.whole}</span>}
+      <div className="inline-flex flex-col items-center justify-center text-xl align-middle leading-none border-l border-transparent px-1">
+        <span className="border-b border-slate-900 pb-0.5 px-0.5">{val.num}</span>
+        <span className="pt-0.5 px-0.5">{val.den}</span>
+      </div>
+    </div>
+  );
+
+  return (
+    <ExamFigureFrame className="overflow-hidden p-4 bg-white border border-slate-200">
+      <div className="max-w-md mx-auto border border-slate-400 rounded-lg overflow-hidden bg-slate-50/50 shadow-sm">
+        <table className="w-full text-center border-collapse">
+          <thead>
+            <tr className="bg-slate-100 border-b border-slate-400">
+              <th className="py-2.5 px-4 font-serif text-base font-bold text-slate-800 border-r border-slate-400 w-1/3">
+                {colA.header}
+              </th>
+              <th className="py-2.5 px-4 font-serif text-base font-bold text-slate-800 border-r border-slate-400 w-1/3">
+                {colB.header}
+              </th>
+              <th className="py-2.5 px-4 font-serif text-base font-bold text-slate-800 w-1/3">
+                {colC.header}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="py-6 px-4 border-r border-slate-400 bg-white">
+                {renderFractionValue(colA)}
+              </td>
+              <td className="py-6 px-4 border-r border-slate-400 bg-white">
+                {renderFractionValue(colB)}
+              </td>
+              <td className="py-6 px-4 bg-white">
+                {renderFractionValue(colC)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ExamFigureFrame>
+  );
+};
+
 // Main ChartRenderer Component
 const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
   switch (chartData.type) {
@@ -773,6 +820,8 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoSquareMosaic {...chartData} />;
     case 'tgo_coordinate_line':
       return <TgoCoordinateLine />;
+    case 'tgo_three_quantities':
+      return <TgoThreeQuantities {...chartData} />;
     default:
       return null;
   }
