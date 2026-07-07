@@ -1635,5 +1635,42 @@ export const tgoCriticalThinkingInequalitiesQuestions = [
   "type": "SINGLE",
   "topic": "Теңсіздіктер",
   "difficulty": "medium"
+},
+{
+  "id": "tgo-inequalities-fraction-solve",
+  "subjectId": "tgo",
+  "text": "Теңсіздікті шешіңіз:",
+  "chartData": {
+    "type": "tgo_inequality_fraction"
+  },
+  "options": [
+    {
+      "id": "tgo-inequalities-fraction-solve-a",
+      "text": "(-∞; 0,5]"
+    },
+    {
+      "id": "tgo-inequalities-fraction-solve-b",
+      "text": "(-∞; 2]"
+    },
+    {
+      "id": "tgo-inequalities-fraction-solve-c",
+      "text": "(-∞; -0,5]"
+    },
+    {
+      "id": "tgo-inequalities-fraction-solve-d",
+      "text": "[-0,5; +∞)"
+    },
+    {
+      "id": "tgo-inequalities-fraction-solve-e",
+      "text": "[-2; +∞)"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-inequalities-fraction-solve-c"
+  ],
+  "type": "SINGLE",
+  "topic": "Теңсіздіктер",
+  "difficulty": "medium",
+  "hint": "Теңсіздікті шешу қадамдары:\n1. Екі жағын да 2-ге көбейтеміз:\n   3 · (6 + 4x) ≤ 2 · (-2x + 5)\n   18 + 12x ≤ -4x + 10\n2. Белгісіз айнымалыларды сол жаққа, бос мүшелерді оң жаққа жинаймыз:\n   12x + 4x ≤ 10 - 18\n   16x ≤ -8\n3. 16-ға бөлеміз:\n   x ≤ -8/16\n   x ≤ -0,5\n\nДемек, шешімі: (-∞; -0,5]."
 }
 ] as Question[];

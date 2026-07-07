@@ -816,6 +816,26 @@ const TgoAngleBisector: React.FC = () => {
   );
 };
 
+const TgoInequalityFraction: React.FC = () => {
+  return (
+    <ExamFigureFrame className="p-6 bg-white border border-slate-200">
+      <div className="flex items-center justify-center font-serif text-3xl font-bold select-none text-[#1e293b] gap-3">
+        {/* Fraction */}
+        <div className="flex flex-col items-center justify-center">
+          <span className="pb-1 px-2 border-b-2 border-slate-900 leading-none">3 · (6 + 4x)</span>
+          <span className="pt-1 px-2 leading-none">2</span>
+        </div>
+        
+        {/* Operator */}
+        <span className="text-4xl leading-none">≤</span>
+        
+        {/* Right side */}
+        <span className="leading-none">-2x + 5</span>
+      </div>
+    </ExamFigureFrame>
+  );
+};
+
 // Main ChartRenderer Component
 const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
   switch (chartData.type) {
@@ -857,6 +877,8 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoThreeQuantities {...chartData} />;
     case 'tgo_angle_bisector':
       return <TgoAngleBisector />;
+    case 'tgo_inequality_fraction':
+      return <TgoInequalityFraction />;
     default:
       return null;
   }

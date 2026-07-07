@@ -78,7 +78,8 @@ export type ChartData =
       colB: { header: string; whole?: string; num: string; den: string };
       colC: { header: string; whole?: string; num: string; den: string };
     }
-  | { type: 'tgo_angle_bisector' };
+  | { type: 'tgo_angle_bisector' }
+  | { type: 'tgo_inequality_fraction' };
 
 export type TgoVisualData =
   | { type: 'triangle_bc'; totalBase: number; rightBase: number; leftHeight: number }
