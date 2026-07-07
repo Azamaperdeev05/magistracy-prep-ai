@@ -64,6 +64,161 @@ const calculateCEFRLevel = (levelStats: Record<string, { correct: number; total:
   return 'Pre-A1';
 };
 
+const Gauge: React.FC<{ score: number; max: number }> = ({ score, max }) => {
+  const percentage = max > 0 ? (score / max) * 100 : 0;
+  const radius = 80;
+  const circ = 2 * Math.PI * radius; // ~502.65
+  const arcLength = circ * (240 / 360); // ~335.1
+  const strokeDashoffset = arcLength - (percentage / 100) * arcLength;
+
+  // The gauge starts at 150 degrees (bottom-left) and sweeps 240 degrees to 390 degrees.
+  const angle = 150 + (percentage / 100) * 240;
+  const angleRad = (angle * Math.PI) / 180;
+  const dotX = 100 + radius * Math.cos(angleRad);
+  const dotY = 100 + radius * Math.sin(angleRad);
+
+  let statusText = "Күшейту қажет";
+  let badgeClass = "bg-rose-50 text-rose-600 border border-rose-100";
+  if (percentage >= 75) {
+    statusText = "Тамаша нәтиже";
+    badgeClass = "bg-emerald-50 text-emerald-600 border border-emerald-100";
+  } else if (percentage >= 50) {
+    statusText = "Орташа деңгей";
+    badgeClass = "bg-amber-50 text-amber-600 border border-amber-100";
+  }
+
+  return (
+    <div className="flex flex-col items-center select-none bg-white rounded-3xl shadow-xl p-8 mb-8 border border-slate-100 max-w-sm mx-auto text-center">
+      <div className="relative w-56 h-48">
+        <svg className="w-full h-full" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="50%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#ec4899" />
+            </linearGradient>
+          </defs>
+          {/* Background Arc */}
+          <circle
+            cx="100"
+            cy="100"
+            r={radius}
+            fill="none"
+            stroke="#f8fafc"
+            strokeWidth="10"
+            strokeLinecap="round"
+            strokeDasharray={`${arcLength} ${circ}`}
+            transform="rotate(150 100 100)"
+          />
+          {/* Active Arc */}
+          <circle
+            cx="100"
+            cy="100"
+            r={radius}
+            fill="none"
+            stroke="url(#gaugeGradient)"
+            strokeWidth="10"
+            strokeLinecap="round"
+            strokeDasharray={`${arcLength} ${circ}`}
+            strokeDashoffset={strokeDashoffset}
+            transform="rotate(150 100 100)"
+            className="transition-all duration-1000 ease-out"
+          />
+          {/* Indicator Dot */}
+          {percentage > 0 && (
+            <circle
+              cx={dotX}
+              cy={dotY}
+              r="6.5"
+              fill="#ffffff"
+              stroke="#ef4444"
+              strokeWidth="3"
+              className="transition-all duration-1000 ease-out"
+            />
+          )}
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
+          <span className="text-5xl font-black text-slate-800 tracking-tighter">{score}</span>
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">/ {max} Ұпай</span>
+        </div>
+      </div>
+      <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${badgeClass} -mt-4 shadow-sm`}>
+        {statusText}
+      </span>
+    </div>
+  );
+};
+
+const MiniGauge: React.FC<{ percentage: number }> = ({ percentage }) => {
+  const radius = 22;
+  const circ = 2 * Math.PI * radius;
+  const arcLength = circ * (240 / 360);
+  const strokeDashoffset = arcLength - (percentage / 100) * arcLength;
+  
+  let strokeColor = "#ef4444"; // Red
+  if (percentage >= 75) {
+    strokeColor = "#10b981"; // Green
+  } else if (percentage >= 50) {
+    strokeColor = "#f59e0b"; // Orange
+  }
+
+  return (
+    <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
+      <svg className="w-full h-full" viewBox="0 0 60 60">
+        <circle
+          cx="30"
+          cy="30"
+          r={radius}
+          fill="none"
+          stroke="#f8fafc"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={`${arcLength} ${circ}`}
+          transform="rotate(150 30 30)"
+        />
+        <circle
+          cx="30"
+          cy="30"
+          r={radius}
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={`${arcLength} ${circ}`}
+          strokeDashoffset={strokeDashoffset}
+          transform="rotate(150 30 30)"
+          className="transition-all duration-1000 ease-out"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-slate-800 pt-0.5">
+        {Math.round(percentage)}%
+      </span>
+    </div>
+  );
+};
+
+const getSubjectRecommendation = (pct: number) => {
+  if (pct >= 75) {
+    return {
+      text: "Керемет нәтиже! Дайындығыңыз өте жоғары деңгейде.",
+      badge: "Жоғары дайындық",
+      badgeClass: "bg-emerald-50 text-emerald-600 border border-emerald-100"
+    };
+  } else if (pct >= 50) {
+    return {
+      text: "Жақсы нәтиже. Аздаған тақырыптарды қайталап, пысықтау керек.",
+      badge: "Орташа дайындық",
+      badgeClass: "bg-amber-50 text-amber-600 border border-amber-100"
+    };
+  } else {
+    return {
+      text: "Бұл пәннен дайындықты күшейту қажет. Тақырыптарды оқыңыз.",
+      badge: "Күшейту қажет",
+      badgeClass: "bg-rose-50 text-rose-600 border border-rose-100"
+    };
+  }
+};
+
 const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onRestart, onPracticeWrong, userName }) => {
   const [expandedSubject, setExpandedSubject] = useState<SubjectId | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -193,98 +348,71 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
   }, [testResult, questions, answers]);
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] pb-20">
-      <header className="bg-[#348FE2] text-white py-10 shadow-lg text-center">
-        <Trophy className="w-16 h-16 text-yellow-300 mx-auto mb-4" />
-        <h1 className="text-4xl font-black mb-2 uppercase tracking-tighter">Тест нәтижесі</h1>
-        <p className="text-xl text-blue-100 font-light">{userName}, құттықтаймыз!</p>
+    <div className="min-h-screen bg-[#F8FAFC] pb-20">
+      <header className="py-12 text-center">
+        <Trophy className="w-14 h-14 text-amber-500 mx-auto mb-3 animate-bounce" />
+        <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-slate-800">Тест нәтижесі</h1>
+        <p className="text-slate-500 text-sm font-bold uppercase tracking-wider">{userName}, құттықтаймыз!</p>
       </header>
 
-      <div className="max-w-5xl mx-auto px-4 -mt-8">
-        {/* Total Score Card */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-white">
-          <div className="text-center md:text-left">
-            <div className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-2">Жалпы нәтиже</div>
-            <div className="text-7xl font-black text-slate-900 leading-none">
-              {totalScore} <span className="text-3xl text-gray-300 font-normal">/ {maxScore}</span>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <span className="px-4 py-2 bg-green-100 text-green-700 rounded-full font-bold shadow-sm">
-                Ұпай: {totalScore}
-              </span>
-              <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full font-bold shadow-sm">
-                Жоғалтқан: {maxScore - totalScore}
-              </span>
-            </div>
-          </div>
-          
-          <div className="relative w-40 h-40">
-            <svg className="w-full h-full" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="16" fill="none" className="stroke-gray-100" strokeWidth="4" />
-              <circle cx="18" cy="18" r="16" fill="none" className="stroke-blue-500" strokeWidth="4" 
-                strokeDasharray={`${(totalScore/maxScore)*100}, 100`} strokeLinecap="round" transform="rotate(-90 18 18)" />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center text-3xl font-black text-blue-600">
-              {Math.round((totalScore/maxScore)*100)}%
-            </div>
-          </div>
-        </div>
+      <div className="max-w-5xl mx-auto px-4">
+        {/* New Gauge Arc Score Card */}
+        <Gauge score={totalScore} max={maxScore} />
         
         {/* PRO Analytics: Subject & Topic Breakdown */}
-        <h2 className="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
-          <BarChart3 className="w-8 h-8 text-blue-500" />
-          Тереңдетілген аналитика
+        <h2 className="text-xl font-black text-slate-800 mb-6 flex items-center justify-center gap-3">
+          <BarChart3 className="w-6 h-6 text-blue-500" />
+          Пәндер бойынша талдау
         </h2>
 
-        <div className="grid gap-6">
-          {subjectResults.map((result) => (
-            <div key={result.subject.id} className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group">
-              <div 
-                onClick={() => setExpandedSubject(expandedSubject === result.subject.id ? null : result.subject.id)}
-                className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50 transition"
-              >
-                <div className="flex-1">
-                  <h3 className="text-xl font-black text-slate-800 mb-2">{result.subject.name}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(result.topicStats).map(([topic, stats]) => (
-                      <div key={topic} className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold border border-blue-100">
-                        {TOPIC_NAMES[topic] || topic}: {stats.correct}/{stats.total}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-black text-blue-600">
-                      {result.score} <span className="text-sm text-gray-300">/ {result.maxScore}</span>
-                    </div>
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Ұпай</div>
-                  </div>
-                  {expandedSubject === result.subject.id ? <ChevronUp /> : <ChevronDown />}
-                </div>
-              </div>
+        <div className="grid gap-4 max-w-3xl mx-auto mb-8">
+          {subjectResults.map((result) => {
+            const pct = result.maxScore > 0 ? (result.score / result.maxScore) * 100 : 0;
+            const recommendation = getSubjectRecommendation(pct);
 
-              {expandedSubject === result.subject.id && (
-                <div className="p-6 bg-slate-50 border-t border-gray-100">
-                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     {Object.entries(result.topicStats).map(([topic, stats]) => {
-                       const pct = Math.round((stats.correct / stats.total) * 100);
-                       return (
-                         <div key={topic} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                           <div className="flex justify-between items-center mb-3">
-                             <span className="font-bold text-slate-700">{TOPIC_NAMES[topic] || topic}</span>
-                             <span className={`text-sm font-black ${pct >= 70 ? 'text-green-600' : pct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
-                               {stats.correct} / {stats.total}
-                             </span>
+            return (
+              <div key={result.subject.id} className="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100 transition-all">
+                <div 
+                  onClick={() => setExpandedSubject(expandedSubject === result.subject.id ? null : result.subject.id)}
+                  className="p-5 cursor-pointer flex items-center justify-between gap-4 hover:bg-slate-50 transition"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <MiniGauge percentage={pct} />
+                    <div className="text-left">
+                      <h3 className="text-sm font-black text-slate-850">{result.subject.name}</h3>
+                      <p className="text-[11px] text-slate-400 font-bold mt-0.5">{recommendation.text}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <span className={`hidden sm:inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${recommendation.badgeClass}`}>
+                      {recommendation.badge}
+                    </span>
+                    {expandedSubject === result.subject.id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+                  </div>
+                </div>
+
+                {expandedSubject === result.subject.id && (
+                  <div className="p-6 bg-slate-50 border-t border-slate-100">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                       {Object.entries(result.topicStats).map(([topic, stats]) => {
+                         const topicPct = Math.round((stats.correct / stats.total) * 100);
+                         return (
+                           <div key={topic} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                             <div className="flex justify-between items-center mb-3">
+                               <span className="font-bold text-slate-700 text-xs">{TOPIC_NAMES[topic] || topic}</span>
+                               <span className={`text-[11px] font-black ${topicPct >= 70 ? 'text-green-600' : topicPct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
+                                 {stats.correct} / {stats.total}
+                               </span>
+                             </div>
+                             <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                               <div className={`h-full transition-all duration-1000 ${topicPct >= 70 ? 'bg-green-500' : topicPct >= 40 ? 'bg-orange-500' : 'bg-red-500'}`}
+                                 style={{ width: `${topicPct}%` }} />
+                             </div>
                            </div>
-                           <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                             <div className={`h-full transition-all duration-1000 ${pct >= 70 ? 'bg-green-500' : pct >= 40 ? 'bg-orange-500' : 'bg-red-500'}`}
-                               style={{ width: `${pct}%` }} />
-                           </div>
-                         </div>
-                       );
-                     })}
-                   </div>
+                         );
+                       })}
+                     </div>
 
                     {/* Answer Matrix */}
                     <div className="mt-8 text-left">
@@ -409,8 +537,9 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
                 </div>
               )}
             </div>
-          ))}
-        </div>
+          );
+        })}
+      </div>
 
         {/* Feedback Section */}
         <div className="bg-white rounded-3xl shadow-lg p-8 mb-8 border border-gray-100 max-w-2xl mx-auto text-left">
