@@ -86,7 +86,8 @@ export type ChartData =
       eq1Num: string; eq1Den: string; eq1Val: string;
       eq2Num: string; eq2Den: string; eq2Val: string;
       colAExpr: string; colBExpr: string;
-    };
+    }
+  | { type: 'tgo_straight_line_angles' };
 
 export type TgoVisualData =
   | { type: 'triangle_bc'; totalBase: number; rightBase: number; leftHeight: number }

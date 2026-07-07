@@ -1905,5 +1905,42 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "easy",
   "hint": "Шеңбердің периметрі (ұзындығы) формуласы:\nC = 2πR\n\nРадиусы R = 5 см болғандықтан:\nC = 2 · π · 5 = 10π см."
+},
+{
+  "id": "tgo-geometry-straight-line-ratio",
+  "subjectId": "tgo",
+  "text": "AOB нүктелері бір түзудің бойында берілген. ∠DOC / ∠BOC табыңыз",
+  "chartData": {
+    "type": "tgo_straight_line_angles"
+  },
+  "options": [
+    {
+      "id": "tgo-geometry-straight-line-ratio-a",
+      "text": "6"
+    },
+    {
+      "id": "tgo-geometry-straight-line-ratio-b",
+      "text": "15"
+    },
+    {
+      "id": "tgo-geometry-straight-line-ratio-c",
+      "text": "5"
+    },
+    {
+      "id": "tgo-geometry-straight-line-ratio-d",
+      "text": "3"
+    },
+    {
+      "id": "tgo-geometry-straight-line-ratio-e",
+      "text": "10"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-straight-line-ratio-a"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "medium",
+  "hint": "Шешуі:\n1. AOB — жазыңқы бұрыш (бір түзудің бойында жатыр), сондықтан оның жалпы шамасы 180° құрайды:\n   ∠AOD + ∠DOC + ∠COB = 180°\n   2x + 6x + x = 180°\n   9x = 180°\n   x = 20°\n\n2. Сұралған қатынасты табамыз:\n   ∠DOC = 6x\n   ∠BOC (немесе ∠COB) = x\n   Қатынасы: ∠DOC / ∠BOC = 6x / x = 6."
 }
 ] as Question[];

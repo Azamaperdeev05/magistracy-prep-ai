@@ -1623,5 +1623,39 @@ export const tgoCriticalThinkingCriticalReasoningQuestions = [
   "type": "SINGLE",
   "topic": "Сыни ойлау",
   "difficulty": "medium"
+},
+{
+  "id": "tgo-critical-reasoning-quote-justice",
+  "subjectId": "tgo",
+  "text": "Көп нүктенің орнына қажет сөзді қойыңыз\nБүгінгі жастарды қазақ халқының «тура биде туған жоқ» деген даналығының рухында ... болуға тәрбиелейік (Ғ.Мүсірепов).",
+  "options": [
+    {
+      "id": "tgo-critical-reasoning-quote-justice-a",
+      "text": "мейірімді"
+    },
+    {
+      "id": "tgo-critical-reasoning-quote-justice-b",
+      "text": "әділ"
+    },
+    {
+      "id": "tgo-critical-reasoning-quote-justice-c",
+      "text": "жомарт"
+    },
+    {
+      "id": "tgo-critical-reasoning-quote-justice-d",
+      "text": "бауырмал"
+    },
+    {
+      "id": "tgo-critical-reasoning-quote-justice-e",
+      "text": "қатал"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-critical-reasoning-quote-justice-b"
+  ],
+  "type": "SINGLE",
+  "topic": "Сыни ойлау",
+  "difficulty": "easy",
+  "hint": "Мәтелдің түпнұсқасы: «Тура биде туған жоқ, туғанды биде иман жоқ». Бұл нақыл сөз билердің, төрешілердің әділ болуын меңзейді. Сондықтан көп нүктенің орнына «әділ» сөзі сәйкес келеді."
 }
 ] as Question[];

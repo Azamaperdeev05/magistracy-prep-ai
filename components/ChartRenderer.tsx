@@ -920,6 +920,46 @@ const TgoComparisonEquations: React.FC<Extract<ChartData, { type: 'tgo_compariso
   );
 };
 
+const TgoStraightLineAngles: React.FC = () => {
+  return (
+    <ExamFigureFrame className="p-4 bg-white border border-slate-200">
+      <svg viewBox="0 0 280 140" className="w-full max-w-xs mx-auto select-none">
+        {/* Straight line AOB */}
+        <line x1="20" y1="100" x2="260" y2="100" stroke="black" strokeWidth="2" />
+        
+        {/* Point O */}
+        <circle cx="140" cy="100" r="3" fill="black" />
+        
+        {/* Ray OD */}
+        <line x1="140" y1="100" x2="60" y2="40" stroke="black" strokeWidth="2" />
+        
+        {/* Ray OC */}
+        <line x1="140" y1="100" x2="230" y2="60" stroke="black" strokeWidth="2" />
+        
+        {/* Labels for points */}
+        <text x="20" y="125" fontSize="16" fontFamily="serif" fontWeight="bold">A</text>
+        <text x="135" y="125" fontSize="16" fontFamily="serif" fontWeight="bold">O</text>
+        <text x="250" y="125" fontSize="16" fontFamily="serif" fontWeight="bold">B</text>
+        <text x="45" y="30" fontSize="16" fontFamily="serif" fontWeight="bold">D</text>
+        <text x="235" y="55" fontSize="16" fontFamily="serif" fontWeight="bold">C</text>
+        
+        {/* Arcs for angles */}
+        {/* Arc AOD (2x) */}
+        <path d="M 110 100 A 30 30 0 0 1 117 81" fill="none" stroke="black" strokeWidth="1" />
+        {/* Arc DOC (6x) */}
+        <path d="M 121 84 A 25 25 0 0 1 163.5 91.5" fill="none" stroke="black" strokeWidth="1" />
+        {/* Arc COB (x) */}
+        <path d="M 170 100 A 30 30 0 0 0 168 90" fill="none" stroke="black" strokeWidth="1" />
+        
+        {/* Labels for angles */}
+        <text x="85" y="80" fontSize="14" fontFamily="serif" fontStyle="italic">2x</text>
+        <text x="130" y="50" fontSize="14" fontFamily="serif" fontStyle="italic">6x</text>
+        <text x="185" y="88" fontSize="14" fontFamily="serif" fontStyle="italic">x</text>
+      </svg>
+    </ExamFigureFrame>
+  );
+};
+
 // Main ChartRenderer Component
 const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
   switch (chartData.type) {
@@ -967,6 +1007,8 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoEquationSystem {...chartData} />;
     case 'tgo_comparison_equations':
       return <TgoComparisonEquations {...chartData} />;
+    case 'tgo_straight_line_angles':
+      return <TgoStraightLineAngles />;
     default:
       return null;
   }

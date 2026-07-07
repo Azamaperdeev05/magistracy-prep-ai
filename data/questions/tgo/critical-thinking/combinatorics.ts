@@ -1532,5 +1532,39 @@ export const tgoCriticalThinkingCombinatoricsQuestions = [
   "type": "SINGLE",
   "topic": "Комбинаторика",
   "difficulty": "medium"
+},
+{
+  "id": "tgo-combinatorics-points-lines",
+  "subjectId": "tgo",
+  "text": "Кез келген үшеуі бір түзуде орналаспаған 10 нүкте арқылы, неше түзу сызық жүргізуге болады?",
+  "options": [
+    {
+      "id": "tgo-combinatorics-points-lines-a",
+      "text": "90"
+    },
+    {
+      "id": "tgo-combinatorics-points-lines-b",
+      "text": "207"
+    },
+    {
+      "id": "tgo-combinatorics-points-lines-c",
+      "text": "108"
+    },
+    {
+      "id": "tgo-combinatorics-points-lines-d",
+      "text": "120"
+    },
+    {
+      "id": "tgo-combinatorics-points-lines-e",
+      "text": "45"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-combinatorics-points-lines-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Комбинаторика",
+  "difficulty": "medium",
+  "hint": "Шешуі:\nКез келген екі нүкте арқылы тек бір ғана түзу жүргізуге болады. Сондықтан түзулер санын табу үшін 10 нүктенің ішінен 2 нүктені таңдау комбинацияларының санын есептейміз:\nC(10, 2) = 10 · 9 / 2 = 45 түзу.\n\n(Ескерту: Кейбір тест нұсқаларында баспа қатесімен '6 нүкте' деп жазылуы мүмкін. Ондай жағдайда 6 нүкте үшін шешім: C(6, 2) = 15 болар еді, бірақ жауап нұсқаларында 15 жоқ, сондықтан тест авторлары 10 нүктені меңзеп, жауабын 45 деп алған)."
 }
 ] as Question[];
