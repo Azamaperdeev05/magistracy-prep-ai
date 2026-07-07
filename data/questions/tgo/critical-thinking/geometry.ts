@@ -1832,5 +1832,38 @@ export const tgoCriticalThinkingGeometryQuestions = [
   "topic": "Геометрия",
   "difficulty": "medium",
   "hint": "Түзу координаттар басынан (0,0) өтеді, сондықтан оның бос мүшесі жоқ және x өскен сайын y-те тура солай өседі (1,1; 2,2; т.б.). Демек, теңдеу: y = x."
+},
+{
+  "id": "tgo-geometry-angle-bisector",
+  "subjectId": "tgo",
+  "text": "ABC бұрышының BD биссектрисасы. ABD бұрышының градустық өлшемі 40°. CBD бұрышының градустық өлшемін табыңыз.",
+  "chartData": {
+    "type": "tgo_angle_bisector"
+  },
+  "options": [
+    {
+      "id": "tgo-geometry-angle-bisector-a",
+      "text": "80°"
+    },
+    {
+      "id": "tgo-geometry-angle-bisector-b",
+      "text": "90°"
+    },
+    {
+      "id": "tgo-geometry-angle-bisector-c",
+      "text": "65°"
+    },
+    {
+      "id": "tgo-geometry-angle-bisector-d",
+      "text": "40°"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-geometry-angle-bisector-d"
+  ],
+  "type": "SINGLE",
+  "topic": "Геометрия",
+  "difficulty": "easy",
+  "hint": "Биссектриса бұрышты қақ бөледі. Сондықтан ABD бұрышы мен CBD бұрыштары өзара тең: ∠CBD = ∠ABD = 40°."
 }
 ] as Question[];

@@ -77,7 +77,8 @@ export type ChartData =
       colA: { header: string; whole?: string; num: string; den: string };
       colB: { header: string; whole?: string; num: string; den: string };
       colC: { header: string; whole?: string; num: string; den: string };
-    };
+    }
+  | { type: 'tgo_angle_bisector' };
 
 export type TgoVisualData =
   | { type: 'triangle_bc'; totalBase: number; rightBase: number; leftHeight: number }

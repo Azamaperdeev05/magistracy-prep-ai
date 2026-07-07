@@ -783,6 +783,39 @@ const TgoThreeQuantities: React.FC<Extract<ChartData, { type: 'tgo_three_quantit
   );
 };
 
+const TgoAngleBisector: React.FC = () => {
+  return (
+    <ExamFigureFrame className="p-4 bg-white border border-slate-200">
+      <svg viewBox="0 0 240 180" className="w-full max-w-xs mx-auto select-none">
+        {/* Draw Rays */}
+        {/* Ray BC */}
+        <line x1="20" y1="150" x2="41" y2="32" stroke="black" strokeWidth="2.5" />
+        <polygon points="38,36 41,32 44,37" fill="black" />
+        
+        {/* Ray BD */}
+        <line x1="20" y1="150" x2="123" y2="55" stroke="black" strokeWidth="2.5" />
+        <polygon points="119,59 123,55 120,53" fill="black" />
+        
+        {/* Ray BA */}
+        <line x1="20" y1="150" x2="169" y2="137" stroke="black" strokeWidth="2.5" />
+        <polygon points="165,134 169,137 165,140" fill="black" />
+
+        {/* Labels for Vertices */}
+        <text x="10" y="160" fontSize="16" fontFamily="serif" fontWeight="bold">B</text>
+        <text x="32" y="24" fontSize="16" fontFamily="serif" fontWeight="bold">C</text>
+        <text x="131" y="52" fontSize="16" fontFamily="serif" fontWeight="bold">D</text>
+        <text x="175" y="145" fontSize="16" fontFamily="serif" fontWeight="bold">A</text>
+
+        {/* Arc for Angle ABD */}
+        <path d="M 69.8 145.7 A 50 50 0 0 0 56.8 116.2" fill="none" stroke="black" strokeWidth="1.2" />
+        
+        {/* 40° Label */}
+        <text x="76" y="128" fontSize="14" fontFamily="serif" fontWeight="bold">40°</text>
+      </svg>
+    </ExamFigureFrame>
+  );
+};
+
 // Main ChartRenderer Component
 const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
   switch (chartData.type) {
@@ -822,6 +855,8 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({ chartData }) => {
       return <TgoCoordinateLine />;
     case 'tgo_three_quantities':
       return <TgoThreeQuantities {...chartData} />;
+    case 'tgo_angle_bisector':
+      return <TgoAngleBisector />;
     default:
       return null;
   }
