@@ -218,3 +218,474 @@ body {
 html, body, button, select, input, a, [role="button"], .cursor-pointer {
   touch-action: manipulation;
 }
+
+/* ============================================
+   Z-INDEX LAYERING SYSTEM
+   Жоба бойынша z-index конфликттерін болдырмау
+   ============================================ */
+:root {
+  --z-behind: -10;
+  --z-background: -1;
+  --z-base: 0;
+  --z-content: 1;
+  --z-elevated: 5;
+  --z-sticky: 10;
+  --z-sticky-header: 15;
+  --z-interactive: 20;
+  --z-drag-overlay: 30;
+  --z-nav: 50;
+  --z-nav-menu: 51;
+  --z-dropdown: 100;
+  --z-overlay: 120;
+  --z-popover: 250;
+  --z-tooltip: 250;
+  --z-modal-backdrop: 200;
+  --z-modal: 210;
+  --z-modal-content: 220;
+  --z-toast: 300;
+  --z-notification: 310;
+  --z-critical: 400;
+  --z-max: 9999;
+}
+
+/* ============================================
+   SCROLLBAR UTILITIES
+   ============================================ */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thin scrollbar for smaller panels */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ============================================
+   SHADOW UTILITIES
+   ============================================ */
+.nice-shadow {
+  box-shadow: 0 4px 6px -1px rgba(148, 163, 184, 0.15),
+              0 2px 4px -2px rgba(148, 163, 184, 0.1);
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.light-shadow {
+  box-shadow: 0 10px 15px -3px rgba(148, 163, 184, 0.1),
+              0 4px 6px -4px rgba(148, 163, 184, 0.08);
+  outline: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================
+   MODAL / OVERLAY ANIMATIONS
+   UpgradeModal, кез келген модальды терезеге
+   ============================================ */
+@keyframes overlayShow {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlayClose {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes contentShow {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes contentClose {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -52%) scale(0.96); }
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; scale: 0.94; }
+  to   { opacity: 1; scale: 1; }
+}
+
+@keyframes modalExit {
+  from { opacity: 1; scale: 1; }
+  to   { opacity: 0; scale: 0.96; }
+}
+
+@keyframes modalOverlayEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalOverlayExit {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Modal utility classes */
+.modal-overlay-enter {
+  animation: modalOverlayEnter 160ms ease-out forwards;
+}
+
+.modal-overlay-exit {
+  animation: modalOverlayExit 130ms ease-in forwards;
+}
+
+.modal-content-enter {
+  animation: modalEnter 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-content-exit {
+  animation: modalExit 120ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* ============================================
+   FADE TRANSITIONS
+   Компоненттер арасында ауысу
+   ============================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* ============================================
+   SHIMMER / LOADING SKELETON
+   Контент жүктелу анимациясы
+   ============================================ */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+/* Skeleton loading placeholder */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============================================
+   FLIPCARD 3D ANIMATION
+   Карточкалар үшін 3D аудару эффектісі
+   ============================================ */
+.flipcard-container {
+  perspective: 1000px;
+}
+
+.flipcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.7s ease-in-out;
+  transform-style: preserve-3d;
+}
+
+.flipcard-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flipcard-front,
+.flipcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 12px;
+}
+
+.flipcard-back {
+  transform: rotateY(180deg);
+}
+
+/* ============================================
+   ROTATING GRADIENT
+   AI / Premium элементтер үшін
+   ============================================ */
+@property --gradient-angle {
+  syntax: '<angle>';
+  initial-value: 32deg;
+  inherits: false;
+}
+
+@keyframes rotateGradientAngle {
+  from { --gradient-angle: 32deg; }
+  to { --gradient-angle: 392deg; }
+}
+
+.rotating-gradient-bg {
+  background: conic-gradient(
+    from var(--gradient-angle) at 53% 50%,
+    #3b82f6 4deg,
+    #6366f1 120deg,
+    #8b5cf6 240deg,
+    #3b82f6 360deg
+  );
+  animation: rotateGradientAngle 20s linear infinite;
+  box-shadow: 0 2px 8px -2px rgba(99, 102, 241, 0.3);
+}
+
+/* ============================================
+   AI STREAMING / CURSOR ANIMATIONS
+   AI көмекші ұяшығы үшін
+   ============================================ */
+@keyframes ai-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.ai-streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: linear-gradient(180deg, #3b82f6 0%, #6366f1 100%);
+  margin-left: 2px;
+  animation: ai-cursor-blink 1s ease-in-out infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes ai-text-reveal {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.ai-streaming-text {
+  background: linear-gradient(
+    90deg,
+    #3b82f6 0%,
+    #6366f1 20%,
+    #8b5cf6 40%,
+    #3b82f6 60%,
+    #6366f1 80%,
+    #93c5fd 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: ai-text-reveal 1.5s linear infinite;
+}
+
+.ai-streaming-text.complete {
+  animation: none;
+  background: none;
+  color: inherit;
+}
+
+/* AI block appear animation */
+@keyframes ai-block-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: none;
+  }
+}
+
+.ai-block-animate {
+  animation: ai-block-appear 0.8s ease-out forwards;
+}
+
+/* AI border flow effect */
+@keyframes ai-border-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.ai-border-glow {
+  position: relative;
+}
+
+.ai-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.6) 0%,
+    rgba(99, 102, 241, 0.6) 25%,
+    rgba(139, 92, 246, 0.6) 50%,
+    rgba(99, 102, 241, 0.6) 75%,
+    rgba(59, 130, 246, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: ai-border-flow 2s ease-in-out infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================
+   DOTS BACKGROUND PATTERN
+   Фон паттерні
+   ============================================ */
+.custom-dots-bg {
+  background-attachment: fixed;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-position: 0 0, 25px 25px;
+  background-size: 50px 50px;
+  background-repeat: repeat;
+}
+
+/* ============================================
+   CONFIRMATION DIALOG ANIMATIONS
+   ============================================ */
+@keyframes dialog-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialog-slide-down {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+.dialog-enter {
+  animation: dialog-slide-up 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dialog-exit {
+  animation: dialog-slide-down 150ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* ============================================
+   TOOLTIP STYLES
+   Жалпы tooltip стильдері
+   ============================================ */
+.tooltip {
+  position: fixed;
+  background: rgba(15, 23, 42, 0.95);
+  color: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 200ms;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2),
+              0 4px 6px -4px rgba(0, 0, 0, 0.15);
+  z-index: var(--z-tooltip, 250);
+}
+
+.tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   BUBBLE POP-IN ANIMATION
+   Notification / chat bubble
+   ============================================ */
+@keyframes bubble-in {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-bubble-in {
+  animation: bubble-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============================================
+   EMBED ICONS SCROLL (infinite marquee)
+   ============================================ */
+@keyframes embed-icons-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: embed-icons-scroll 20s linear infinite;
+}

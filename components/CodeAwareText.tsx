@@ -4,6 +4,8 @@ interface CodeAwareTextProps {
   text: string;
   className?: string;
   codeClassName?: string;
+  subjectId?: string;
+  forceCode?: boolean;
 }
 
 const CODE_TOKEN_PATTERN =
@@ -22,8 +24,32 @@ const unwrapCodeToken = (value: string): string => {
   if ((value.startsWith('`') && value.endsWith('`')) || (value.startsWith('"') && value.endsWith('"'))) {
     return value.slice(1, -1);
   }
-
   return value;
+};
+
+const cleanTextArtifacts = (str: string): string => {
+  if (!str) return str;
+  let cleaned = str.trim();
+
+  // Strip wrapping backticks if they enclose the whole option or text
+  if (cleaned.startsWith('`') && cleaned.endsWith('`') && cleaned.length > 2) {
+    cleaned = cleaned.slice(1, -1).trim();
+  }
+
+  return cleaned;
+};
+
+const isITSubject = (subjectId?: string): boolean => {
+  if (!subjectId) return false;
+  const s = subjectId.toLowerCase();
+  return (
+    s.includes('algo') ||
+    s.includes('db') ||
+    s.includes('code') ||
+    s.includes('programming') ||
+    s.includes('m002') ||
+    s.includes('it')
+  );
 };
 
 const isFullCodeText = (text: string): boolean => {
@@ -36,13 +62,27 @@ const isFullCodeText = (text: string): boolean => {
   return hasCodeSignal && !hasSentenceSignal;
 };
 
-const CodeAwareText: React.FC<CodeAwareTextProps> = ({ text, className = '', codeClassName }) => {
+const CodeAwareText: React.FC<CodeAwareTextProps> = ({
+  text,
+  className = '',
+  codeClassName,
+  subjectId,
+  forceCode = false,
+}) => {
   if (!text) return null;
+
+  const processedText = cleanTextArtifacts(text);
+
+  // If this is not an IT / Programming subject and code is not forced,
+  // do NOT apply code keyword highlighting (e.g. for "for", "if", "select" in English tests)
+  if (!forceCode && !isITSubject(subjectId)) {
+    return <span className={className}>{processedText}</span>;
+  }
 
   const codeClass = codeClassName || baseCodeClass;
 
-  if (isFullCodeText(text)) {
-    return <code className={`${fullCodeClass} ${className}`.trim()}>{text}</code>;
+  if (isFullCodeText(processedText)) {
+    return <code className={`${fullCodeClass} ${className}`.trim()}>{processedText}</code>;
   }
 
   const parts: React.ReactNode[] = [];
@@ -51,9 +91,9 @@ const CodeAwareText: React.FC<CodeAwareTextProps> = ({ text, className = '', cod
 
   CODE_TOKEN_PATTERN.lastIndex = 0;
 
-  while ((match = CODE_TOKEN_PATTERN.exec(text)) !== null) {
+  while ((match = CODE_TOKEN_PATTERN.exec(processedText)) !== null) {
     if (match.index > currentIndex) {
-      parts.push(text.slice(currentIndex, match.index));
+      parts.push(processedText.slice(currentIndex, match.index));
     }
 
     parts.push(
@@ -65,11 +105,11 @@ const CodeAwareText: React.FC<CodeAwareTextProps> = ({ text, className = '', cod
     currentIndex = CODE_TOKEN_PATTERN.lastIndex;
   }
 
-  if (currentIndex < text.length) {
-    parts.push(text.slice(currentIndex));
+  if (currentIndex < processedText.length) {
+    parts.push(processedText.slice(currentIndex));
   }
 
-  return <span className={className}>{parts.length > 0 ? parts : text}</span>;
+  return <span className={className}>{parts.length > 0 ? parts : processedText}</span>;
 };
 
 export default CodeAwareText;

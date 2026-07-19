@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'r
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { generateQuestionsForSubject } from './services/apiService';
-import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields } from './services/authService';
+import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
+import { calculateTestResult } from './services/scoringService';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import AuthScreen from './components/AuthScreen';
@@ -14,6 +15,7 @@ import SyllabusScreen from './components/SyllabusScreen';
 import HistoryScreen from './components/HistoryScreen';
 import PrepScreen from './components/PrepScreen';
 import SpecialtiesScreen from './components/SpecialtiesScreen';
+import SpecialtyDetailScreen from './components/SpecialtyDetailScreen';
 import TestSetupScreen from './components/TestSetupScreen';
 import ConsentGateScreen from './components/ConsentGateScreen';
 import AdminScreen from './components/AdminScreen';
@@ -33,6 +35,9 @@ const RootApp: React.FC = () => {
       return [];
     }
   });
+  const [isInProgress, setIsInProgress] = useState<boolean>(
+    () => localStorage.getItem('active_test_in_progress') === 'true'
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>(() => {
     const saved = localStorage.getItem('active_test_answers');
@@ -159,6 +164,8 @@ const RootApp: React.FC = () => {
       }
 
       localStorage.removeItem('active_test_answers');
+      localStorage.setItem('active_test_in_progress', 'true');
+      setIsInProgress(true);
       setQuestions(allQuestions);
       setUserAnswers({});
       navigate('/test');
@@ -170,26 +177,54 @@ const RootApp: React.FC = () => {
     }
   };
 
-  const handleFinishTest = (answers: UserAnswers) => {
+  const handleFinishTest = async (answers: UserAnswers) => {
     setUserAnswers(answers);
+    localStorage.removeItem('active_test_in_progress');
+    localStorage.removeItem('active_test_start_time');
+    setIsInProgress(false);
+
+    const resultId = `res_${Date.now()}`;
+    const resultPayload = {
+      resultId,
+      questions,
+      answers,
+      userName: user.full_name,
+      timestamp: new Date().toISOString()
+    };
+
     try {
+      localStorage.setItem(`test_result_${resultId}`, JSON.stringify(resultPayload));
+      localStorage.setItem('latest_result_id', resultId);
       localStorage.setItem('active_test_answers', JSON.stringify(answers));
+
+      if (questions.length > 0) {
+        const resObj = calculateTestResult(questions, answers);
+        saveTestResult(resObj, questions.map(q => q.id), answers).catch(e => {
+          console.error("Firestore history save error:", e);
+        });
+      }
     } catch (e) {
-      console.error("Error saving active_test_answers on finish:", e);
+      console.error("Error saving result payload on finish:", e);
     }
-    navigate('/result');
+
+    navigate(`/result/${resultId}`);
   };
 
   const handleRestart = () => {
     setQuestions([]);
     setUserAnswers({});
+    setIsInProgress(false);
     localStorage.removeItem('active_test_questions');
     localStorage.removeItem('active_test_answers');
+    localStorage.removeItem('active_test_in_progress');
+    localStorage.removeItem('active_test_start_time');
     navigate('/home');
   };
 
   const handlePracticeWrong = (wrongQuestions: Question[]) => {
     localStorage.removeItem('active_test_answers');
+    localStorage.setItem('active_test_in_progress', 'true');
+    setIsInProgress(true);
     setQuestions(wrongQuestions);
     setUserAnswers({});
     navigate('/test');
@@ -204,8 +239,26 @@ const RootApp: React.FC = () => {
     );
   }
 
-  // If not authenticated, show auth screen
+  // If not authenticated, allow public shared history viewing in guest mode!
   if (!user) {
+    const isPublicHistory = window.location.pathname.startsWith('/history');
+    if (isPublicHistory) {
+      return (
+        <Routes>
+          <Route 
+            path="/history/:historyId?" 
+            element={
+              <HistoryScreen 
+                onBack={() => navigate('/')} 
+                isGuest={true}
+                onAuthSuccess={handleAuthSuccess}
+              />
+            } 
+          />
+          <Route path="*" element={<AuthScreen onAuthSuccess={handleAuthSuccess} />} />
+        </Routes>
+      );
+    }
     return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
   }
 
@@ -284,7 +337,7 @@ const RootApp: React.FC = () => {
               specialtyCode={user.specialty_code}
               specialtyName={user.specialty_name}
               onLogout={handleLogout}
-              hasActiveTest={questions.length > 0}
+              hasActiveTest={questions.length > 0 && isInProgress}
               onResume={() => navigate('/test')}
               onViewAdmin={() => navigate('/admin')}
             />
@@ -308,7 +361,7 @@ const RootApp: React.FC = () => {
           element={<SyllabusScreen onBack={() => navigate('/home')} />} 
         />
         <Route 
-          path="/history" 
+          path="/history/:historyId?" 
           element={<HistoryScreen onBack={() => navigate('/home')} />} 
         />
         <Route 
@@ -319,6 +372,10 @@ const RootApp: React.FC = () => {
               onSpecialtyChange={(updatedUser) => setUser(updatedUser)}
             />
           } 
+        />
+        <Route 
+          path="/specialties/:code" 
+          element={<SpecialtyDetailScreen />} 
         />
         <Route 
           path="/admin" 
@@ -349,17 +406,36 @@ const RootApp: React.FC = () => {
         <Route 
           path="/result" 
           element={
-            questions.length > 0 ? (
-              <ResultScreen 
-                questions={questions}
-                answers={userAnswers}
-                onRestart={handleRestart}
-                onPracticeWrong={handlePracticeWrong}
-                userName={user.full_name}
-              />
-            ) : (
-              <Navigate to="/home" replace />
-            )
+            (() => {
+              const latestId = localStorage.getItem('latest_result_id');
+              if (latestId) {
+                return <Navigate to={`/result/${latestId}`} replace />;
+              }
+              if (questions.length > 0) {
+                return (
+                  <ResultScreen 
+                    questions={questions}
+                    answers={userAnswers}
+                    onRestart={handleRestart}
+                    onPracticeWrong={handlePracticeWrong}
+                    userName={user.full_name}
+                  />
+                );
+              }
+              return <Navigate to="/home" replace />;
+            })()
+          } 
+        />
+        <Route 
+          path="/result/:resultId" 
+          element={
+            <ResultScreen 
+              questions={questions}
+              answers={userAnswers}
+              onRestart={handleRestart}
+              onPracticeWrong={handlePracticeWrong}
+              userName={user.full_name}
+            />
           } 
         />
       </Routes>

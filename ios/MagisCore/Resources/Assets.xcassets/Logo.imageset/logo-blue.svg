@@ -1,0 +1,28 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Background -->
+<rect width="1024" height="1024" rx="224" fill="white"/>
+
+<!-- Graduation cap - clean geometric -->
+<g transform="translate(512, 420)">
+  <!-- Cap top diamond -->
+  <path d="M0,-160 L200,-50 L0,60 L-200,-50 Z" fill="#1E3A5F"/>
+  
+  <!-- Cap sides -->
+  <path d="M-140,-35 L-140,30 C0,120 0,120 140,30 L140,-35 C0,55 0,55 -140,-35 Z" fill="#2B5278"/>
+  
+  <!-- Tassel line -->
+  <line x1="0" y1="-50" x2="0" y2="100" stroke="#C9A84C" stroke-width="5" stroke-linecap="round"/>
+  
+  <!-- Tassel ball -->
+  <circle cx="0" cy="108" r="14" fill="#C9A84C"/>
+  
+  <!-- Tassel tail -->
+  <path d="M0,122 C15,155 25,175 18,200" stroke="#C9A84C" stroke-width="5" fill="none" stroke-linecap="round"/>
+</g>
+
+<!-- Base/book shape -->
+<g transform="translate(512, 560)">
+  <path d="M-160,0 L-160,60 C0,130 0,130 160,60 L160,0 C0,70 0,70 -160,0 Z" fill="#1E3A5F"/>
+  <line x1="0" y1="0" x2="0" y2="100" stroke="#162D45" stroke-width="3"/>
+</g>
+</svg>

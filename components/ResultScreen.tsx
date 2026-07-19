@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers } from '../types';
 import { SUBJECTS } from '../constants';
 import { ChevronDown, ChevronUp, CheckCircle, XCircle, Trophy, Home, RotateCcw, BookOpen, TrendingUp, Target, BarChart3, BrainCircuit, AlertTriangle, Star, MessageSquare } from 'lucide-react';
-import { saveTestResult, checkAndIncrementAiLimit, getSavedUser } from '../services/authService';
+import { saveTestResult, checkAndIncrementAiLimit, getSavedUser, getHistoryItemById } from '../services/authService';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { calculateTestResult, scoreQuestion } from '../services/scoringService';
@@ -12,11 +13,11 @@ import CodeAwareText from './CodeAwareText';
 import ReportModal from './modals/ReportModal';
 
 interface ResultScreenProps {
-  questions: Question[];
-  answers: UserAnswers;
-  onRestart: () => void;
+  questions?: Question[];
+  answers?: UserAnswers;
+  onRestart?: () => void;
   onPracticeWrong?: (wrongQuestions: Question[]) => void;
-  userName: string;
+  userName?: string;
 }
 
 const buildAiQuestionContext = (question: Question): AiQuestionContext => ({
@@ -64,38 +65,72 @@ const calculateCEFRLevel = (levelStats: Record<string, { correct: number; total:
   return 'Pre-A1';
 };
 
-const Gauge: React.FC<{ score: number; max: number }> = ({ score, max }) => {
-  const percentage = max > 0 ? (score / max) * 100 : 0;
+const Gauge: React.FC<{ score: number; max: number; isDarkMode?: boolean }> = ({ score, max, isDarkMode }) => {
+  const [animatedScore, setAnimatedScore] = useState(0);
+
+  useEffect(() => {
+    setAnimatedScore(0);
+    if (score <= 0) return;
+
+    let startTimestamp: number | null = null;
+    const duration = 1600; // 1.6 seconds smooth speedometer count-up
+
+    let animId: number;
+    const animate = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const elapsed = timestamp - startTimestamp;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentVal = Math.round(easeOut * score);
+
+      setAnimatedScore(currentVal);
+
+      if (progress < 1) {
+        animId = requestAnimationFrame(animate);
+      }
+    };
+
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
+  }, [score]);
+
+  const percentage = max > 0 ? (animatedScore / max) * 100 : 0;
   const radius = 80;
   const circ = 2 * Math.PI * radius; // ~502.65
-  const arcLength = circ * (240 / 360); // ~335.1
+  const arcLength = circ * (240 / 360); // 240-degree gauge (~335.1)
   const strokeDashoffset = arcLength - (percentage / 100) * arcLength;
 
-  // The gauge starts at 150 degrees (bottom-left) and sweeps 240 degrees to 390 degrees.
-  const angle = 150 + (percentage / 100) * 240;
-  const angleRad = (angle * Math.PI) / 180;
-  const dotX = 100 + radius * Math.cos(angleRad);
-  const dotY = 100 + radius * Math.sin(angleRad);
+  // Calculate indicator dot position along the arc
+  const startAngleDeg = 150; // 120deg offset from top (bottom gap)
+  const currentAngleDeg = startAngleDeg + (percentage / 100) * 240;
+  const currentAngleRad = (currentAngleDeg * Math.PI) / 180;
+  const dotX = 100 + radius * Math.cos(currentAngleRad);
+  const dotY = 100 + radius * Math.sin(currentAngleRad);
 
-  let statusText = "Күшейту қажет";
-  let badgeClass = "bg-rose-50 text-rose-600 border border-rose-100";
-  if (percentage >= 75) {
-    statusText = "Тамаша нәтиже";
-    badgeClass = "bg-emerald-50 text-emerald-600 border border-emerald-100";
-  } else if (percentage >= 50) {
-    statusText = "Орташа деңгей";
-    badgeClass = "bg-amber-50 text-amber-600 border border-amber-100";
+  const finalPercentage = max > 0 ? (score / max) * 100 : 0;
+  let statusText = "Шектен өтпеді";
+  let badgeClass = "bg-rose-500/10 text-rose-500 border border-rose-500/20";
+
+  if (finalPercentage >= 75) {
+    statusText = "Үлкен мүмкіндік (Грант)";
+    badgeClass = "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+  } else if (finalPercentage >= 50) {
+    statusText = "Шектен өтті";
+    badgeClass = "bg-amber-500/10 text-amber-500 border border-amber-500/20";
   }
 
   return (
-    <div className="flex flex-col items-center select-none bg-white rounded-3xl shadow-xl p-8 mb-8 border border-slate-100 max-w-sm mx-auto text-center">
-      <div className="relative w-56 h-48">
+    <div className={`p-6 sm:p-8 rounded-3xl border flex flex-col items-center justify-center max-w-sm mx-auto mb-10 transition-all ${
+      isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-md'
+    }`}>
+      <div className="relative w-56 h-48 flex items-center justify-center">
         <svg className="w-full h-full" viewBox="0 0 200 200">
           <defs>
-            <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#f59e0b" />
-              <stop offset="50%" stopColor="#ef4444" />
-              <stop offset="100%" stopColor="#ec4899" />
+            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ef4444" />
+              <stop offset="50%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#10b981" />
             </linearGradient>
           </defs>
           {/* Background Arc */}
@@ -104,7 +139,7 @@ const Gauge: React.FC<{ score: number; max: number }> = ({ score, max }) => {
             cy="100"
             r={radius}
             fill="none"
-            stroke="#f8fafc"
+            stroke={isDarkMode ? "#1e293b" : "#f1f5f9"}
             strokeWidth="10"
             strokeLinecap="round"
             strokeDasharray={`${arcLength} ${circ}`}
@@ -122,7 +157,7 @@ const Gauge: React.FC<{ score: number; max: number }> = ({ score, max }) => {
             strokeDasharray={`${arcLength} ${circ}`}
             strokeDashoffset={strokeDashoffset}
             transform="rotate(150 100 100)"
-            className="transition-all duration-1000 ease-out"
+            className="transition-all duration-75 ease-out"
           />
           {/* Indicator Dot */}
           {percentage > 0 && (
@@ -133,13 +168,13 @@ const Gauge: React.FC<{ score: number; max: number }> = ({ score, max }) => {
               fill="#ffffff"
               stroke="#ef4444"
               strokeWidth="3"
-              className="transition-all duration-1000 ease-out"
+              className="transition-all duration-75 ease-out"
             />
           )}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
-          <span className="text-5xl font-black text-slate-800 tracking-tighter">{score}</span>
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">/ {max} Ұпай</span>
+          <span className={`text-5xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{animatedScore}</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest mt-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>/ {max} Ұпай</span>
         </div>
       </div>
       <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${badgeClass} -mt-4 shadow-sm`}>
@@ -149,53 +184,7 @@ const Gauge: React.FC<{ score: number; max: number }> = ({ score, max }) => {
   );
 };
 
-const MiniGauge: React.FC<{ percentage: number }> = ({ percentage }) => {
-  const radius = 22;
-  const circ = 2 * Math.PI * radius;
-  const arcLength = circ * (240 / 360);
-  const strokeDashoffset = arcLength - (percentage / 100) * arcLength;
-  
-  let strokeColor = "#ef4444"; // Red
-  if (percentage >= 75) {
-    strokeColor = "#10b981"; // Green
-  } else if (percentage >= 50) {
-    strokeColor = "#f59e0b"; // Orange
-  }
 
-  return (
-    <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
-      <svg className="w-full h-full" viewBox="0 0 60 60">
-        <circle
-          cx="30"
-          cy="30"
-          r={radius}
-          fill="none"
-          stroke="#f8fafc"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeDasharray={`${arcLength} ${circ}`}
-          transform="rotate(150 30 30)"
-        />
-        <circle
-          cx="30"
-          cy="30"
-          r={radius}
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeDasharray={`${arcLength} ${circ}`}
-          strokeDashoffset={strokeDashoffset}
-          transform="rotate(150 30 30)"
-          className="transition-all duration-1000 ease-out"
-        />
-      </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-slate-800 pt-0.5">
-        {Math.round(percentage)}%
-      </span>
-    </div>
-  );
-};
 
 const getSubjectRecommendation = (pct: number) => {
   if (pct >= 75) {
@@ -219,8 +208,81 @@ const getSubjectRecommendation = (pct: number) => {
   }
 };
 
-const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onRestart, onPracticeWrong, userName }) => {
+const ResultScreen: React.FC<ResultScreenProps> = ({ 
+  questions: propQuestions, 
+  answers: propAnswers, 
+  onRestart, 
+  onPracticeWrong, 
+  userName: propUserName 
+}) => {
+  const { resultId } = useParams<{ resultId?: string }>();
+
+  const [questions, setQuestions] = useState<Question[]>(() => propQuestions || []);
+  const [answers, setAnswers] = useState<UserAnswers>(() => propAnswers || {});
+  const [userName, setUserName] = useState<string>(() => propUserName || 'Пердеев Азамат');
+
+  useEffect(() => {
+    if (propQuestions && propQuestions.length > 0 && propAnswers && Object.keys(propAnswers).length > 0) {
+      setQuestions(propQuestions);
+      setAnswers(propAnswers);
+      if (propUserName) setUserName(propUserName);
+      return;
+    }
+
+    const targetId = resultId || localStorage.getItem('latest_result_id');
+    if (!targetId) return;
+
+    // 1. Try LocalStorage
+    const localKey = `test_result_${targetId}`;
+    const stored = localStorage.getItem(localKey);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (parsed.questions && parsed.answers) {
+          setQuestions(parsed.questions);
+          setAnswers(parsed.answers);
+          if (parsed.userName) setUserName(parsed.userName);
+          return;
+        }
+      } catch (e) {
+        console.error("Error parsing local stored result:", e);
+      }
+    }
+
+    // 2. Try Firestore history by ID
+    getHistoryItemById(targetId).then((item) => {
+      if (item) {
+        let loadedQ: Question[] = [];
+        let loadedAns: UserAnswers = {};
+
+        try {
+          if (item.questions_data) loadedQ = JSON.parse(item.questions_data);
+          if (item.answers_data) loadedAns = JSON.parse(item.answers_data);
+        } catch (e) {
+          console.error("Error parsing history item data:", e);
+        }
+
+        if (loadedQ.length > 0) {
+          setQuestions(loadedQ);
+          setAnswers(loadedAns);
+        } else {
+          const savedQ = localStorage.getItem('active_test_questions');
+          const savedA = localStorage.getItem('active_test_answers');
+          if (savedQ) {
+            try { setQuestions(JSON.parse(savedQ)); } catch (e) {}
+          }
+          if (savedA) {
+            try { setAnswers(JSON.parse(savedA)); } catch (e) {}
+          }
+        }
+      }
+    }).catch(err => {
+      console.error("Error fetching history item by ID:", err);
+    });
+  }, [resultId, propQuestions, propAnswers, propUserName]);
+
   const [expandedSubject, setExpandedSubject] = useState<SubjectId | null>(null);
+  const [selectedReviewQuestionId, setSelectedReviewQuestionId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [aiExplanations, setAiExplanations] = useState<Record<string, string>>({});
   const [reportQuestion, setReportQuestion] = useState<{ id: string; text: string } | null>(null);
@@ -284,7 +346,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
     if (!check.allowed) {
       setAiExplanations(prev => ({
         ...prev,
-        [qId]: `⚠️ Күнделікті ИИ сұраныс лимитіңіз бітті (10 сұрақ). Шексіз қолдану үшін Premium жазылымға өтіңіз немесе ертең қайта көріңіз.`
+        [qId]: `🔒 Бұл мүмкіндік тек Premium жазылымы бар пайдаланушыларға қол жетімді. Premium жазылымға өтіп, ИИ түсіндірмелерін шексіз пайдаланыңыз!`
       }));
       return;
     }
@@ -374,67 +436,88 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
               <div key={result.subject.id} className="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100 transition-all">
                 <div 
                   onClick={() => setExpandedSubject(expandedSubject === result.subject.id ? null : result.subject.id)}
-                  className="p-5 cursor-pointer flex items-center justify-between gap-4 hover:bg-slate-50 transition"
+                  className="p-5 cursor-pointer hover:bg-slate-50 transition"
                 >
-                  <div className="flex items-center gap-4 flex-1">
-                    <MiniGauge percentage={pct} />
-                    <div className="text-left">
-                      <h3 className="text-sm font-black text-slate-850">{result.subject.name}</h3>
-                      <p className="text-[11px] text-slate-400 font-bold mt-0.5">{recommendation.text}</p>
+                  <div className="flex items-center justify-between gap-4 mb-3">
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className="text-left">
+                        <h3 className="text-sm font-black text-slate-850">{result.subject.name}</h3>
+                        <p className="text-[11px] text-slate-400 font-bold mt-0.5">{recommendation.text}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0">
+                      {/* Score pill */}
+                      <div className="text-right">
+                        <div className={`text-lg font-black leading-none ${pct >= 70 ? 'text-green-600' : pct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
+                          {result.score}
+                          <span className="text-xs font-bold text-slate-400">/{result.maxScore}</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 font-bold">{Math.round(pct)}%</div>
+                      </div>
+                      <span className={`hidden sm:inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${recommendation.badgeClass}`}>
+                        {recommendation.badge}
+                      </span>
+                      {expandedSubject === result.subject.id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <span className={`hidden sm:inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${recommendation.badgeClass}`}>
-                      {recommendation.badge}
-                    </span>
-                    {expandedSubject === result.subject.id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+
+                  {/* Mini progress bar */}
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-1000 ${pct >= 70 ? 'bg-green-500' : pct >= 40 ? 'bg-orange-400' : 'bg-red-500'}`}
+                      style={{ width: `${pct}%` }}
+                    />
                   </div>
                 </div>
 
                 {expandedSubject === result.subject.id && (
                   <div className="p-6 bg-slate-50 border-t border-slate-100">
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                       {Object.entries(result.topicStats).map(([topic, stats]) => {
-                         const topicPct = Math.round((stats.correct / stats.total) * 100);
-                         return (
-                           <div key={topic} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                             <div className="flex justify-between items-center mb-3">
-                               <span className="font-bold text-slate-700 text-xs">{TOPIC_NAMES[topic] || topic}</span>
-                               <span className={`text-[11px] font-black ${topicPct >= 70 ? 'text-green-600' : topicPct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
-                                 {stats.correct} / {stats.total}
-                               </span>
-                             </div>
-                             <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                               <div className={`h-full transition-all duration-1000 ${topicPct >= 70 ? 'bg-green-500' : topicPct >= 40 ? 'bg-orange-500' : 'bg-red-500'}`}
-                                 style={{ width: `${topicPct}%` }} />
-                             </div>
-                           </div>
-                         );
-                       })}
-                     </div>
+                    {/* Topic Stats Grid */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                      {Object.entries(result.topicStats).map(([topic, stats]) => {
+                        const topicPct = Math.round((stats.correct / stats.total) * 100);
+                        return (
+                          <div key={topic} className="bg-white px-3 py-2.5 rounded-xl shadow-sm border border-slate-100">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="font-semibold text-slate-700 text-[11px] leading-tight">{TOPIC_NAMES[topic] || topic}</span>
+                              <span className={`text-[10px] font-black ml-1.5 shrink-0 ${topicPct >= 70 ? 'text-green-600' : topicPct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
+                                {stats.correct}/{stats.total}
+                              </span>
+                            </div>
+                            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                              <div className={`h-full transition-all duration-1000 ${topicPct >= 70 ? 'bg-green-500' : topicPct >= 40 ? 'bg-orange-500' : 'bg-red-500'}`}
+                                style={{ width: `${topicPct}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
 
                     {/* Answer Matrix */}
                     <div className="mt-8 text-left">
                       <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Сұрақтар торшасы (өту үшін нөмірді басыңыз):</h4>
-                      <div className="flex flex-wrap gap-2.5">
+                      <div className="flex flex-wrap gap-2">
                         {result.questions.map((q, i) => {
                           const isCorrect = scoreQuestion(q, answers[q.id] || []).correct;
+                          const isSelected = selectedReviewQuestionId === q.id;
                           return (
                             <button
                               key={q.id}
                               onClick={() => {
-                                const element = document.getElementById(`q-review-${q.id}`);
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                if (selectedReviewQuestionId === q.id) {
+                                  setSelectedReviewQuestionId(null);
+                                } else {
+                                  setSelectedReviewQuestionId(q.id);
+                                  setTimeout(() => {
+                                    const element = document.getElementById(`q-review-${q.id}`);
+                                    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                  }, 50);
                                 }
                               }}
-                              className={`
-                                w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm transition-all active:scale-95 hover:scale-105 shrink-0
-                                ${isCorrect 
-                                  ? 'bg-green-500 hover:bg-green-600 shadow-green-100' 
-                                  : 'bg-red-500 hover:bg-red-600 shadow-red-100'}
-                              `}
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shadow-sm transition-all active:scale-95 hover:scale-105 shrink-0
+                                ${isSelected ? 'ring-2 ring-offset-1 ring-slate-800 scale-110' : ''}
+                                ${isCorrect ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
                               title={`Сұрақ №${i + 1}`}
                             >
                               {i + 1}
@@ -444,98 +527,107 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
                       </div>
                     </div>
 
-                   {/* Detailed Questions Review */}
-                   <div className="mt-8 space-y-6">
-                     <h4 className="text-lg font-black text-slate-800 mb-4 border-b pb-2 flex items-center gap-2 text-left">
-                       <BrainCircuit className="w-5 h-5 text-indigo-500" />
-                       Сұрақтарды талдау:
-                     </h4>
-                     {result.questions.map((q, qIdx) => {
-                       const userAns = answers[q.id] || [];
-                       const scoreRes = scoreQuestion(q, userAns);
-                       const isCorrect = scoreRes.correct;
-                       
-                       const userOptionTexts = q.options
-                         .filter(o => userAns.includes(o.id))
-                         .map(o => o.text);
-                         
-                       const correctOptionTexts = q.options
-                         .filter(o => q.correctOptionIds.includes(o.id))
-                         .map(o => o.text);
+                    {/* Detailed Questions Review */}
+                    <div className="mt-8 space-y-6">
+                      <h4 className="text-lg font-black text-slate-800 mb-4 border-b pb-2 flex items-center gap-2 text-left">
+                        <BrainCircuit className="w-5 h-5 text-indigo-500" />
+                        Сұрақтарды талдау:
+                      </h4>
+                      {!selectedReviewQuestionId ? (
+                        <div className="text-center py-10 text-slate-400">
+                          <div className="text-3xl mb-2">☝️</div>
+                          <p className="text-sm font-medium">Талдау үшін жоғарыдағы нөмірді басыңыз</p>
+                        </div>
+                      ) : (
+                        result.questions
+                          .filter(q => q.id === selectedReviewQuestionId)
+                          .map((q, qIdx) => {
+                            const userAns = answers[q.id] || [];
+                            const scoreRes = scoreQuestion(q, userAns);
+                            const isCorrect = scoreRes.correct;
 
-                       return (
-                         <div key={q.id} id={`q-review-${q.id}`} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 text-left scroll-mt-20">
-                           <div className="flex justify-between items-start gap-4">
-                             <div className="font-bold text-slate-800 text-base leading-relaxed">
-                               Сұрақ №{qIdx + 1}: <CodeAwareText text={q.text} />
-                             </div>
-                             <span className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                               {isCorrect ? 'Дұрыс' : 'Қате'} ({scoreRes.score}/{scoreRes.max} балл)
-                             </span>
-                           </div>
+                            const userOptionTexts = q.options
+                              .filter(o => userAns.includes(o.id))
+                              .map(o => o.text);
 
-                           {q.codeSnippet && (
-                             <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg font-mono text-xs overflow-x-auto text-left">
-                               {q.codeSnippet}
-                             </pre>
-                           )}
+                            const correctOptionTexts = q.options
+                              .filter(o => q.correctOptionIds.includes(o.id))
+                              .map(o => o.text);
 
-                           <div className="grid gap-2 pl-4 border-l-2 border-slate-100">
-                             {q.options.map((opt, optIdx) => {
-                               const letter = String.fromCharCode(65 + optIdx);
-                               const isOptSelected = userAns.includes(opt.id);
-                               const isOptCorrect = q.correctOptionIds.includes(opt.id);
+                            return (
+                              <div key={q.id} id={`q-review-${q.id}`} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 text-left scroll-mt-20">
+                                <div className="flex justify-between items-start gap-4">
+                                  <div className="font-bold text-slate-800 text-base leading-relaxed">
+                                    Сұрақ №{qIdx + 1}: <CodeAwareText text={q.text} subjectId={q.subjectId} />
+                                  </div>
+                                  <span className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                    {isCorrect ? 'Дұрыс' : 'Қате'} ({scoreRes.score}/{scoreRes.max} балл)
+                                  </span>
+                                </div>
 
-                               let optClass = "text-slate-600";
-                               if (isOptCorrect) {
-                                 optClass = "text-green-600 font-bold";
-                               } else if (isOptSelected && !isOptCorrect) {
-                                 optClass = "text-red-500 font-semibold";
-                               }
+                                {q.codeSnippet && (
+                                  <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg font-mono text-xs overflow-x-auto text-left">
+                                    {q.codeSnippet}
+                                  </pre>
+                                )}
 
-                               return (
-                                 <div key={opt.id} className={`text-sm flex items-start gap-2 ${optClass}`}>
-                                   <span>{letter}) <CodeAwareText text={opt.text} /></span>
-                                   {isOptCorrect && <span className="text-xs text-green-500 font-bold">(Дұрыс жауап)</span>}
-                                   {isOptSelected && <span className="text-xs text-blue-500 font-bold">(Сіздің жауабыңыз)</span>}
-                                 </div>
-                               );
-                             })}
-                           </div>
+                                <div className="grid gap-2 pl-4 border-l-2 border-slate-100">
+                                  {q.options.map((opt, optIdx) => {
+                                    const letter = String.fromCharCode(65 + optIdx);
+                                    const isOptSelected = userAns.includes(opt.id);
+                                    const isOptCorrect = q.correctOptionIds.includes(opt.id);
 
-                           {/* Actions Section */}
-                           <div className="pt-2 border-t border-slate-100 flex flex-row flex-wrap gap-2">
-                             <button
-                               onClick={() => handleRequestExplanation(q, q.options.map(o => o.text), correctOptionTexts, userOptionTexts)}
-                               className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all"
-                             >
-                               <BookOpen className="w-4 h-4" />
-                               Нейрожелі түсіндірмесі (AI)
-                             </button>
-                             <button
-                               onClick={() => setReportQuestion({ id: q.id, text: q.text })}
-                               className="inline-flex items-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all"
-                             >
-                               <AlertTriangle className="w-4 h-4" />
-                               Қате туралы хабарлау
-                             </button>
-                           </div>
+                                    let optClass = "text-slate-600";
+                                    if (isOptCorrect) {
+                                      optClass = "text-green-600 font-bold";
+                                    } else if (isOptSelected && !isOptCorrect) {
+                                      optClass = "text-red-500 font-semibold";
+                                    }
 
-                           {aiExplanations[q.id] && (
-                             <div className="mt-3 bg-indigo-50/50 border border-indigo-100/80 rounded-xl p-5 text-slate-800 text-sm whitespace-pre-wrap leading-relaxed shadow-inner text-left">
-                               <div className="flex items-center gap-2 text-indigo-700 font-bold mb-2 text-xs uppercase tracking-wider">
-                                 <BrainCircuit className="w-4 h-4" />
-                                 ИИ Мұғалім жауабы:
-                               </div>
-                               <MarkdownRenderer content={aiExplanations[q.id]} />
-                             </div>
-                           )}
-                         </div>
-                       );
-                     })}
-                   </div>
-                </div>
-              )}
+                                    return (
+                                      <div key={opt.id} className={`text-sm flex items-start gap-2 ${optClass}`}>
+                                        <span>{letter}) <CodeAwareText text={opt.text} subjectId={q.subjectId} /></span>
+                                        {isOptCorrect && <span className="text-xs text-green-500 font-bold">(Дұрыс жауап)</span>}
+                                        {isOptSelected && <span className="text-xs text-blue-500 font-bold">(Сіздің жауабыңыз)</span>}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* Actions Section */}
+                                <div className="pt-2 border-t border-slate-100 flex flex-row flex-wrap gap-2">
+                                  <button
+                                    onClick={() => handleRequestExplanation(q, q.options.map(o => o.text), correctOptionTexts, userOptionTexts)}
+                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all"
+                                  >
+                                    <BookOpen className="w-4 h-4" />
+                                    Нейрожелі түсіндірмесі (AI)
+                                  </button>
+                                  <button
+                                    onClick={() => setReportQuestion({ id: q.id, text: q.text })}
+                                    className="inline-flex items-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all"
+                                  >
+                                    <AlertTriangle className="w-4 h-4" />
+                                    Қате туралы хабарлау
+                                  </button>
+                                </div>
+
+                                {aiExplanations[q.id] && (
+                                  <div className="mt-3 bg-indigo-50/50 border border-indigo-100/80 rounded-xl p-5 text-slate-800 text-sm whitespace-pre-wrap leading-relaxed shadow-inner text-left">
+                                    <div className="flex items-center gap-2 text-indigo-700 font-bold mb-2 text-xs uppercase tracking-wider">
+                                      <BrainCircuit className="w-4 h-4" />
+                                      ИИ Мұғалім жауабы:
+                                    </div>
+                                    <MarkdownRenderer content={aiExplanations[q.id]} />
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
           );
         })}
@@ -618,7 +710,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ questions, answers, onResta
            <button onClick={onRestart} className="flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition">
              <RotateCcw /> Қайта тапсыру
            </button>
-           <button onClick={() => window.location.reload()} className="flex items-center gap-2 bg-slate-800 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition">
+           <button onClick={onRestart} className="flex items-center gap-2 bg-slate-800 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition">
              <Home /> Басты бет
            </button>
         </div>

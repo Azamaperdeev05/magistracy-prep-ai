@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Grid3X3 } from 'lucide-react';
 
 interface SolubilityTableModalProps {
@@ -55,55 +55,84 @@ const getCellColor = (value: string) => {
 };
 
 const SolubilityTableModal: React.FC<SolubilityTableModalProps> = ({ isOpen, onClose }) => {
+  const [lang, setLang] = useState<'kk' | 'ru'>('kk');
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[100] p-0 sm:p-4" onClick={onClose}>
       <div 
-        className="bg-white rounded-lg shadow-2xl w-[95%] max-w-5xl max-h-[90vh] overflow-hidden animate-fade-in"
+        className="bg-white w-full h-full sm:h-auto sm:max-h-[92vh] sm:w-[95%] sm:max-w-5xl sm:rounded-2xl rounded-none shadow-2xl overflow-hidden animate-fade-in flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-6 py-4 flex items-center justify-between">
+        <div className="bg-[#2c3240] text-white px-4 sm:px-6 py-3.5 flex items-center justify-between shrink-0 border-b border-slate-700">
           <div className="flex items-center gap-3">
-            <Grid3X3 className="w-6 h-6" />
-            <h2 className="text-lg font-bold">Ерігіштік кестесі</h2>
+            <Grid3X3 className="w-5 h-5 sm:w-6 sm:h-6 text-teal-400 shrink-0" />
+            <h2 className="text-base sm:text-lg font-bold leading-tight">
+              {lang === 'kk' ? 'Ерігіштік кестесі' : 'Таблица растворимости'}
+            </h2>
           </div>
-          <button onClick={onClose} className="hover:bg-white/20 p-1 rounded transition">
-            <X className="w-5 h-5" />
-          </button>
+
+          <div className="flex items-center gap-3">
+            {/* Language Switcher */}
+            <div className="flex bg-slate-800 p-0.5 rounded-lg border border-slate-700 text-xs font-bold">
+              <button
+                onClick={() => setLang('kk')}
+                className={`px-2.5 py-1 rounded transition ${
+                  lang === 'kk' ? 'bg-teal-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                ҚАЗ
+              </button>
+              <button
+                onClick={() => setLang('ru')}
+                className={`px-2.5 py-1 rounded transition ${
+                  lang === 'ru' ? 'bg-teal-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                РУС
+              </button>
+            </div>
+
+            <button onClick={onClose} className="hover:bg-white/20 p-1.5 rounded-lg transition text-slate-300 hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Legend */}
-        <div className="px-6 py-3 bg-gray-50 border-b flex items-center gap-6 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-green-100 text-green-700 rounded flex items-center justify-center font-bold text-xs">Р</div>
-            <span>Ериді</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-yellow-100 text-yellow-700 rounded flex items-center justify-center font-bold text-xs">М</div>
-            <span>Аз ериді</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-red-100 text-red-700 rounded flex items-center justify-center font-bold text-xs">Н</div>
-            <span>Ерімейді</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-200 text-gray-400 rounded flex items-center justify-center font-bold text-xs">−</div>
-            <span>Жоқ</span>
+        <div className="px-4 sm:px-6 py-2.5 bg-gray-50 border-b flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-green-100 text-green-700 rounded flex items-center justify-center font-bold text-xs">Р</div>
+              <span className="font-semibold">{lang === 'kk' ? 'Ериді (Р)' : 'Растворимо (Р)'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-yellow-100 text-yellow-700 rounded flex items-center justify-center font-bold text-xs">М</div>
+              <span className="font-semibold">{lang === 'kk' ? 'Аз ериді (М)' : 'Малорастворимо (М)'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-red-100 text-red-700 rounded flex items-center justify-center font-bold text-xs">Н</div>
+              <span className="font-semibold">{lang === 'kk' ? 'Ерімейді (Н)' : 'Нерастворимо (Н)'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-gray-200 text-gray-400 rounded flex items-center justify-center font-bold text-xs">−</div>
+              <span className="font-semibold">{lang === 'kk' ? 'Ыдырайды (-)' : 'Разлагается (-)'}</span>
+            </div>
           </div>
         </div>
 
         {/* Table */}
-        <div className="p-4 overflow-auto max-h-[65vh]">
-          <table className="w-full border-collapse text-sm">
+        <div className="p-3 sm:p-4 overflow-auto touch-pan-x flex-1 max-h-[65vh] scrollbar-thin">
+          <table className="w-full border-collapse text-sm select-none min-w-[600px]">
             <thead>
               <tr>
-                <th className="sticky left-0 top-0 z-20 bg-gray-800 text-white p-2 border border-gray-700 min-w-[60px]">
-                  Катион / Анион
+                <th className="sticky left-0 top-0 z-20 bg-[#2c3240] text-white p-2.5 border border-slate-700 min-w-[70px] text-center font-bold text-xs">
+                  {lang === 'kk' ? 'Катион / Анион' : 'Катион / Анион'}
                 </th>
                 {anions.map((anion, idx) => (
-                  <th key={idx} className="sticky top-0 z-10 bg-gray-700 text-white p-2 border border-gray-600 min-w-[50px] text-xs">
+                  <th key={idx} className="sticky top-0 z-10 bg-[#2c3240] text-white p-2 border border-slate-700 min-w-[50px] text-center text-xs font-extrabold">
                     {anion}
                   </th>
                 ))}
@@ -112,7 +141,7 @@ const SolubilityTableModal: React.FC<SolubilityTableModalProps> = ({ isOpen, onC
             <tbody>
               {cations.map((cation, cIdx) => (
                 <tr key={cIdx}>
-                  <td className="sticky left-0 bg-gray-700 text-white p-2 border border-gray-600 font-medium text-xs">
+                  <td className="sticky left-0 bg-[#2c3240] text-white p-2 border border-slate-700 font-black text-center text-xs">
                     {cation}
                   </td>
                   {anions.map((_, aIdx) => {
@@ -120,7 +149,7 @@ const SolubilityTableModal: React.FC<SolubilityTableModalProps> = ({ isOpen, onC
                     return (
                       <td 
                         key={aIdx} 
-                        className={`p-2 border border-gray-300 text-center font-bold text-sm ${getCellColor(value)}`}
+                        className={`p-2 border border-slate-300 text-center font-bold text-sm ${getCellColor(value)}`}
                       >
                         {value}
                       </td>
@@ -133,8 +162,11 @@ const SolubilityTableModal: React.FC<SolubilityTableModalProps> = ({ isOpen, onC
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 bg-gray-50 border-t text-center text-xs text-gray-500">
-          Қышқыл ортасындағы тұздардың ерігіштігі (25°C)
+        <div className="px-6 py-2.5 bg-gray-50 border-t text-center text-xs text-gray-500 shrink-0 font-medium">
+          {lang === 'kk' 
+            ? 'Тұздардың, қышқылдардың және негіздердің судағы ерігіштігі (25°C)'
+            : 'Растворимость солей, кислот и оснований в воде (25°C)'
+          }
         </div>
       </div>
     </div>

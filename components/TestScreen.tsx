@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers, QuestionType } from '../types';
 import { SUBJECTS } from '../constants';
-import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, BrainCircuit, X, Send, AlertTriangle, Clock } from 'lucide-react';
+import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, BrainCircuit, X, Send, AlertTriangle, Clock, Wrench } from 'lucide-react';
 import { askAiQuestion, ChatMessage, getAiExplanation, AiQuestionContext } from '../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';
 import { getTheoryForQuestion } from '../data/textbooks';
@@ -15,6 +15,8 @@ import CalculatorModal from './modals/CalculatorModal';
 import PeriodicTableModal from './modals/PeriodicTableModal';
 import SolubilityTableModal from './modals/SolubilityTableModal';
 import ReportModal from './modals/ReportModal';
+import FinishTestModal from './modals/FinishTestModal';
+import MobileToolsModal from './modals/MobileToolsModal';
 import AudioPlayer from './AudioPlayer';
 import ChartRenderer from './ChartRenderer';
 import CodeAwareText from './CodeAwareText';
@@ -271,6 +273,30 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const [showPeriodicTable, setShowPeriodicTable] = useState(false);
   const [showSolubilityTable, setShowSolubilityTable] = useState(false);
   const [reportQuestion, setReportQuestion] = useState<{ id: string; text: string } | null>(null);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [showFinishModal, setShowFinishModal] = useState(false);
+  const [showMobileTools, setShowMobileTools] = useState(false);
+
+  // Compute subject summaries for ҰТО finish modal
+  const subjectSummaries = useMemo(() => {
+    const activeSubjectIds = Array.from(new Set(questions.map(q => q.subjectId)));
+
+    return activeSubjectIds.map(sId => {
+      const sQuestions = questions.filter(q => q.subjectId === sId);
+      const total = sQuestions.length;
+      const answered = sQuestions.filter(q => answers[q.id] && answers[q.id].length > 0).length;
+      const unanswered = total - answered;
+      const name = SUBJECTS[sId as SubjectId]?.name || sId;
+
+      return {
+        id: sId,
+        name,
+        total,
+        answered,
+        unanswered
+      };
+    });
+  }, [questions, answers]);
 
   // Refresh and copy prevention
   useEffect(() => {
@@ -357,26 +383,27 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
     }
   };
 
+  const activeSubjectIds = useMemo(() => Array.from(new Set(questions.map(q => q.subjectId))), [questions]);
+  const currSubjectIdx = activeSubjectIds.indexOf(currentSubjectId);
+  const isFirstSubject = currSubjectIdx <= 0;
+  const isLastSubject = currSubjectIdx >= activeSubjectIds.length - 1;
+
+  const handlePrevSubject = () => {
+    if (currSubjectIdx > 0) {
+      navigate(`/test/${activeSubjectIds[currSubjectIdx - 1]}/q/1`);
+    }
+  };
+
   const handleNextSubject = () => {
-    const activeSubjectIds = Array.from(new Set(questions.map(q => q.subjectId)));
-    const currIdx = activeSubjectIds.indexOf(currentSubjectId);
-    if (currIdx < activeSubjectIds.length - 1) {
-      navigate(`/test/${activeSubjectIds[currIdx + 1]}/q/1`);
+    if (currSubjectIdx < activeSubjectIds.length - 1) {
+      navigate(`/test/${activeSubjectIds[currSubjectIdx + 1]}/q/1`);
     } else {
-      triggerConfirm(
-        "Бұл соңғы пән. Тестті аяқтауға сенімдісіз бе?",
-        () => submitTestResult(answers),
-        "Аяқтау"
-      );
+      setShowFinishModal(true);
     }
   };
 
   const handleFinish = () => {
-    triggerConfirm(
-      "Тестті аяқтауға сенімдісіз бе?",
-      () => submitTestResult(answers),
-      "Аяқтау"
-    );
+    setShowFinishModal(true);
   };
 
   // Sidebar Tools
@@ -403,7 +430,13 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
       {/* 1. Full Width Top Header (Dark Blue) - Mobile Responsive */}
       <header className="bg-[#348FE2] h-[48px] md:h-[48px] flex items-center justify-between px-2 md:px-4 text-white shadow-md z-50 shrink-0">
           <div className="flex items-center gap-2 md:gap-4">
-              <Menu className="w-5 h-5 md:w-6 md:h-6 cursor-pointer opacity-90 hover:opacity-100" />
+              <button 
+                onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
+                className="p-1 rounded-lg hover:bg-white/20 transition active:scale-95 flex items-center justify-center"
+                title={isSidebarExpanded ? "Панельді кішірейту" : "Панельді үлкейту"}
+              >
+                <Menu className="w-5 h-5 md:w-6 md:h-6 cursor-pointer opacity-90 hover:opacity-100" />
+              </button>
               <div className="font-semibold text-xs md:text-base tracking-wide flex items-center gap-2 truncate max-w-[120px] md:max-w-none">
                  <span>{userName || 'Пердеев Азамат'}</span>
               </div>
@@ -427,41 +460,69 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
             )}
           </div>
 
-          <button 
+          <div className="flex items-center gap-1.5 md:gap-2">
+            {!isFirstSubject && (
+              <button 
+                onClick={handlePrevSubject}
+                className="bg-white/15 hover:bg-white/25 border border-white/30 text-white px-2 md:px-3 py-1 rounded-[3px] text-[10px] md:text-xs font-bold transition shadow-xs uppercase tracking-tight whitespace-nowrap active:scale-95"
+              >
+                &lt; Алдыңғы пән
+              </button>
+            )}
+            <button 
               onClick={handleNextSubject}
-              className="bg-white text-[#348FE2] px-2 md:px-4 py-1 rounded-[3px] text-[10px] md:text-xs font-bold hover:bg-slate-50 transition shadow-sm uppercase tracking-tight whitespace-nowrap"
-          >
-              Келесі пән &gt;
-          </button>
+              className="bg-white text-[#348FE2] px-2 md:px-3 py-1 rounded-[3px] text-[10px] md:text-xs font-bold hover:bg-slate-50 transition shadow-sm uppercase tracking-tight whitespace-nowrap active:scale-95"
+            >
+              {isLastSubject ? 'Аяқтау >' : 'Келесі пән >'}
+            </button>
+          </div>
       </header>
 
       {/* 2. Main Layout (Sidebar + Content) */}
       <div className="flex flex-1 overflow-hidden">
           
-          {/* Sidebar (Left, Fixed Width) - Hidden on Mobile */}
-          <div className="hidden md:flex w-[100px] bg-[#56CCF2] flex-col items-center py-4 text-white border-r border-[#4DBBE0] z-40">
+          {/* Sidebar (Left, Expandable) - Hidden on Mobile */}
+          <div className={`hidden md:flex flex-col items-center py-4 text-white border-r border-[#4DBBE0] z-40 transition-all duration-300 bg-[#56CCF2] shrink-0 ${
+            isSidebarExpanded ? 'w-[220px] px-3' : 'w-[95px] px-1'
+          }`}>
               {/* Tools */}
-              <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-2 w-full">
                   {tools.map((tool, index) => (
                       <div 
                           key={index}
                           onClick={tool.onClick}
-                          className="flex flex-col items-center gap-1 cursor-pointer hover:bg-white/20 w-full py-2 transition rounded-md"
+                          className={`flex items-center cursor-pointer hover:bg-white/20 w-full py-2.5 transition rounded-xl ${
+                            isSidebarExpanded 
+                              ? 'flex-row gap-3 px-3.5 text-left justify-start' 
+                              : 'flex-col gap-1 px-1 justify-center text-center'
+                          }`}
                       >
-                          <div className="p-1">{tool.icon}</div>
-                          <span className="text-[10px] font-medium leading-tight px-1 text-center">{tool.label}</span>
+                          <div className="p-1 shrink-0">{tool.icon}</div>
+                          <span className={`font-semibold leading-tight ${
+                            isSidebarExpanded ? 'text-xs text-white' : 'text-[10px] text-white px-1'
+                          }`}>
+                            {tool.label}
+                          </span>
                       </div>
                   ))}
               </div>
 
-              {/* Finish Button */}
-              <div className="mt-auto mb-4 w-full">
+              {/* Finish Button - Red Icon & Red Text ONLY */}
+              <div className="mt-auto mb-2 w-full">
                    <button 
                       onClick={handleFinish}
-                      className="flex flex-col items-center gap-1 cursor-pointer hover:bg-red-500/20 w-full py-2 transition text-red-100"
+                      className={`flex items-center cursor-pointer hover:bg-white/20 w-full py-2.5 transition rounded-xl text-red-500 ${
+                        isSidebarExpanded 
+                          ? 'flex-row gap-3 px-3.5 text-left justify-start' 
+                          : 'flex-col gap-1 px-1 justify-center text-center'
+                      }`}
                    >
-                      <LogOut className="w-6 h-6" />
-                      <span className="text-[10px]">Аяқтау</span>
+                      <LogOut className="w-6 h-6 text-red-500 shrink-0" />
+                      <span className={`font-bold leading-tight ${
+                        isSidebarExpanded ? 'text-xs text-red-500' : 'text-[10px] text-red-500 px-1'
+                      }`}>
+                        Аяқтау
+                      </span>
                    </button>
               </div>
           </div>
@@ -567,7 +628,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
                            <div className="flex justify-between items-start gap-4 mb-6">
                              <div className="text-2xl font-serif text-slate-900 leading-relaxed font-medium">
-                                 <CodeAwareText text={currentQuestion.text} />
+                                 <CodeAwareText text={currentQuestion.text} subjectId={currentQuestion.subjectId} />
                              </div>
                              <button
                                onClick={() => setReportQuestion({ id: currentQuestion.id, text: currentQuestion.text })}
@@ -651,7 +712,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
                                           <div className="text-base sm:text-lg text-slate-800 font-serif leading-snug pt-0.5">
                                               <span className="font-bold mr-2 uppercase">{letter})</span>
-                                              <CodeAwareText text={option.text} />
+                                              <CodeAwareText text={option.text} subjectId={currentQuestion.subjectId} />
                                           </div>
                                       </div>
                                   );
@@ -716,6 +777,16 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
         />
       )}
 
+      <FinishTestModal
+        isOpen={showFinishModal}
+        onClose={() => setShowFinishModal(false)}
+        onConfirm={() => {
+          setShowFinishModal(false);
+          submitTestResult(answers);
+        }}
+        subjectSummaries={subjectSummaries}
+      />
+
       {/* Mobile Bottom Navigation - Only visible on mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#56CCF2] border-t border-[#4DBBE0] flex justify-around items-center py-2 px-1 z-50 safe-area-bottom">
         <button onClick={() => setShowSections(true)} className="flex flex-col items-center text-white p-1">
@@ -730,15 +801,24 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
           <BrainCircuit className="w-5 h-5" />
           <span className="text-[9px] mt-0.5">ИИ Көмекші</span>
         </button>
-        <button onClick={() => setShowCalculator(true)} className="flex flex-col items-center text-white p-1">
-          <Calculator className="w-5 h-5" />
-          <span className="text-[9px] mt-0.5">Есептеу</span>
+        <button onClick={() => setShowMobileTools(true)} className="flex flex-col items-center text-white p-1">
+          <Wrench className="w-5 h-5 text-white" />
+          <span className="text-[9px] mt-0.5 font-bold">Құралдар</span>
         </button>
-        <button onClick={handleFinish} className="flex flex-col items-center text-red-100 p-1">
-          <LogOut className="w-5 h-5" />
-          <span className="text-[9px] mt-0.5">Аяқтау</span>
+        <button onClick={handleFinish} className="flex flex-col items-center text-red-500 p-1">
+          <LogOut className="w-5 h-5 text-red-500" />
+          <span className="text-[9px] mt-0.5 text-red-500 font-bold">Аяқтау</span>
         </button>
       </div>
+
+      {/* Mobile Tools Modal */}
+      <MobileToolsModal
+        isOpen={showMobileTools}
+        onClose={() => setShowMobileTools(false)}
+        onOpenCalculator={() => setShowCalculator(true)}
+        onOpenPeriodicTable={() => setShowPeriodicTable(true)}
+        onOpenSolubilityTable={() => setShowSolubilityTable(true)}
+      />
 
       {/* AI ASSISTANT DRAWER */}
       <div className={`
@@ -794,7 +874,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
         <div className="bg-slate-50 border-b border-slate-200 p-3 text-xs text-slate-600 font-medium shrink-0 flex flex-col gap-0.5">
           <div className="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Сұрақ №{currentIndex + 1} ({currentQuestion?.topic})</div>
           <div className="truncate text-slate-700 font-semibold">
-            <CodeAwareText text={currentQuestion.text} />
+            <CodeAwareText text={currentQuestion.text} subjectId={currentQuestion.subjectId} />
           </div>
         </div>
 

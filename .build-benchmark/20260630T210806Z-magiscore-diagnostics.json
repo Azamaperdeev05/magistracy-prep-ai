@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-06-30T21:08:36.445763+00:00",
+  "type": "compilation-diagnostics",
+  "build": {
+    "entrypoint": "project",
+    "path": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/ios/MagisCore.xcodeproj",
+    "scheme": "MagisCore",
+    "configuration": "Debug",
+    "destination": "platform=iOS Simulator,name=iPhone 17"
+  },
+  "threshold_ms": 100,
+  "build_duration_seconds": 25.675,
+  "build_success": true,
+  "raw_log_path": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/.build-benchmark/20260630T210806Z-magiscore-diagnostics.log",
+  "warnings": [
+    {
+      "file": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/ios/MagisCore/Data/ProfileSubjectConstants.swift",
+      "line": 8,
+      "column": 72,
+      "duration_ms": 316,
+      "kind": "expression",
+      "name": ""
+    }
+  ],
+  "summary": {
+    "total_warnings": 1,
+    "function_body_warnings": 0,
+    "expression_warnings": 1,
+    "slowest_ms": 316
+  }
+}

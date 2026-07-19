@@ -1621,5 +1621,39 @@ export const tgoCriticalThinkingPercentagesQuestions = [
   "topic": "Пайыздар",
   "difficulty": "easy",
   "hint": "Есептің шешімі:\n1. Екі күнде терілген жалпы пайыз: 35% + 40% = 75%.\n2. Теруге қалған тестінің пайызы: 100% - 75% = 25%."
+},
+{
+  "id": "tgo-percentages-laptop-discount",
+  "subjectId": "tgo",
+  "text": "Ноутбуктың бағасы – 60 000 теңге еді. Мамыр мейрамы қарсаңында х пайыз жеңілдік жасағандықтан оның жаңа бағасы 45 000 теңге болды. Жеңілдіктің пайыздық мөлшері.",
+  "options": [
+    {
+      "id": "tgo-percentages-laptop-discount-a",
+      "text": "18 %"
+    },
+    {
+      "id": "tgo-percentages-laptop-discount-b",
+      "text": "20 %"
+    },
+    {
+      "id": "tgo-percentages-laptop-discount-c",
+      "text": "16 %"
+    },
+    {
+      "id": "tgo-percentages-laptop-discount-d",
+      "text": "14 %"
+    },
+    {
+      "id": "tgo-percentages-laptop-discount-e",
+      "text": "25 %"
+    }
+  ],
+  "correctOptionIds": [
+    "tgo-percentages-laptop-discount-e"
+  ],
+  "type": "SINGLE",
+  "topic": "Пайыздар",
+  "difficulty": "easy",
+  "hint": "Шешуі:\n1. Жеңілдік сомасын табамыз:\n   60 000 - 45 000 = 15 000 теңге.\n2. Бұл сома бастапқы бағаның қанша пайызы екенін есептейміз:\n   (15 000 / 60 000) · 100% = (1 / 4) · 100% = 25%.\n\nДемек, жеңілдіктің пайыздық мөлшері 25%-ды құрайды."
 }
 ] as Question[];

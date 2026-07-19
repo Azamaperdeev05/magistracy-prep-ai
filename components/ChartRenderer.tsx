@@ -551,32 +551,60 @@ const TgoStepPerimeter: React.FC<Extract<ChartData, { type: 'tgo_step_perimeter'
 
 const TgoVenn: React.FC<Extract<ChartData, { type: 'tgo_venn' }>> = ({ leftLabel, rightLabel, leftTotal, rightTotal, intersection, outside }) => (
   <ExamFigureFrame className="p-5">
-    <svg viewBox="0 0 620 360" className="w-full max-w-2xl mx-auto">
-      <rect x="45" y="35" width="530" height="290" fill="white" stroke="black" strokeWidth="2.5" />
-      <circle cx="275" cy="205" r="100" fill="none" stroke="black" strokeWidth="2.5" />
-      <circle cx="395" cy="205" r="100" fill="none" stroke="black" strokeWidth="2.5" />
-      <text x="82" y="86" fontSize="30" fontFamily="serif">{leftLabel}</text>
-      <text x="250" y="78" fontSize="24" fontFamily="serif">{leftTotal}</text>
-      <text x="382" y="82" fontSize="30" fontFamily="serif">{rightLabel}</text>
-      <text x="532" y="78" textAnchor="end" fontSize="24" fontFamily="serif">{rightTotal}</text>
-      <text x="335" y="220" textAnchor="middle" fontSize="30" fontFamily="serif">{intersection}</text>
-      {typeof outside === 'number' && <text x="520" y="275" fontSize="30" fontFamily="serif">{outside}</text>}
+    <svg viewBox="0 0 640 360" className="w-full max-w-2xl mx-auto">
+      {/* Outer Box */}
+      <rect x="40" y="30" width="560" height="300" fill="white" stroke="black" strokeWidth="2.5" />
+      
+      {/* Venn Circles */}
+      <circle cx="240" cy="205" r="95" fill="none" stroke="black" strokeWidth="2.5" />
+      <circle cx="400" cy="205" r="95" fill="none" stroke="black" strokeWidth="2.5" />
+      
+      {/* Left Set Label & Total */}
+      <text x="180" y="75" textAnchor="middle" fontSize="24" fontWeight="bold" fontFamily="serif">{leftLabel}</text>
+      <text x="280" y="75" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="serif" fill="#2563eb">({leftTotal})</text>
+
+      {/* Right Set Label & Total */}
+      <text x="380" y="75" textAnchor="middle" fontSize="24" fontWeight="bold" fontFamily="serif">{rightLabel}</text>
+      <text x="490" y="75" textAnchor="middle" fontSize="22" fontWeight="bold" fontFamily="serif" fill="#2563eb">({rightTotal})</text>
+
+      {/* Intersection (Both) */}
+      <text x="320" y="213" textAnchor="middle" fontSize="28" fontWeight="bold" fontFamily="serif">{intersection}</text>
+
+      {/* Outside (Neither) */}
+      {typeof outside === 'number' && (
+        <text x="560" y="305" textAnchor="end" fontSize="26" fontWeight="bold" fontFamily="serif" fill="#475569">{outside}</text>
+      )}
     </svg>
   </ExamFigureFrame>
 );
 
 const TgoVennExclusive: React.FC<Extract<ChartData, { type: 'tgo_venn_exclusive' }>> = ({ leftLabel, rightLabel, leftExclusive, rightExclusive, intersection, outside }) => (
   <ExamFigureFrame className="p-5">
-    <svg viewBox="0 0 620 360" className="w-full max-w-2xl mx-auto">
-      <rect x="45" y="35" width="530" height="290" fill="white" stroke="black" strokeWidth="2.5" />
-      <circle cx="275" cy="205" r="100" fill="none" stroke="black" strokeWidth="2.5" />
-      <circle cx="395" cy="205" r="100" fill="none" stroke="black" strokeWidth="2.5" />
-      <text x="175" y="70" fontSize="30" fontFamily="serif" fontStyle="italic" textAnchor="middle">{leftLabel}</text>
-      <text x="445" y="70" fontSize="30" fontFamily="serif" fontStyle="italic" textAnchor="middle">{rightLabel}</text>
-      <text x="210" y="215" textAnchor="middle" fontSize="30" fontFamily="serif">{leftExclusive}</text>
-      <text x="335" y="215" textAnchor="middle" fontSize="30" fontFamily="serif">{intersection}</text>
-      <text x="460" y="215" textAnchor="middle" fontSize="30" fontFamily="serif">{rightExclusive}</text>
-      {typeof outside === 'number' && <text x="520" y="275" fontSize="30" fontFamily="serif">{outside}</text>}
+    <svg viewBox="0 0 640 360" className="w-full max-w-2xl mx-auto">
+      {/* Outer Box */}
+      <rect x="40" y="30" width="560" height="300" fill="white" stroke="black" strokeWidth="2.5" />
+      
+      {/* Venn Circles */}
+      <circle cx="240" cy="205" r="95" fill="none" stroke="black" strokeWidth="2.5" />
+      <circle cx="400" cy="205" r="95" fill="none" stroke="black" strokeWidth="2.5" />
+      
+      {/* Left & Right Labels */}
+      <text x="240" y="75" textAnchor="middle" fontSize="24" fontWeight="bold" fontFamily="serif">{leftLabel}</text>
+      <text x="400" y="75" textAnchor="middle" fontSize="24" fontWeight="bold" fontFamily="serif">{rightLabel}</text>
+
+      {/* Left Exclusive */}
+      <text x="180" y="213" textAnchor="middle" fontSize="28" fontWeight="bold" fontFamily="serif">{leftExclusive}</text>
+
+      {/* Intersection */}
+      <text x="320" y="213" textAnchor="middle" fontSize="28" fontWeight="bold" fontFamily="serif">{intersection}</text>
+
+      {/* Right Exclusive */}
+      <text x="460" y="213" textAnchor="middle" fontSize="28" fontWeight="bold" fontFamily="serif">{rightExclusive}</text>
+
+      {/* Outside */}
+      {typeof outside === 'number' && (
+        <text x="560" y="305" textAnchor="end" fontSize="26" fontWeight="bold" fontFamily="serif" fill="#475569">{outside}</text>
+      )}
     </svg>
   </ExamFigureFrame>
 );

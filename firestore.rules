@@ -11,7 +11,8 @@ service cloud.firestore {
     
     // 1. Тест тапсыру тарихы (history коллекциясы)
     match /history/{document} {
-      allow read, delete: if isAdmin() || (request.auth != null && resource.data.user_uid == request.auth.uid);
+      allow read: if true; // Бөлісілген сілтемелерді қонақтар мен басқа қолданушылар көре алуы үшін
+      allow delete: if isAdmin() || (request.auth != null && resource.data.user_uid == request.auth.uid);
       allow create: if request.auth != null && request.resource.data.user_uid == request.auth.uid;
       allow update: if isAdmin(); // Тек әкімші тест нәтижесін өзгерткенді көре алады (қолданушы өз ұпайын қолмен өзгерте алмайды)
     }

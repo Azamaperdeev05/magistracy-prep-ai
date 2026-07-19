@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.1.0",
+  "created_at": "2026-06-30T21:06:54.929683+00:00",
+  "build": {
+    "entrypoint": "project",
+    "path": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/ios/MagisCore.xcodeproj",
+    "scheme": "MagisCore",
+    "configuration": "Debug",
+    "destination": "platform=iOS Simulator,name=iPhone 17",
+    "derived_data_path": "",
+    "command": "xcodebuild -project /Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/ios/MagisCore.xcodeproj -scheme MagisCore -configuration Debug -destination \"platform=iOS Simulator,name=iPhone 17\""
+  },
+  "environment": {
+    "host": "MacBook-Air-Azamat.local",
+    "macos_version": "macOS-27.0-arm64-arm-64bit",
+    "xcode_version": "Xcode 27.0\nBuild version 27A5209h",
+    "cwd": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai"
+  },
+  "runs": {
+    "clean": [
+      {
+        "id": "clean-1",
+        "build_type": "clean",
+        "duration_seconds": 24.62,
+        "success": true,
+        "exit_code": 0,
+        "command": "xcodebuild -project /Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/ios/MagisCore.xcodeproj -scheme MagisCore -configuration Debug -destination \"platform=iOS Simulator,name=iPhone 17\" build -showBuildTimingSummary",
+        "raw_log_path": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/.build-benchmark/20260630T210605Z-magiscore-clean-1.log",
+        "timing_summary_categories": [
+          {
+            "name": "SwiftCompile",
+            "seconds": 33.581,
+            "task_count": 34
+          },
+          {
+            "name": "CompileC",
+            "seconds": 21.33,
+            "task_count": 100
+          },
+          {
+            "name": "ScanDependencies",
+            "seconds": 9.899,
+            "task_count": 62
+          },
+          {
+            "name": "SwiftEmitModule",
+            "seconds": 4.223,
+            "task_count": 5
+          },
+          {
+            "name": "SwiftDriver",
+            "seconds": 3.192,
+            "task_count": 5
+          },
+          {
+            "name": "CompileAssetCatalogVariant",
+            "seconds": 1.344,
+            "task_count": 1
+          },
+          {
+            "name": "Ld",
+            "seconds": 1.29,
+            "task_count": 30
+          },
+          {
+            "name": "Copy",
+            "seconds": 0.803,
+            "task_count": 69
+          },
+          {
+            "name": "CodeSign",
+            "seconds": 0.632,
+            "task_count": 26
+          },
+          {
+            "name": "ExtractAppIntentsMetadata",
+            "seconds": 0.361,
+            "task_count": 5
+          },
+          {
+            "name": "ProcessInfoPlistFile",
+            "seconds": 0.22,
+            "task_count": 19
+          },
+          {
+            "name": "RegisterExecutionPolicyException",
+            "seconds": 0.193,
+            "task_count": 19
+          },
+          {
+            "name": "CpResource",
+            "seconds": 0.102,
+            "task_count": 33
+          },
+          {
+            "name": "CopySwiftLibs",
+            "seconds": 0.059,
+            "task_count": 1
+          },
+          {
+            "name": "Touch",
+            "seconds": 0.048,
+            "task_count": 19
+          },
+          {
+            "name": "WriteAuxiliaryFile",
+            "seconds": 0.034,
+            "task_count": 245
+          },
+          {
+            "name": "AppIntentsSSUTraining",
+            "seconds": 0.034,
+            "task_count": 1
+          },
+          {
+            "name": "GenerateAssetSymbols",
+            "seconds": 0.022,
+            "task_count": 1
+          },
+          {
+            "name": "ConstructStubExecutorLinkFileList",
+            "seconds": 0.01,
+            "task_count": 1
+          },
+          {
+            "name": "ProcessProductPackagingDER",
+            "seconds": 0.007,
+            "task_count": 1
+          },
+          {
+            "name": "SwiftDriver Compilation Requirements",
+            "seconds": 0.006,
+            "task_count": 5
+          },
+          {
+            "name": "SwiftDriver Compilation",
+            "seconds": 0.004,
+            "task_count": 5
+          },
+          {
+            "name": "SwiftMergeGeneratedHeaders",
+            "seconds": 0.002,
+            "task_count": 5
+          },
+          {
+            "name": "Validate",
+            "seconds": 0.002,
+            "task_count": 1
+          },
+          {
+            "name": "LinkAssetCatalog",
+            "seconds": 0.001,
+            "task_count": 1
+          },
+          {
+            "name": "CopyPlistFile",
+            "seconds": 0.001,
+            "task_count": 1
+          },
+          {
+            "name": "ProcessProductPackaging",
+            "seconds": 0.001,
+            "task_count": 1
+          }
+        ]
+      }
+    ],
+    "incremental": [
+      {
+        "id": "zero-change-1",
+        "build_type": "zero-change",
+        "duration_seconds": 11.009,
+        "success": true,
+        "exit_code": 0,
+        "command": "xcodebuild -project /Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/ios/MagisCore.xcodeproj -scheme MagisCore -configuration Debug -destination \"platform=iOS Simulator,name=iPhone 17\" build -showBuildTimingSummary",
+        "raw_log_path": "/Users/azamat/Developer.noindex/GitHub/magistracy-prep-ai/.build-benchmark/20260630T210605Z-magiscore-zero-change-1.log",
+        "timing_summary_categories": [
+          {
+            "name": "Copy",
+            "seconds": 0.107,
+            "task_count": 18
+          },
+          {
+            "name": "ProcessInfoPlistFile",
+            "seconds": 0.085,
+            "task_count": 19
+          },
+          {
+            "name": "CopySwiftLibs",
+            "seconds": 0.016,
+            "task_count": 1
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "clean": {
+      "count": 1,
+      "min_seconds": 24.62,
+      "max_seconds": 24.62,
+      "median_seconds": 24.62,
+      "average_seconds": 24.62
+    },
+    "incremental": {
+      "count": 1,
+      "min_seconds": 11.009,
+      "max_seconds": 11.009,
+      "median_seconds": 11.009,
+      "average_seconds": 11.009
+    }
+  },
+  "notes": []
+}

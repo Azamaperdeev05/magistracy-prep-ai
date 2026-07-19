@@ -65,10 +65,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
                 onClick={() => {
                     showConfirm("Тестті аяқтауға сенімдісіз бе?", onFinish);
                 }}
-                className="flex flex-col items-center gap-1 cursor-pointer hover:bg-red-500/20 w-full py-2 transition text-red-100"
+                className="flex flex-col items-center gap-1 cursor-pointer hover:bg-white/20 w-full py-2 transition text-red-500 rounded-md"
              >
-                <LogOut className="w-6 h-6" />
-                <span className="text-[10px]">Аяқтау</span>
+                <LogOut className="w-6 h-6 text-red-500" />
+                <span className="text-[10px] font-bold text-red-500">Аяқтау</span>
              </button>
         </div>
 

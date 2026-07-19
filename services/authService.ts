@@ -191,6 +191,23 @@ export async function login(email: string, password: string): Promise<AuthRespon
     is_active: true
   };
 
+  // Load consent from Firestore so it persists across sessions
+  if (db) {
+    try {
+      const userDocRef = doc(db, "users", fbUser.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.consent) {
+          profile.consent = data.consent as UserConsent;
+        }
+        profile.is_premium = !!data.is_premium;
+      }
+    } catch (e) {
+      console.warn("Firestore consent fetch on login failed:", e);
+    }
+  }
+
   const idToken = await fbUser.getIdToken();
   setToken(idToken);
   saveUser(profile);
@@ -213,6 +230,23 @@ export async function loginWithGoogle(): Promise<AuthResponse> {
     full_name: fbUser.displayName || 'Google Пайдаланушысы',
     is_active: true
   };
+
+  // Load consent from Firestore so it persists across sessions
+  if (db) {
+    try {
+      const userDocRef = doc(db, "users", fbUser.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.consent) {
+          profile.consent = data.consent as UserConsent;
+        }
+        profile.is_premium = !!data.is_premium;
+      }
+    } catch (e) {
+      console.warn("Firestore consent fetch on Google login failed:", e);
+    }
+  }
 
   const idToken = await fbUser.getIdToken();
   setToken(idToken);
@@ -258,6 +292,9 @@ export async function getProfile(): Promise<UserProfile> {
 
   const currentDeviceId = getDeviceId();
 
+  // Track consent from Firestore
+  let firestoreConsent: UserConsent | undefined = savedUser?.consent;
+
   // Synchronize with Firestore database if online/db is ready
   if (db) {
     try {
@@ -269,6 +306,11 @@ export async function getProfile(): Promise<UserProfile> {
         aiQueriesToday = data.ai_queries_today || 0;
         aiQueriesDate = data.ai_queries_date || "";
         activeDevices = data.active_devices || [];
+
+        // Read consent from Firestore (source of truth)
+        if (data.consent) {
+          firestoreConsent = data.consent as UserConsent;
+        }
 
         // Check device limit (Max: 2)
         if (activeDevices.includes(currentDeviceId)) {
@@ -319,7 +361,7 @@ export async function getProfile(): Promise<UserProfile> {
     test_lang: savedUser?.test_lang,
     foreign_lang: savedUser?.foreign_lang,
     tgo_lang: savedUser?.tgo_lang,
-    consent: savedUser?.consent,
+    consent: firestoreConsent,
     is_premium: isPremium,
     ai_queries_today: aiQueriesToday,
     ai_queries_date: aiQueriesDate,
@@ -373,6 +415,64 @@ export async function getHistory(): Promise<HistoryItem[]> {
     }
   }
   return [];
+}
+
+export async function getHistoryItemById(id: string | number): Promise<HistoryItem | null> {
+  ensureFirebaseReady();
+  if (db) {
+    try {
+      const numId = Number(id);
+      const targetId = isNaN(numId) ? id : numId;
+
+      // 1. Query by numeric or string id field
+      const q1 = query(collection(db, "history"), where("id", "==", targetId));
+      let snap = await getDocs(q1);
+
+      // 2. Query by string id field if numeric query returned empty
+      if (snap.empty && typeof targetId === 'number') {
+        const q2 = query(collection(db, "history"), where("id", "==", String(targetId)));
+        snap = await getDocs(q2);
+      }
+
+      if (!snap.empty) {
+        const data = snap.docs[0].data();
+        return {
+          id: data.id || snap.docs[0].id,
+          total_score: data.total_score,
+          max_score: data.max_score,
+          subject_scores: data.subject_scores,
+          correct_count: data.correct_count,
+          total_questions: data.total_questions,
+          created_at: data.created_at,
+          questions_data: data.questions_data,
+          answers_data: data.answers_data
+        };
+      }
+
+      // 3. Fallback: try fetching by Firestore doc ID directly
+      try {
+        const docRef = doc(db, "history", String(id));
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          return {
+            id: data.id || docSnap.id,
+            total_score: data.total_score,
+            max_score: data.max_score,
+            subject_scores: data.subject_scores,
+            correct_count: data.correct_count,
+            total_questions: data.total_questions,
+            created_at: data.created_at,
+            questions_data: data.questions_data,
+            answers_data: data.answers_data
+          };
+        }
+      } catch (e) {}
+    } catch (err) {
+      console.error("Fetch history by ID failed:", err);
+    }
+  }
+  return null;
 }
 
 export async function deleteHistoryItem(id: number): Promise<void> {

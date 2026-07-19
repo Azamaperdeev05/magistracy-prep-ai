@@ -1,11 +1,21 @@
 # Questions data
 
-Static question bank split by exam subject and specification topic.
+Static question bank split by exam subject and specification topic. **5 062 questions** across 6 subjects.
 
-- `english/`: listening, grammar, vocabulary, reading
-- `tgo/`: critical-thinking and analytical-thinking topics from the ODAT specification
-- `algo/`: programming basics, algorithms, complexity, data structures, graphs
-- `db/`: modeling, SQL, normalization, integrity, architecture
+See [MANIFEST.md](./MANIFEST.md) for the full list with counts and specialty mapping.
+
+## Subjects
+
+| Subject | Directory | Questions | Specialty |
+|---------|-----------|-----------|-----------|
+| English (Ағылшын) | `english/` | 159 | Міндетті |
+| ОДАТ (ТГО) | `tgo/` | 754 | Міндетті |
+| Педагогика (М001) | `m001/pedagogika/` | 1 000 | M001 |
+| Психология (М001) | `m001/psychology/` | 450 | M001 |
+| Мектепке дейінгі педагогика (М002) | `m002/pedagogika/` | 550 | M002 |
+| Тіл дамыту әдістемесі (М002) | `m002/speech-dev/` | 50 | M002 |
+| Алгоритмдер | `algo/` | 1 000 | M094 |
+| Дерекқорлар (SQL) | `db/` | 1 099 | M094 |
 
 The app imports only `data/questions/index.ts`; topic files stay small enough to edit and extend manually.
 

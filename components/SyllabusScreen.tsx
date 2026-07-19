@@ -14,6 +14,7 @@ interface SyllabusScreenProps {
 }
 
 const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
+  const [isDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
   const { subjectId } = useParams<{ subjectId: string }>();
   const navigate = useNavigate();
   const currentSubject = subjectId || 'english';
@@ -50,67 +51,71 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
     fetchSyllabus();
   }, [currentSubject]);
 
-  const subjects = [
-    { id: 'english', name: 'Ағылшын тілі', icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { id: 'tgo', name: 'ОДАТ (Логика)', icon: Brain, color: 'text-violet-600', bg: 'bg-violet-50' },
-    { id: 'algo', name: 'Алгоритмдер', icon: Book, color: 'text-rose-600', bg: 'bg-rose-50' },
-    { id: 'db', name: 'Дерекқорлар', icon: Database, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { id: 'rules', name: 'Тест ережелері', icon: Info, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { id: 'info', name: 'Жалпы ақпарат', icon: Info, color: 'text-slate-600', bg: 'bg-slate-50' },
-  ];
+  const subjectIcons: Record<string, React.ReactNode> = {
+    english: <Globe className="w-5 h-5" />,
+    tgo: <Brain className="w-5 h-5" />,
+    db: <Database className="w-5 h-5" />,
+    algo: <Book className="w-5 h-5" />
+  };
 
-  const hasChapters = currentSubject !== 'info' && currentSubject !== 'rules';
-  const chapters = 
-    currentSubject === 'db' ? DB_TEXTBOOK : 
-    currentSubject === 'algo' ? ALGO_TEXTBOOK : 
-    currentSubject === 'english' ? ENGLISH_TEXTBOOK : 
-    currentSubject === 'tgo' ? TGO_TEXTBOOK : null;
-  const currentChapter = chapters ? chapters[activeChapter] : null;
+  const getChapterData = () => {
+    if (currentSubject === 'db') return DB_TEXTBOOK;
+    if (currentSubject === 'algo') return ALGO_TEXTBOOK;
+    if (currentSubject === 'english') return ENGLISH_TEXTBOOK;
+    if (currentSubject === 'tgo') return TGO_TEXTBOOK;
+    return null;
+  };
+
+  const chapterData = getChapterData();
+  const hasChapters = !!chapterData;
+  const chapters = chapterData?.chapters;
+  const currentChapter = chapters && chapters[activeChapter];
+
+  // Theme styles
+  const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';
+  const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
+  const textSecondary = isDarkMode ? 'text-slate-400' : 'text-slate-600';
+  const textMuted = isDarkMode ? 'text-slate-500' : 'text-slate-400';
+  const cardBg = isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-sm';
+  const subCardBg = isDarkMode ? 'bg-slate-900/40 border-slate-800' : 'bg-slate-50 border-slate-200/80';
+  const btnBg = isDarkMode ? 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs';
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] flex flex-col">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button 
-            onClick={onBack}
-            className="flex items-center text-slate-600 hover:text-blue-600 transition-colors font-medium"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Артқа
-          </button>
-          <h1 className="text-lg font-bold text-slate-900">Оқу Бағдарламасы мен Оқулықтар</h1>
-          <div className="w-20"></div> {/* Spacer */}
+    <div className={`min-h-screen ${bg} ${textPrimary} flex flex-col transition-colors duration-300 select-text`}>
+      {/* Top Header */}
+      <header className={`border-b sticky top-0 backdrop-blur-md z-30 ${isDarkMode ? 'bg-[#07090d]/80 border-white/5' : 'bg-white/90 border-slate-200 shadow-sm'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={onBack}
+              className={`p-2 rounded-xl border transition-all active:scale-95 ${btnBg}`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-blue-500">{subjectIcons[currentSubject]}</span>
+              <h1 className={`text-lg sm:text-xl font-black ${textPrimary}`}>
+                {SUBJECTS[currentSubject as SubjectId]?.name || 'Конспект'}
+              </h1>
+            </div>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-400">
+            <Info className="w-4 h-4 text-blue-500" />
+            <span>Магистратура КТ бағдарламасы бойынша</span>
+          </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 sm:p-6 overflow-hidden">
-        {/* Sidebar Tabs */}
-        <aside className="w-full lg:w-64 flex lg:flex-col overflow-x-auto lg:overflow-x-visible py-2 lg:py-0 gap-2 lg:gap-2 shrink-0 mb-2 lg:mb-0 scrollbar-none">
-          <div className="hidden lg:block text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Пәндер</div>
-          {subjects.map((sub) => (
-            <button
-              key={sub.id}
-              onClick={() => navigate(`/program/${sub.id}`)}
-              className={`
-                flex items-center p-3 rounded-xl transition-all duration-200 whitespace-nowrap shrink-0 lg:w-full
-                ${currentSubject === sub.id 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
-                  : 'bg-white text-slate-600 hover:bg-white hover:shadow-md border border-slate-100'}
-              `}
-            >
-              <div className={`p-2 rounded-lg mr-3 ${currentSubject === sub.id ? 'bg-white/20' : sub.bg + ' ' + sub.color}`}>
-                <sub.icon className="w-5 h-5" />
-              </div>
-              <span className="font-semibold text-sm">{sub.name}</span>
-            </button>
-          ))}
-        </aside>
-
-        {/* Sub-sidebar for Chapters (Only for DB and Algo) */}
+      {/* Main Container */}
+      <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
+        
+        {/* Sub-sidebar for Chapters */}
         {hasChapters && chapters && (
-          <aside className="w-full lg:w-80 flex lg:flex-col overflow-x-auto lg:overflow-x-visible py-2 lg:py-0 gap-1.5 lg:gap-1.5 shrink-0 max-h-[120px] lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto pr-1 mb-2 lg:mb-0 scrollbar-none">
-            <div className="hidden lg:block text-[10px] font-black uppercase tracking-widest text-slate-400 pl-3 mb-2">Тақырыптар бойынша оқулық</div>
+          <aside className="w-full lg:w-80 flex lg:flex-col overflow-x-auto lg:overflow-x-visible py-2 lg:py-0 gap-1.5 shrink-0 max-h-[120px] lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto pr-1 mb-2 lg:mb-0 scrollbar-none">
+            <div className={`hidden lg:block text-[10px] font-black uppercase tracking-widest pl-3 mb-2 ${textMuted}`}>
+              Тақырыптар бойынша оқулық
+            </div>
             {Object.keys(chapters).map((key) => {
               const ch = chapters[key];
               const isActive = activeChapter === key;
@@ -130,8 +135,8 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
                   className={`
                     text-left p-3 rounded-xl border transition text-xs font-semibold whitespace-nowrap shrink-0 lg:w-full lg:whitespace-normal
                     ${isActive 
-                      ? 'bg-blue-50/70 border-blue-200 text-blue-700 font-bold' 
-                      : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-50/50'}
+                      ? (isDarkMode ? 'bg-blue-950/40 border-blue-500/40 text-blue-400 font-bold' : 'bg-blue-50/80 border-blue-200 text-blue-700 font-bold') 
+                      : (isDarkMode ? 'bg-[#0f1219] border-slate-800 text-slate-400 hover:bg-slate-900' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100')}
                   `}
                 >
                   <div className="flex items-center justify-between gap-2 w-full">
@@ -145,10 +150,10 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
         )}
 
         {/* Content Area */}
-        <main className="flex-1 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col min-h-[500px]">
+        <main className={`flex-1 rounded-3xl border overflow-hidden flex flex-col min-h-[500px] ${cardBg}`}>
           {isLoading ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-400">
-              <Loader2 className="w-10 h-10 animate-spin mb-4" />
+            <div className={`flex-1 flex flex-col items-center justify-center ${textMuted}`}>
+              <Loader2 className="w-10 h-10 animate-spin mb-4 text-blue-500" />
               <p>Жүктелуде...</p>
             </div>
           ) : (
@@ -163,12 +168,14 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
             </div>
           )}
         </main>
+
       </div>
 
-      <UpgradeModal
-        isOpen={showUpgradeModal}
+      <UpgradeModal 
+        isOpen={showUpgradeModal} 
         onClose={() => setShowUpgradeModal(false)}
-        userEmail={currentUser?.email || ''}
+        title="Оқулықтың толық нұсқасын ашыңыз"
+        description="Кешенді тестілеудің барлық пәндері бойынша толық оқулықтар мен шексіз ИИ-мұғалім түсіндірмелерін алу үшін Премиум тарифіне өтіңіз."
       />
     </div>
   );
