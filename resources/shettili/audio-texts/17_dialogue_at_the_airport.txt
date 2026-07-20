@@ -1,0 +1,74 @@
+Speaker 1:
+Good morning. Welcome to SkyAir check-in. May I see your passport and booking reference, please?
+
+Speaker 2:
+Good morning. Here you are.
+
+Speaker 1:
+Thank you. Let me pull up your reservation. I see you're flying to London Heathrow today, is that correct?
+
+Speaker 2:
+Yes, that's right. Flight SK 472.
+
+Speaker 1:
+Perfect. Would you like a window seat or an aisle seat today?
+
+Speaker 2:
+Aisle seat, please. I like being able to get up without bothering anyone.
+
+Speaker 1:
+Of course. I have seat 14C available, which is an aisle seat near the middle of the cabin. Would that work for you?
+
+Speaker 2:
+That sounds fine.
+
+Speaker 1:
+And are you checking any luggage today?
+
+Speaker 2:
+Yes, I have one suitcase to check in.
+
+Speaker 1:
+Please place it on the scale. Let me weigh it.
+
+Speaker 2:
+Sure.
+
+Speaker 1:
+It's twenty-two kilograms. Your allowance is twenty-three, so you're well within the limit. I'll attach the tag and send it through.
+
+Speaker 2:
+Great. And can I take my carry-on bag with me on the plane?
+
+Speaker 1:
+Yes, as long as it fits in the overhead compartment or under the seat in front of you. Could you place it in the sizer just to confirm?
+
+Speaker 2:
+Of course.
+
+Speaker 1:
+It fits perfectly. You're all set. Here's your boarding pass. Your gate is B12, and boarding starts at 10:15. That gives you about an hour to get through security and find your gate.
+
+Speaker 2:
+Is there anything I should know about security? Any restrictions I might have forgotten?
+
+Speaker 1:
+Just the usual — liquids must be under 100 milliliters in a clear bag, and electronics larger than a phone need to be taken out of your bag. You should be fine.
+
+Speaker 2:
+Thank you. And which way is security?
+
+Speaker 1:
+Go straight ahead past the shops, then turn left. You'll see the signs. Have a wonderful flight to London.
+
+Speaker 2:
+Thank you very much for your help.
+
+Speaker 1:
+My pleasure. Enjoy your trip.
+
+--Scene:
+A busy airport check-in counter with flight information boards and long queues nearby.
+
+--Sample Context:
+Efficient, polite. Both speakers are courteous and the interaction flows smoothly and quickly.

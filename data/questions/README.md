@@ -1,47 +1,59 @@
 # Questions data
 
-Static question bank split by exam subject and specification topic. **5 062 questions** across 6 subjects.
-
-See [MANIFEST.md](./MANIFEST.md) for the full list with counts and specialty mapping.
+Static question bank split by exam subject and specification topic. **7 375 questions** across 10 subjects.
 
 ## Subjects
 
-| Subject | Directory | Questions | Specialty |
-|---------|-----------|-----------|-----------|
-| English (Ағылшын) | `english/` | 159 | Міндетті |
-| ОДАТ (ТГО) | `tgo/` | 754 | Міндетті |
-| Педагогика (М001) | `m001/pedagogika/` | 1 000 | M001 |
-| Психология (М001) | `m001/psychology/` | 450 | M001 |
-| Мектепке дейінгі педагогика (М002) | `m002/pedagogika/` | 550 | M002 |
-| Тіл дамыту әдістемесі (М002) | `m002/speech-dev/` | 50 | M002 |
-| Алгоритмдер | `algo/` | 1 000 | M094 |
-| Дерекқорлар (SQL) | `db/` | 1 099 | M094 |
+| Subject | Directory | Questions | Format |
+|---------|-----------|-----------|--------|
+| English — Grammar | `english/grammar/` | 624 | SINGLE/MULTIPLE |
+| English — Listening | `english/listening/` | 256 | SINGLE/MULTIPLE |
+| English — Reading | `english/reading/` | 352 | MULTIPLE (8 per passage) |
+| English — Vocabulary | `english/vocabulary/` | 60 | SINGLE |
+| ОДАТ (ТГО) | `tgo/` | 754 | SINGLE/MULTIPLE |
+| Педагогика (M001) | `subjects/general-pedagogy/` | 1 000 | SINGLE |
+| Психология (M001) | `subjects/general-psychology/` | 450 | SINGLE |
+| Мектепке дейінгі педагогика (M002) | `subjects/preschool-pedagogy/` | 550 | SINGLE |
+| Тіл дамыту (M002) | `subjects/speech-development/` | 600 | MULTIPLE (8 opt) |
+| Алгоритмдер (M094) | `subjects/algorithms/` | 1 000 | SINGLE |
+| Дерекқорлар SQL (M094) | `subjects/databases/` | 1 099 | MULTIPLE |
+| Алгоритмдік бағдарламалау (M095) | `subjects/algorithmic-programming/` | 330 | SINGLE (5 opt) |
+| Ақпараттық қауіпсіздік (M095) | `subjects/information-security/` | 300 | MULTIPLE (8 opt) |
 
-The app imports only `data/questions/index.ts`; topic files stay small enough to edit and extend manually.
+## Structure
 
-## TGO visual question types
+```
+data/questions/
+├── index.ts                              ← All subjects registered into STATIC_QUESTIONS
+├── english/                              ← English language
+│   ├── grammar/     (13 files)
+│   ├── listening/   (4 files)
+│   ├── reading/     (5 files)
+│   └── vocabulary/  (6 files)
+├── tgo/                                  ← ОДАТ (logic)
+└── subjects/
+    ├── general-pedagogy/                 ← M001 Pedagogy
+    ├── general-psychology/               ← M001 Psychology
+    ├── preschool-pedagogy/               ← M002 Preschool Pedagogy
+    ├── speech-development/               ← M002 Speech Development
+    ├── algorithms/                       ← M094 Algorithms (10 topics)
+    ├── databases/                        ← M094 SQL Databases (11 topics)
+    ├── algorithmic-programming/          ← M095 Algorithmic Programming (11 topics)
+    └── information-security/             ← M095 Information Security (6 topics)
+        ├── 01-cryptography/
+        ├── 02-identification-auth/
+        ├── 03-network-security/
+        ├── 04-malware/
+        ├── 05-security-technologies/
+        └── 06-attacker-types/
+```
 
-TGO follows the ODAT specification in `тест спец/Оқуға-дайындығын-анықтау-тесті.docx`.
-Visual/statistical/math prompts are stored as structured `chartData`, then rendered as React/SVG in `components/ChartRenderer.tsx`.
-`services/apiService.ts` samples TGO as 15 critical-thinking questions and 15 analytical-thinking questions for the 30-question ODAT section.
+## Question format standard
 
-Current visual families:
+All subjects follow a uniform format (see `docs/QUESTION_STANDARD.md`):
 
-- `tgo_comparison_grid`: quantity A/B comparison tables.
-- `tgo_grouped_bar`: table/diagram data interpretation.
-- `tgo_step_perimeter`: right-angle perimeter geometry.
-- `tgo_venn`: set/survey diagrams.
-- `tgo_shaded_rectangle`: shaded-area geometry.
-- `tgo_triangle_sides`: triangle side-inequality prompts.
-- `tgo_inscribed_square`: square inscribed in a circle.
-- `tgo_square_mosaic`: shaded/unshaded square-area mosaics.
-
-## DB question format
-
-DB follows `тест спец/М094_Ақпараттық-технологиялар/Дерекқор базасы.doc` and the sample in `Деректер-базасы үлгі.pdf`.
-
-- One DB variant has 20 questions and a 40-point maximum.
-- Every DB question is stored as `MULTIPLE`, because the official format allows one or more correct answers.
-- The UI caps DB selections at 3 options.
-- Scoring is 2 points for an exact answer, 1 point for one mistake, and 0 for two or more mistakes.
-- `services/apiService.ts` samples DB questions by broad spec distribution: relational model 2, integrity 2, architecture/transactions 2, ER 1, keys/relationships 2, SQL 8, normalization/design 3.
+- M-series subjects use `SubjectId` enum for `subjectId`
+- Algorithmic programming and information security use string `"m095_algo"` / `"m095_infosec"` with `as any` cast
+- Reading: 8 questions per passage, stored as `readingPassage` field
+- Listening (speech-development): MULTIPLE, 8 options, 2/1/0 scoring
+- Information security: MULTIPLE, 8 options, 2/1/0 scoring, 50 questions per topic

@@ -626,5 +626,117 @@ export const englishReadingReadingPassagesQuestions = [
     "type": "SINGLE",
     "topic": "Reading",
     "difficulty": "medium"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000001",
+    "subjectId": "english",
+    "text": "What is the main benefit of bilingualism mentioned in the text?",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000101", "text": "Only professional growth" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000102", "text": "Better problem-solving and creativity" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000103", "text": "Faster reading speed" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000104", "text": "Physical health improvement" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000102"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "medium"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000002",
+    "subjectId": "english",
+    "text": "According to the passage, bilingualism helps delay:",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000201", "text": "Physical aging" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000202", "text": "Career growth" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000203", "text": "Age-related cognitive decline" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000204", "text": "Language acquisition" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000203"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "medium"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000003",
+    "subjectId": "english",
+    "text": "Which fields are mentioned as career opportunities for language learners?",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000301", "text": "Engineering and medicine" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000302", "text": "International business, diplomacy, tourism" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000303", "text": "Agriculture and farming" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000304", "text": "Sports and entertainment" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000302"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "medium"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000004",
+    "subjectId": "english",
+    "text": "The word 'monolinguals' in the text refers to:",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000401", "text": "People who speak two languages" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000402", "text": "People who speak only one language" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000403", "text": "People who study languages" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000404", "text": "People who travel frequently" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000402"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "medium"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000005",
+    "subjectId": "english",
+    "text": "What social benefit of language learning is mentioned?",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000501", "text": "Higher salary" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000502", "text": "Greater empathy and global awareness" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000503", "text": "Faster internet connection" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000504", "text": "Better cooking skills" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000502"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "medium"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000006",
+    "subjectId": "english",
+    "text": "What do many education systems now require according to the passage?",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000601", "text": "Daily physical exercise" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000602", "text": "Studying at least one foreign language" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000603", "text": "Taking online courses" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000604", "text": "Learning to play music" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000602"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "easy"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000007",
+    "subjectId": "english",
+    "text": "The main purpose of this passage is to:",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000701", "text": "Compare different languages" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000702", "text": "Promote the benefits of learning a second language" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000703", "text": "Criticize monolingual education" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000704", "text": "Discuss language difficulty" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000702"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "easy"
+  },
+  {
+    "id": "b1a2c3d4-0001-4000-8000-000000000008",
+    "subjectId": "english",
+    "text": "The phrase 'cognitive decline' most likely means:",
+    "readingPassage": "Learning a second language has numerous cognitive, social, and professional benefits. Research shows that bilingual individuals often have better problem-solving skills and enhanced creativity compared to monolinguals. Speaking multiple languages also improves memory and delays the onset of age-related cognitive decline. In addition, knowing a foreign language opens up career opportunities in international business, diplomacy, and tourism. From a social perspective, it allows people to connect with different cultures, fostering greater empathy and global awareness. Many education systems around the world now require students to study at least one foreign language, recognizing these lifelong advantages.",
+    "options": [
+      { "id": "b1a2c3d4-0001-4000-8000-000000000801", "text": "Improvement in physical fitness" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000802", "text": "Reduction in mental abilities over time" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000803", "text": "Growth in career opportunities" },
+      { "id": "b1a2c3d4-0001-4000-8000-000000000804", "text": "Increase in social connections" }
+    ],
+    "correctOptionIds": ["b1a2c3d4-0001-4000-8000-000000000802"],
+    "type": "SINGLE", "topic": "Reading", "difficulty": "hard"
   }
 ] as Question[];

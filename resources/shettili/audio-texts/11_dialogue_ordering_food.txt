@@ -1,0 +1,65 @@
+Speaker 1:
+Good evening, welcome to Bella Roma. My name is Marco, and I'll be your server tonight.
+
+Speaker 2:
+Thank you. Could I see the wine list, please?
+
+Speaker 1:
+Of course. Here you are. Can I start you off with something to drink while you look at the menu?
+
+Speaker 2:
+Yes, I'll have a sparkling water with lemon, please.
+
+Speaker 1:
+Perfect. I'll be right back with that.
+
+Speaker 2:
+Thanks.
+
+Speaker 1:
+Here's your water. Are you ready to order, or would you like a few more minutes?
+
+Speaker 2:
+I think I'm ready. For the starter, I'll have the bruschetta — it comes with tomatoes and basil, right?
+
+Speaker 1:
+That's right. Fresh tomatoes, basil, and a drizzle of balsamic glaze. It's one of our most popular starters.
+
+Speaker 2:
+Sounds wonderful. And for the main course, I'd like the grilled salmon. What side dishes does it come with?
+
+Speaker 1:
+The salmon is served with roasted vegetables and your choice of either mashed potatoes or a fresh green salad.
+
+Speaker 2:
+I'll go with the mashed potatoes, please.
+
+Speaker 1:
+Excellent choice. And how would you like the salmon cooked — medium or well-done?
+
+Speaker 2:
+Medium, please.
+
+Speaker 1:
+Any additional sides or sauces?
+
+Speaker 2:
+No, that should be everything.
+
+Speaker 1:
+Great. I'll put the order in right away. Is there anything else I can get you in the meantime?
+
+Speaker 2:
+Maybe some bread with olive oil while I wait?
+
+Speaker 1:
+Absolutely. I'll bring that out shortly. Enjoy your evening.
+
+Speaker 2:
+Thank you, you too.
+
+--Scene:
+A casual restaurant with soft lighting and a cozy atmosphere.
+
+--Sample Context:
+Polite, friendly. The customer and server speak with warm but professional tones.

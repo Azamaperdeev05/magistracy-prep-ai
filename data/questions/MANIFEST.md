@@ -1,117 +1,89 @@
 # Question Bank Manifest
 
-Auto-generated reference for the static question bank. 6 subjects, 5 062 questions total.
+Updated: July 2026. **7 375 questions** across 10 subjects.
 
 ## Summary
 
-| Subject ID | Name | Questions | Specialty |
-|------------|------|-----------|-----------|
-| `english` | Шет тілі (Ағылшын) | 159 | Міндетті (барлығына) |
-| `tgo` | Оқу дайындығын анықтау (ОДАТ) | 754 | Міндетті (барлығына) |
-| `m001_pedagogika` | Педагогика (М001) | 1 000 | M001 — Profile1 |
-| `m001_psychology` | Психология (М001) | 450 | M001 — Profile2 |
-| `m002_pedagogika` | Мектепке дейінгі педагогика (М002) | 550 | M002 — Profile1 |
-| `m002_speech_dev` | Тіл дамыту әдістемесі (М002) | 50 | M002 — Profile2 |
-| `algo` | Алгоритмдер және деректер құрылымы | 1 000 | M094 — Profile1 |
-| `db` | Дерекқор базасы (SQL) | 1 099 | M094 — Profile2 |
-| | **Барлығы** | **5 062** | |
+| Subject ID | Name | Questions | Format |
+|------------|------|-----------|--------|
+| `english` | Шет тілі (Ағылшын) | 1 292 | SINGLE/MULTIPLE |
+| `tgo` | ОДАТ | 754 | SINGLE/MULTIPLE |
+| `m001_pedagogika` | Педагогика (M001) | 1 000 | SINGLE |
+| `m001_psychology` | Психология (M001) | 450 | SINGLE |
+| `m002_pedagogika` | Мектепке дейінгі педагогика (M002) | 550 | SINGLE |
+| `m002_speech_dev` | Тіл дамыту (M002) | 600 | MULTIPLE (8 opt) |
+| `algo` | Алгоритмдер (M094) | 1 000 | SINGLE |
+| `db` | Дерекқор SQL (M094) | 1 099 | MULTIPLE |
+| `m095_algo` | Алгоритмдік бағдарламалау (M095) | 330 | SINGLE (5 opt) |
+| `m095_infosec` | Ақпараттық қауіпсіздік (M095) | 300 | MULTIPLE (8 opt) |
+| | **Барлығы** | **7 375** | |
 
 ## Specialty → Subject Mapping
 
-| Code | Specialty | Profile1 (Subject) | Profile2 (Subject) |
-|------|-----------|-------------------|-------------------|
-| M001 | Педагогика және психология | `m001_pedagogika` (1 000) | `m001_psychology` (450) |
-| M002 | Мектепке дейінгі оқыту және тәрбиелеу | `m002_pedagogika` (550) | `m002_speech_dev` (50) |
-| M094 | Ақпараттық технологиялар | `algo` (1 000) | `db` (1 099) |
+| Code | Specialty | Subjects |
+|------|-----------|----------|
+| M001 | Педагогика және психология | `general-pedagogy` (1 000) + `general-psychology` (450) |
+| M002 | Мектепке дейінгі оқыту | `preschool-pedagogy` (550) + `speech-development` (600) |
+| M094 | Ақпараттық технологиялар | `algorithms` (1 000) + `databases` (1 099) |
+| M095 | Бағдарлама және қауіпсіздік | `algorithmic-programming` (330) + `information-security` (300) |
 
-## Mandatory Subjects (all specialties)
+## Folder structure
 
-Always loaded regardless of specialty selection.
+```
+questions/
+├── index.ts
+├── english/                                  → 1 292 questions
+├── tgo/                                      → 754 questions
+└── subjects/
+    ├── general-pedagogy/                     → 1 000 questions
+    ├── general-psychology/                   → 450 questions
+    ├── preschool-pedagogy/                   → 550 questions
+    ├── speech-development/                   → 600 questions
+    ├── algorithms/                           → 1 000 questions (10 topics)
+    ├── databases/                            → 1 099 questions (11 topics)
+    ├── algorithmic-programming/              → 330 questions (11 topics)
+    └── information-security/                 → 300 questions (6 topics)
+        ├── 01-cryptography/                  → 50 questions
+        ├── 02-identification-auth/           → 50 questions
+        ├── 03-network-security/              → 50 questions
+        ├── 04-malware/                       → 50 questions
+        ├── 05-security-technologies/         → 50 questions
+        └── 06-attacker-types/                → 50 questions
+```
 
-### english — Шет тілі (Ағылшын) — 159 questions
+## information-security — Ақпараттық қауіпсіздік (M095) — 300 questions
 
-| Directory | File | Topic |
-|-----------|------|-------|
-| `english/listening/` | `audio-texts.ts` | Listening (аудио) |
-| `english/grammar/` | `articles.ts` | Articles |
-| `english/grammar/` | `conditionals.ts` | Conditionals |
-| `english/grammar/` | `modal-verbs.ts` | Modal Verbs |
-| `english/grammar/` | `passive-voice.ts` | Passive Voice |
-| `english/grammar/` | `prepositions.ts` | Prepositions |
-| `english/grammar/` | `tenses.ts` | Tenses |
-| `english/reading/` | `reading-passages.ts` | Reading Passages |
-| `english/reading/` | `reading-skills.ts` | Reading Skills |
-| `english/vocabulary/` | `academic-vocabulary.ts` | Academic Vocabulary |
-| `english/vocabulary/` | `antonyms.ts` | Antonyms |
-| `english/vocabulary/` | `collocations.ts` | Collocations |
-| `english/vocabulary/` | `prefixes.ts` | Prefixes |
-| `english/vocabulary/` | `synonyms.ts` | Synonyms |
-| `english/vocabulary/` | `word-formation.ts` | Word Formation |
+| # | File | Topic | Questions |
+|---|------|-------|:---------:|
+| 1 | `01-cryptography/01Cryptography.ts` | Криптография | 50 |
+| 2 | `02-identification-auth/02IdentificationAuth.ts` | Идентификация, Аутентификация, Авторизация | 50 |
+| 3 | `03-network-security/03NetworkSecurity.ts` | Желінің қауіпсіздігі | 50 |
+| 4 | `04-malware/04Malware.ts` | Зиянды бағдарлама | 50 |
+| 5 | `05-security-technologies/05SecurityTechnologies.ts` | Ақпараттық қауіпсіздік технологиялары | 50 |
+| 6 | `06-attacker-types/06AttackerTypes.ts` | Зиянкестердің түрлері | 50 |
 
-### tgo — Оқу дайындығын анықтау (ОДАТ) — 754 questions
+Difficulty distribution per topic: Easy 15, Medium 20, Hard 15.
+Format: MULTIPLE, 8 options, 1–3 correct answers (2/1/0 scoring).
 
-| Directory | File | Topic |
-|-----------|------|-------|
-| `tgo/analytical-thinking/` | `text-analysis.ts` | Мәтінді талдау |
-| `tgo/critical-thinking/` | `algebra.ts` | Алгебра |
-| `tgo/critical-thinking/` | `combinatorics.ts` | Комбинаторика |
-| `tgo/critical-thinking/` | `critical-reasoning.ts` | Сыни ойлау |
-| `tgo/critical-thinking/` | `geometry.ts` | Геометрия |
-| `tgo/critical-thinking/` | `inequalities.ts` | Неравенства |
-| `tgo/critical-thinking/` | `mathematical-logic.ts` | Математикалық логика |
-| `tgo/critical-thinking/` | `numeric-sequences.ts` | Сан тізбегі |
-| `tgo/critical-thinking/` | `percentages.ts` | Пайыздар |
-| `tgo/critical-thinking/` | `probability.ts` | ықтималдық |
-| `tgo/critical-thinking/` | `quantity-comparison.ts` | Сандарды салыстыру |
-| `tgo/critical-thinking/` | `speed-problems.ts` | Жылдамдық есептері |
-| `tgo/critical-thinking/` | `tables-and-graphs.ts` | Кестелер мен графигтер |
-| `tgo/critical-thinking/` | `work-problems.ts` | Жұмыс есептері |
+## Question format
 
-## Profile Subjects
+All subjects follow the unified standard (`docs/QUESTION_STANDARD.md`):
 
-### algo — Алгоритмдер және деректер құрылымы — 1 000 questions (M094)
+```typescript
+import { Question, SubjectId, QuestionType, Difficulty } from '...';
 
-| # | File | Topic |
-|---|------|-------|
-| 1 | `1-procedure-language/procedureLanguage.ts` | Негізгі процедуралық-бағытталған алгоритмдік тіл |
-| 2 | `2-operators-and-structure/operatorsAndStructure.ts` | Алгоритмдік тіл операторлары |
-| 3 | `3-programming-structures/programmingStructures.ts` | Алгоритмдердің әртүрлі құрылымдарын бағдарламалау |
-| 4 | `4-functions-and-recursion/functionsAndRecursion.ts` | Функциялар және рекурсивті функциялар |
-| 5 | `5-sorting-and-search/sortingAndSearch.ts` | Сұрыптау және іздеу алгоритмдері |
-| 6 | `6-complexity-evaluation/complexityEvaluation.ts` | Алгоритмді бағалау |
-| 7 | `7-linear-structures/linearStructures.ts` | Сызықтық мәліметтер құрылымы |
-| 8 | `8-hash-tables/hashTables.ts` | Хэш кестелері және хэш функциялары |
-| 9 | `9-trees-and-heaps/treesAndHeaps.ts` | Ағаш және екілік үйінділер |
-| 10 | `10-graphs/graphs.ts` | Графтар және графтар алгоритмдері |
-
-### db — Дерекқор базасы (SQL) — 1 099 questions (M094)
-
-| # | File | Topic |
-|---|------|-------|
-| 1 | `1-relational-model/relationalModel.ts` | Реляциялық модель |
-| 2 | `2-data-integrity/dataIntegrity.ts` | Тұтастық |
-| 3 | `3-dbms-architecture/dbmsArchitecture.ts` | Архитектура және Транзакциялар |
-| 4 | `4-er-modeling/erModeling.ts` | ER-модельдеу |
-| 5 | `5-keys-and-relationships/keysAndRelationships.ts` | Кілттер |
-| 6 | `6-sql-basics/sqlBasics.ts` | SQL негіздері |
-| 7 | `7-sql-queries/sqlQueries.ts` | SQL сұраныстары |
-| 8 | `8-subqueries/subqueries.ts` | Ішкі сұраныстар |
-| 9 | `9-database-design/databaseDesign.ts` | Дерекқор жобалау |
-| 10 | `10-normalization/normalization.ts` | Нормализация |
-| 11 | `11-sql-server-architecture/sqlServerArchitecture.ts` | SQL Server архитектурасы |
-
-### m001_pedagogika — Педагогика (М001) — 1 000 questions
-
-20 тақырып бойынша, `m001/pedagogika/` ішіндегі бөлімдерде.
-
-### m001_psychology — Психология (М001) — 450 questions
-
-`m001/psychology/` ішіндегі бөлімдерде.
-
-### m002_pedagogika — Мектепке дейінгі педагогика (М002) — 550 questions
-
-`m002/pedagogika/` ішіндегі бөлімдерде.
-
-### m002_speech_dev — Тіл дамыту әдістемесі (М002) — 50 questions
-
-`m002/speech-dev/` ішіндегі бөлімдерде.
+export const Name: Question[] = [
+  {
+    id: "ped001-t01-a01",
+    subjectId: SubjectId.M001_PEDAGOGIKA,
+    text: "...",
+    options: [
+      { id: "ped001-t01-a01-op1", text: "..." },
+    ],
+    correctOptionIds: ["ped001-t01-a01-op1"],
+    type: QuestionType.SINGLE,
+    topic: "...",
+    difficulty: Difficulty.EASY,
+  },
+];
+```

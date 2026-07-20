@@ -1,0 +1,62 @@
+Speaker 1:
+Next in line, please. What can I do for you?
+
+Speaker 2:
+I hope you can help. My phone screen suddenly went completely black this morning. It was working fine last night.
+
+Speaker 1:
+Let me take a look. Do you remember dropping it recently?
+
+Speaker 2:
+Not really. I mean, I drop it sometimes but it always seemed fine. It has a case and a screen protector.
+
+Speaker 1:
+Good, that helps. Let me try a few things. Could you hold down the power button for me?
+
+Speaker 2:
+Nothing happens. It's completely dead.
+
+Speaker 1:
+I see. Let me plug it into my charger here.
+
+Speaker 2:
+Is that a bad sign?
+
+Speaker 1:
+Not necessarily. The screen could be damaged even if the phone itself is working. Do you have any important data on here that isn't backed up?
+
+Speaker 2:
+Oh no, I hope not. I think my photos are on the cloud but there might be some recent ones that didn't upload yet.
+
+Speaker 1:
+Don't worry just yet. Let me see if it responds to a computer connection.
+
+Speaker 2:
+Please tell me it's fixable. I really can't afford a new phone right now.
+
+Speaker 1:
+Okay, good news. The computer recognizes it, which means the phone is on. It's likely just the screen that needs replacing.
+
+Speaker 2:
+Really? That's a huge relief. How much would that cost?
+
+Speaker 1:
+For this model, about eighty dollars for a quality replacement screen. I can have it ready by tomorrow afternoon.
+
+Speaker 2:
+That's much better than buying a new phone. Please go ahead.
+
+Speaker 1:
+I'll take care of it. Just fill out this form with your contact details and I'll call you when it's ready.
+
+Speaker 2:
+Thank you so much. I was panicking all morning.
+
+Speaker 1:
+It's a common problem. Most of the time it's fixable.
+
+--Scene:
+A small phone repair shop with glass counters displaying cases and chargers. Shelves of tools line the back wall.
+
+--Sample Context:
+The customer starts frustrated and anxious but becomes relieved as the technician diagnoses the problem step by step.

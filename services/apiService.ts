@@ -46,7 +46,7 @@ const generateEnglishQuestions = (count: number): Question[] => {
     .flatMap(group => shuffle(group).slice(0, 8));
 
   const selectedReading = shuffle([...byPassage.values()].filter(group => group.length >= 8))
-    .slice(0, 2)
+    .slice(0, 3)
     .flatMap(group => shuffle(group).slice(0, 8));
 
   const selectedGrammar = pickRandom(grammar, 18);
