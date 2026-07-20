@@ -172,11 +172,11 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
                 </div>
               </div>
             </div>
-            {!['M094'].includes(currentUser.specialty_code || '') && (
+            {!['M001', 'M002', 'M094', 'M095'].includes(currentUser.specialty_code || '') && (
               <div className="flex items-start gap-2.5 bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 max-w-md">
                 <Info className="w-5 h-5 text-amber-500 shrink-0 mt-0.5 animate-bounce" />
                 <p className="text-xs text-amber-600 dark:text-amber-400 leading-relaxed font-semibold">
-                  Бұл мамандықтың сұрақтары әзірлену үстінде. Әзірге сіз жалпы пәндерді (Ағылшын тілі + ОДАТ) немесе дайындық үшін IT бағытының (M094) сұрақтарын тапсыра аласыз.
+                  Бұл мамандықтың сұрақтары әзірлену үстінде. Әзірге сіз жалпы пәндерді (Ағылшын тілі + ОДАТ) тапсыра аласыз.
                 </p>
               </div>
             )}

@@ -183,6 +183,19 @@ export const generateQuestionsForSubject = async (
     return generateAlgoQuestions(count);
   }
 
+  // M095 Algorithmic Programming - topic-based distribution
+  if (subjectId === SubjectId.M095_ALGO) {
+    const algoQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === 'm095_algo');
+    return pickRandom(algoQuestions, count);
+  }
+
+  // M095 Information Security - topic-based distribution
+  if (subjectId === SubjectId.M095_INFOSEC) {
+    const infosecQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === 'm095_infosec');
+    return pickRandom(infosecQuestions, count);
+  }
+
+  // M001 and M002 subjects
   const subjectQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === subjectId);
   return pickRandom(subjectQuestions, count);
 };

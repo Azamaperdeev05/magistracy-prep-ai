@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
+import { SPECIALTIES } from './data/specialties';
 import { generateQuestionsForSubject } from './services/apiService';
 import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
@@ -148,8 +149,18 @@ const RootApp: React.FC = () => {
       const p1 = generateQuestionsForSubject(SubjectId.ENGLISH, SUBJECTS[SubjectId.ENGLISH].totalQuestions);
       const p2 = generateQuestionsForSubject(SubjectId.TGO, SUBJECTS[SubjectId.TGO].totalQuestions);
 
-      const p3Subject = SubjectId.ALGO;
-      const p4Subject = SubjectId.DB;
+      // Determine profile subjects based on specialty
+      const specCode = updatedUser?.specialty_code || 'M094';
+      const spec = SPECIALTIES.find(s => s.code === specCode);
+      const subjectMap: Record<string, { p3: SubjectId; p4: SubjectId }> = {
+        'M094': { p3: SubjectId.ALGO, p4: SubjectId.DB },
+        'M095': { p3: SubjectId.M095_ALGO, p4: SubjectId.M095_INFOSEC },
+        'M001': { p3: SubjectId.M001_PEDAGOGIKA, p4: SubjectId.M001_PSYCHOLOGY },
+        'M002': { p3: SubjectId.M002_PEDAGOGIKA, p4: SubjectId.M002_SPEECH_DEV },
+      };
+      const subjects = subjectMap[specCode] || subjectMap['M094'];
+      const p3Subject = subjects.p3;
+      const p4Subject = subjects.p4;
 
       const p3 = generateQuestionsForSubject(p3Subject, SUBJECTS[p3Subject].totalQuestions);
       const p4 = generateQuestionsForSubject(p4Subject, SUBJECTS[p4Subject].totalQuestions);

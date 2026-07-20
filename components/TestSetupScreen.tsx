@@ -89,7 +89,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   const [foreignLang, setForeignLang] = useState(currentUser?.foreign_lang || 'ағылшын');
   const [tgoLang, setTgoLang] = useState(currentUser?.tgo_lang || 'қазақша');
 
-  const allowedGopCodes = ['M094'];
+  const allowedGopCodes = ['M001', 'M002', 'M094', 'M095'];
   const [selectedGopCode, setSelectedGopCode] = useState(() => {
     const code = currentUser?.specialty_code;
     return code && allowedGopCodes.includes(code) ? code : 'M094';
@@ -132,6 +132,18 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
 
   const selectedGop = SPECIALTIES.find(s => s.code === selectedGopCode) || SPECIALTIES.find(s => s.code === 'M094')!;
 
+  // Profile question counts per specialty
+  const getProfileCounts = (code: string) => {
+    switch (code) {
+      case 'M094': return { p1q: 30, p1m: 30, p2q: 20, p2m: 40 };
+      case 'M095': return { p1q: 30, p1m: 30, p2q: 20, p2m: 40 };
+      case 'M001': return { p1q: 30, p1m: 30, p2q: 20, p2m: 20 };
+      case 'M002': return { p1q: 30, p1m: 30, p2q: 20, p2m: 40 };
+      default: return { p1q: 30, p1m: 30, p2q: 20, p2m: 40 };
+    }
+  };
+  const profileCounts = getProfileCounts(selectedGopCode);
+
   const handleGopChange = (code: string) => {
     setSelectedGopCode(code);
   };
@@ -170,17 +182,8 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
       }
     };
 
-    // If specialty is not implemented yet, warn the user
-    if (!['M094'].includes(selectedGop.code)) {
-      showConfirm(
-        `«${selectedGop.name}» мамандығының сұрақтары әзірлену үстінде.\n\nТестке дайындықты IT бағытының (M094 - Ақпараттық технологиялар) профильдік сұрақтары арқылы жалғастыруды қалайсыз ба?`,
-        saveAndStart,
-        'Назар аударыңыз!',
-        'Жалғастыру'
-      );
-    } else {
-      await saveAndStart();
-    }
+    // All specialties with questions are ready
+    await saveAndStart();
   };
 
   return (
@@ -303,7 +306,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               onChange={(e) => handleGopChange(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
             >
-              {SPECIALTIES.filter(spec => ['M094'].includes(spec.code)).map((spec) => (
+              {SPECIALTIES.filter(spec => allowedGopCodes.includes(spec.code)).map((spec) => (
                 <option key={spec.code} value={spec.code}>
                   {spec.code} - {spec.name}
                 </option>
@@ -313,12 +316,12 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
           </div>
         </div>
 
-        {/* Specialty warning banner */}
-        {!['M094'].includes(selectedGopCode) && (
+        {/* Specialty warning banner - only for unimplemented specialties */}
+        {!allowedGopCodes.includes(selectedGopCode) && (
           <div className="max-w-3xl mx-auto mb-8 bg-amber-50 border border-amber-300/70 rounded-xl p-4 flex gap-3 text-amber-800 text-sm font-semibold leading-relaxed shadow-sm">
             <Info className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
             <div>
-              <span className="font-extrabold">Назар аударыңыз!</span> «{selectedGop.name}» мамандығының сұрақтары әзірлену үстінде. Әзірге сіз жалпы пәндерді (Ағылшын тілі + ОДАТ) немесе дайындық үшін IT бағытының (M094) сұрақтарын тапсыра аласыз.
+              <span className="font-extrabold">Назар аударыңыз!</span> «{selectedGop.name}» мамандығының сұрақтары әзірлену үстінде. Әзірге сіз жалпы пәндерді (Ағылшын тілі + ОДАТ) тапсыра аласыз.
             </div>
           </div>
         )}
@@ -356,19 +359,19 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
                 <tr className="hover:bg-slate-50/50">
                   <td className="p-3 border-r border-slate-700">3</td>
                   <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile1}</td>
-                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 30 : 0}</td>
-                  <td className="p-3">{['M094'].includes(selectedGopCode) ? 30 : 0}</td>
+                  <td className="p-3 border-r border-slate-700">{profileCounts.p1q}</td>
+                  <td className="p-3">{profileCounts.p1m}</td>
                 </tr>
                 <tr className="hover:bg-slate-50/50">
                   <td className="p-3 border-r border-slate-700">4</td>
                   <td className="p-3 border-r border-slate-700 text-center">{selectedGop.profile2}</td>
-                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 20 : 0}</td>
-                  <td className="p-3">{['M094'].includes(selectedGopCode) ? 40 : 0}</td>
+                  <td className="p-3 border-r border-slate-700">{profileCounts.p2q}</td>
+                  <td className="p-3">{profileCounts.p2m}</td>
                 </tr>
                 <tr className="bg-slate-100 font-extrabold border-t border-slate-700">
                   <td className="p-3 border-r border-slate-700" colSpan={2}>Жалпы (Барлығы)</td>
-                  <td className="p-3 border-r border-slate-700">{['M094'].includes(selectedGopCode) ? 130 : 80}</td>
-                  <td className="p-3">{['M094'].includes(selectedGopCode) ? 150 : 80}</td>
+                  <td className="p-3 border-r border-slate-700">{80 + profileCounts.p1q + profileCounts.p2q}</td>
+                  <td className="p-3">{80 + profileCounts.p1m + profileCounts.p2m}</td>
                 </tr>
               </tbody>
             </table>

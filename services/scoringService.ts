@@ -32,6 +32,8 @@ export function calculateTestResult(questions: Question[], answers: UserAnswers)
     [SubjectId.M001_PSYCHOLOGY]: { score: 0, max: 0 },
     [SubjectId.M002_PEDAGOGIKA]: { score: 0, max: 0 },
     [SubjectId.M002_SPEECH_DEV]: { score: 0, max: 0 },
+    [SubjectId.M095_ALGO]: { score: 0, max: 0 },
+    [SubjectId.M095_INFOSEC]: { score: 0, max: 0 },
   };
 
   let totalScore = 0;

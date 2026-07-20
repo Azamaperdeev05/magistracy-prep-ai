@@ -6,7 +6,9 @@ export enum SubjectId {
   M001_PEDAGOGIKA = 'm001_pedagogika',
   M001_PSYCHOLOGY = 'm001_psychology',
   M002_PEDAGOGIKA = 'm002_pedagogika',
-  M002_SPEECH_DEV = 'm002_speech_dev'
+  M002_SPEECH_DEV = 'm002_speech_dev',
+  M095_ALGO = 'm095_algo',
+  M095_INFOSEC = 'm095_infosec'
 }
 
 export enum QuestionType {
