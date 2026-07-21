@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
@@ -7,7 +7,7 @@ import { generateQuestionsForSubject } from './services/apiService';
 import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult, handleGoogleRedirectResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
 import { auth } from './firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 import AuthScreen from './components/AuthScreen';
 import WelcomeScreen from './components/WelcomeScreen';
 import TestScreen from './components/TestScreen';
@@ -51,6 +51,7 @@ const RootApp: React.FC = () => {
   });
   const [showGlobalUpgradeModal, setShowGlobalUpgradeModal] = useState(false);
   const navigate = useNavigate();
+  const cleanupRef = useRef<(() => void) | null>(null);
 
   // Confirm Modal state
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -91,25 +92,23 @@ const RootApp: React.FC = () => {
     setIsConfirmOpen(true);
   };
 
-  // Listen to Firebase Auth state reactively
+  // Handle Google redirect result + listen to auth state
   useEffect(() => {
     if (!auth) {
       setIsCheckingAuth(false);
       return;
     }
 
-    const init = async () => {
-      // Handle Google redirect result first
-      await handleGoogleRedirectResult();
-
-      // Then listen to auth state
+    // Must call getRedirectResult on EVERY page load to complete redirect sign-in
+    // This is a no-op if there's no pending redirect
+    getRedirectResult(auth).catch(() => {}).finally(() => {
       const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
         if (fbUser) {
           try {
             const profile = await getProfile();
             setUser(profile);
           } catch (error) {
-            console.error("Error setting user profile on auth change:", error);
+            console.error("Error setting user profile:", error);
             setUser(null);
           }
         } else {
@@ -118,13 +117,12 @@ const RootApp: React.FC = () => {
         setIsCheckingAuth(false);
       });
 
-      return () => unsubscribe();
+      cleanupRef.current = unsubscribe;
+    });
+
+    return () => {
+      if (cleanupRef.current) cleanupRef.current();
     };
-
-    let cleanup: (() => void) | undefined;
-    init().then((unsub) => { cleanup = unsub; });
-
-    return () => { cleanup?.(); };
   }, []);
 
   useEffect(() => {
