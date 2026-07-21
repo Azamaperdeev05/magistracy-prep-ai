@@ -4,25 +4,18 @@
 
 <img src="public/logo no bg, white.svg" alt="MagisCore Logo" width="120">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript)
+![Firebase](https://img.shields.io/badge/Firebase-11.15-FFCA28?logo=firebase)
+![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?logo=vite)
+![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa)
 
-**Қазақстан магистратурасына түсуге дайындалуға арналған MagisCore интерактивті тест платформасы**
+**Қазақстан магистратурасына түсуге дайындалуға арналған MagisCore интерактивті AI тест платформасы**
 
-[Demo](#demo) • [Мүмкіндіктер](#-мүмкіндіктер) • [Орнату](#-орнату) • [Деплой](#-деплой)
+[Демо](#-демо) • [Мүмкіндіктер](#-мүмкіндіктер) • [Технологиялар](#-технологиялар) • [Іске Қосу](#-іске-қосу) • [Сәулет](#-жоба-сәулеті-fsd)
 
-</div>
-
----
-
-## 📸 Demo
-
-<div align="center">
-  <img src="docs/screenshots/welcome.png" alt="Басты бет" width="45%">
-  <img src="docs/screenshots/test.png" alt="Тест беті" width="45%">
 </div>
 
 ---
@@ -30,177 +23,127 @@
 ## ✨ Мүмкіндіктер
 
 ### 📚 Толық КТ Симуляциясы
-- **6 пән бойынша 5 062 сапалы сұрақ**:
-  - 🌐 Шет тілі (Ағылшын) — 159 сұрақ (Listening аудио) — **міндетті**
-  - 🧠 Оқу дайындығын анықтау (ОДАТ) — 754 сұрақ — **міндетті**
-  - 📖 Педагогика (М001) — 1 000 сұрақ
-  - 🧠 Психология (М001) — 450 сұрақ
-  - 🏫 Мектепке дейінгі педагогика (М002) — 550 сұрақ
-  - 🗣️ Тіл дамыту әдістемесі (М002) — 50 сұрақ
-  - 💻 Алгоритмдер және деректер құрылымы (M094) — 1 000 сұрақ
-  - 🗄️ Дерекқорлар SQL (M094) — 1 099 сұрақ
+- **Ресми спецификацияға сай пәндер базасы**:
+  - 🌐 Шет тілі (Ағылшын) — Listening аудио мәтіндерімен (1-30 нұсқалар) — **міндетті**
+  - 🧠 Оқу дайындығын анықтау (ТҒО/ОДАТ) — Сын тұрғысынан ойлау, аналитика, логика — **міндетті**
+  - 💻 Компьютерлік ғылымдар & IT (М094/М095/М096) — Алгоритмдер, Деректер құрылымы, SQL
+  - 🏫 Педагогика & Психология (М001/М002/М003) — Тәрбие теориясы, әдістеме
+  - ⚖️ Заңтану, Экономика, Инженерия және т.б. 80+ мамандық спецификациялары
 
-### 🛡️ Анти-чит жүйесі
-- Мәтінді көшіруді бұғаттау (Ctrl+C)
-- Оң жақ батырманы өшіру
-- Браузер аудармашысын болдырмау
-- Бетті жаңартудан қорғау
+### 🤖 ИИ Ассистент & AI Жауап Түсіндірмесі
+- Сұрақ бойынша AI арқылы жеке түсіндірме алу (Gemini AI API)
+- AI интерактивті сұрақ-жауап чаты және кеңес беру
+- AI лимитін интеллектуалды бақылау
 
-### 📊 Кеңейтілген аналитика
-- Тақырып бойынша әлсіз жақтарды анықтау
-- Деңгейлер бойынша сұрыптау (оңай → қиын)
-- Толық нәтиже талдауы
+### 🛡️ Анти-чит & Тестілеу Жүйесі
+- Мәтінді көшіруді бұғаттау (Ctrl+C / Right click)
+- Ресми таймер, Интерактивті Калькулятор, Менделеев кестесі
+- Тест картасы (Answer Map) мен бөлімдер арасында жылдам өту
 
-### 🎓 Сертификат
-- 60%+ нәтижеге сертификат жүктеу мүмкіндігі
-- Аты-жөні және нәтижесі көрсетіледі
+### 📊 Аналитика және Тарих
+- Бұрын тапсырған тесттердің толық тарихы (Firestore да сақталады)
+- Пәндер және тақырыптар бойынша нәтиже графиктері мен аналитика
+- 60%+ нәтижеде ресми Сертификат дайындау
 
-### 📖 Оқу бағдарламасы
-- Әр пәннің толық силлабусы
-- Markdown форматында құжаттама
+### 📱 PWA және Аналитика
+- PWA қолдауы: Офлайн режимде жұмыс жасау және ұялы телефонға оңай орнату
+- Vercel Analytics және Yandex Metrica интеграциясы
 
 ---
 
 ## 🛠️ Технологиялар
 
-### Frontend
-| Технология | Сипаттама |
-|------------|-----------|
-| React 19 | UI кітапханасы |
-| TypeScript | Типтелген JavaScript |
-| Vite | Құрастыру құралы |
-| TailwindCSS | Стиль кітапханасы |
-| React Router | Маршрутизация |
-| Lucide React | Иконкалар |
+### Frontend & Core
+| Технология | Қызметі |
+|------------|---------|
+| **React 19** | UI кітапханасы |
+| **TypeScript 5.8** | Строго типтелген тіл |
+| **Vite 6** | Өнімділігі жоғары құрастырушы |
+| **TailwindCSS** | Дизайн жүйесі мен стильдер |
+| **Lucide React** | Заманауи UI иконкалар топтамасы |
+| **React Router v6** | Клиенттік маршрутизация |
 
-### Backend
-| Технология | Сипаттама |
-|------------|-----------|
-| FastAPI | Python веб-фреймворк |
-| SQLAlchemy | ORM |
-| SQLite | Дерекқор |
-| Uvicorn | ASGI сервер |
+### Backend & Cloud Services
+| Сервис | Қызметі |
+|--------|---------|
+| **Firebase Auth** | Google OAuth, Email/Password, Phone OTP тіркелу |
+| **Cloud Firestore** | Реал-тайм NoSQL дерекқор және тарих сақтау |
+| **Vercel Analytics** | Веб-сайтқа келушілер мен бет қаралымдарын талдау |
+| **Vite PWA Plugin** | Service Worker, manifest және авто-жаңарту |
 
 ---
 
-## 🚀 Орнату
-
-### Қажеттіліктер
-- Node.js 18+
-- Python 3.10+
-- npm немесе yarn
+## 🚀 Іске Қосу
 
 ### 1. Репозиторийді клондау
 ```bash
-git clone https://github.com/yourusername/magistracy-prep-ai.git
+git clone https://github.com/Azamaperdeev05/magistracy-prep-ai.git
 cd magistracy-prep-ai
 ```
 
-### 2. Frontend орнату
+### 2. Тәуелділіктерді орнату
 ```bash
 npm install
 ```
 
-### 3. Backend орнату
+### 3. Әзірлеу серверін іске қосу
 ```bash
-cd backend
-pip install -r requirements.txt
+npm run dev
 ```
+Сервер `http://localhost:3000` (немесе Vite белгілеген портта) ашылады.
 
-### 4. Дерекқорды толтыру
+### 4. Продакшн жинау (Build)
 ```bash
-cd backend
-python seed_db.py
+npm run build
 ```
-
-**Бірден іске қосу (Backend + Frontend):**
-```bash
-python start.py
-```
-
-Сайт: http://localhost:3000
 
 ---
 
-## 🌐 Деплой
+## 📁 Жоба Сәулеті (FSD - Feature-Sliced Design)
 
-### Railway-ға деплой
-
-1. [Railway](https://railway.app) сайтына кіріңіз
-2. "New Project" → "Deploy from GitHub repo" таңдаңыз
-3. Репозиторийді таңдаңыз
-4. Екі сервис жасаңыз:
-   - **Backend**: `backend` папкасынан
-   - **Frontend**: түбірден
-
-Толық нұсқаулық: [DEPLOYMENT.md](./docs/DEPLOYMENT.md)
-
----
-
-## 📁 Жоба құрылымы
+Жоба модульдік **Feature-Sliced Design** стандарты бойынша реттелген:
 
 ```
 magistracy-prep-ai/
-├── 📂 backend/              # FastAPI backend
-│   ├── main.py              # API endpoints
-│   ├── models.py            # SQLAlchemy & Pydantic models
-│   ├── database.py          # DB connection
-│   ├── seed_db.py           # Сұрақтар базасы
-│   └── requirements.txt     # Python dependencies
+├── 📂 src/
+│   ├── 📂 features/             # Домендік фичалар мен экрандар
+│   │   ├── 📂 admin/            # Админ панель (AdminScreen)
+│   │   ├── 📂 analytics/        # Аналитика мен нәтиже (ResultScreen, HistoryScreen)
+│   │   ├── 📂 auth/             # Тіркелу мен кіру (AuthScreen, WelcomeScreen, ConsentGate)
+│   │   ├── 📂 blog/             # Блог мақалалары (BlogScreen, BlogPostScreen)
+│   │   ├── 📂 specialties/     # Мамандықтар мен силлабус (SpecialtiesScreen, SpecialtyDetail)
+│   │   └── 📂 test-engine/      # Тест тапсыру модулі (TestScreen, PrepScreen, Modals)
+│   │
+│   ├── 📂 components/ui/        # Жалпы UI компоненттер (SEO, Motion, Sidebar, InstallBanner)
+│   ├── 📂 services/             # Firebase SDK, API, Scoring, Logging сервистері
+│   ├── 📂 hooks/                # PWA install және Metrica hook-тары
+│   ├── 📂 utils/                # Көмекші функциялар мен иконкалар
+│   ├── 📂 types/                # TypeScript глобалды типтер
+│   ├── App.tsx                  # Негізгі маршрутизатор компонент
+│   ├── firebase.ts              # Firebase конфигурациясы мен баптаулары
+│   ├── index.css                # Глобалды CSS стильдер
+│   └── index.tsx                # React қолданбасын жүктеу нүктесі
 │
-├── 📂 components/           # React компоненттері
-│   ├── AuthScreen.tsx       # Авторизация (Login/Register/OTP)
-│   ├── WelcomeScreen.tsx    # Басты бет (MagisCore бренді)
-│   ├── TestScreen.tsx       # Тест тапсыру процесі
-│   ├── HistoryScreen.tsx    # Тест нәтижелерінің тарихы
-│   ├── ResultScreen.tsx     # Нәтижелерді талдау және сақтау
-│   └── SyllabusScreen.tsx   # Пәндер бағдарламасы
+├── 📂 data/                     # Сұрақтар базасы, силлабустар мен ЖОО деректері
+│   ├── 📂 questions/            # Пәндер бойынша сұрақтар файлы
+│   ├── specialties.ts           # Мамандықтар тізімі
+│   └── univision_*.json         # Университеттер мен магистратура бағдарламалары
 │
-├── 📂 resources/            # Ресурстар мен оқу материалдары
-│   ├── 📂 Markdown/         # Пәндердің MD силлабустары
-│   └── 📂 shettili/         # Ағылшын тілі материалдары
-│
-├── 📂 docs/                 # Жүйелік құжаттама
-│   ├── PROJECT_STATS.md     # Жоба статистикасы
-│   ├── DATABASE.md          # Деректер базасының схемасы
-│   ├── SYSTEM_LOGIC.md      # Жүйе архитектурасы мен логикасы
-│   └── PROJECT_STRUCTURE.md # Папкалар иерархиясы
-│
-├── App.tsx                  # Негізгі React компоненті
-├── start.py                 # Жобаны іске қосу скрипті
-├── types.ts                 # TypeScript типтері
-├── constants.ts             # Глобалды константалар
-└── index.html               # HTML entry point
+├── 📂 docs/                     # Жоба спецификациялары, файлдар мен құжаттар
+├── 📂 ios/                      # iOS Swift/SwiftUI мобильді қосымша коды
+├── index.html                   # HTML негізгі шаблоны
+├── vite.config.ts               # Vite & PWA баптаулары
+└── package.json                 # Жоба тәуелділіктері
 ```
-
----
-
-## 🤝 Үлес қосу
-
-1. Fork жасаңыз
-2. Feature branch жасаңыз (`git checkout -b feature/amazing-feature`)
-3. Commit жасаңыз (`git commit -m 'Add amazing feature'`)
-4. Push жасаңыз (`git push origin feature/amazing-feature`)
-5. Pull Request ашыңыз
 
 ---
 
 ## 📄 Лицензия
 
-MIT лицензиясы бойынша таратылады. Толығырақ [LICENSE](LICENSE) файлында.
+MIT Лицензиясы бойынша таратылады.
 
 ---
 
 ## 👨‍💻 Автор
 
-**Пердеев Азамат**
-
-- GitHub: [@Azamaperdeev05](https://github.com/Azamaperdeev05)
-
----
-
-<div align="center">
-
-**⭐ Егер жоба ұнаса, жұлдызша қойыңыз!**
-
-</div>
+**Пердеев Азамат** — [GitHub Profile](https://github.com/Azamaperdeev05)

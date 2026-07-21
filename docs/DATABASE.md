@@ -1,48 +1,65 @@
-# Деректер базасының құрылымы (Database Schema)
+# Деректер базасының құрылымы (Database Architecture & Schema)
 
-MagisCore деректерді сақтау үшін **SQLite** базасын қолданады.
- SQLAlchemy ORM арқылы басқарылады.
+MagisCore платформасында деректер **Cloud Firestore (Firebase NoSQL)** және **Жергілікті TypeScript/JSON деректер форматында** сақталады.
 
-## 🗄 Кестелер (Tables)
+---
 
-### 1. `users` (Пайдаланушылар)
-Пайдаланушы мәліметтері мен қауіпсіздік ақпараты.
-- `id` (Integer): Бастапқы кілт.
-- `email` (String): Пайдаланушының поштасы (unique).
-- `full_name` (String): Аты-жөні.
-- `hashed_password` (String): PBKDF2-SHA256 арқылы шифрланған пароль.
-- `otp_code` (String): Парольді қалпына келтіруге арналған код.
-- `otp_expires_at` (DateTime): Кодтың жарамдылық уақыты.
-- `created_at` (DateTime): Тіркелген уақыты.
+## ☁️ Cloud Firestore Коллекциялары (Cloud Collections)
 
-### 2. `questions` (Сұрақтар)
-Тест сұрақтарының негізгі қоймасы.
-- `id` (String): Сұрақ коды.
-- `subject_id` (String): Пән коды (english, tgo, algo, db).
-- `text` (Text): Сұрақ мәтіні.
-- `type` (Enum): Сұрақ түрі (single, multiple).
-- `topic` (String): Тақырыбы (мысалы: listening, grammar).
-- `difficulty` (String): Қиындық деңгейі.
-- `hint` (Text): Түсіндірме/Көмекші мәтін.
-- `reading_passage` (Text): Оқылым мәтіні немесе Аудио сілтемесі (`AUDIO:...`).
+### 1. `users` (Пайдаланушы профильдері)
+Документ ID-сі: `user.uid` (Firebase Auth UID).
+- `uid` (String): Пайдаланушының қайталанбас ИД-сі.
+- `email` (String): Электрондық поштасы.
+- `displayName` (String): Аты-жөні.
+- `photoURL` (String): Профиль суреті.
+- `selectedSpecialtyCode` (String): Таңдалған мамандық коды (мысалы, `M094`).
+- `selectedSpecialtyName` (String): Таңдалған мамандық атауы.
+- `aiRequestsToday` (Number): Бүгінгі күнде пайдаланылған AI сұраулар саны.
+- `lastAiResetDate` (String): AI лимиті соңғы рет жаңартылған күн (`YYYY-MM-DD`).
+- `consent` (Object):
+  - `accepted` (Boolean): Шарттарды қабылдау мәртебесі.
+  - `acceptedAt` (Timestamp): Қабылданған уақыт.
+- `createdAt` (Timestamp): Тіркелген уақыты.
+- `updatedAt` (Timestamp): Соңғы жаңартылған уақыт.
 
-### 3. `options` (Жауап нұсқалары)
-Әр сұрақтың жауап нұсқалары.
-- `id` (String): Жауап идентификаторы.
-- `question_id` (ForeignKey): Сұраққа сілтеме.
-- `text` (Text): Жауап мәтіні.
+---
 
-### 4. `test_results` (Тест нәтижелері)
-Пайдаланушылардың прогресін сақтау.
-- `id` (Integer): Бастапқы кілт.
-- `user_id` (ForeignKey): Пайдаланушыға сілтеме.
-- `total_score` (Integer): Жалпы жиналған ұпай.
-- `max_score` (Integer): Мүмкін болған ең жоғары ұпай.
-- `subject_scores` (JSON): Пәндер бойынша бөлінген ұпайлар.
-- `correct_count` (Integer): Дұрыс жауаптар саны.
-- `total_questions` (Integer): Тесттегі сұрақтар саны.
-- `created_at` (DateTime): Тест аяқталған уақыт.
+### 2. `test_results` (Тестілеу нәтижелері)
+Документ ID-сі: Авто-генерацияланатын Firestore Document ID.
+- `userId` (String): Пайдаланушының UID-сі.
+- `userEmail` (String): Пайдаланушының э-поштасы.
+- `userName` (String): Пайдаланушының аты.
+- `specialtyCode` (String): Тест тапсырылған мамандық коды.
+- `totalScore` (Number): Жиналған жалпы ұпай (0 - 150).
+- `maxScore` (Number): Мүмкін болған ең жоғары ұпай.
+- `percentage` (Number): Пайыздық көрсеткіші.
+- `correctCount` (Number): Дұрыс жауап берілген сұрақтар саны.
+- `totalQuestions` (Number): Жалпы сұрақтар саны.
+- `subjectScores` (Array / Object): Әр пән бойынша жеке бөлінген ұпайлар (Шет тілі, ТҒО/ОДАТ, Беске қатысты пәндер).
+- `userAnswers` (Object): Пайдаланушының әр сұраққа берген жауаптар картасы (`questionId -> answerId[]`).
+- `timestamp` (Number / Timestamp): Тест аяқталған уақыт белгісі (Epoch ms).
 
-## 🔗 Байланыстар (Relationships)
-- **User -> TestResults:** 1-ге көп (Бір пайдаланушыда көп нәтиже).
-- **Question -> Options:** 1-ге көп (Бір сұрақта көп жауап).
+---
+
+### 3. `feedback` / `reports` (Сұрақтарға қатысты шағымдар мен пікірлер)
+- `userId` (String): Шағым түсірген пайдаланушы.
+- `questionId` (String): Шағым жасалған сұрақ ИД-сі.
+- `reason` (String): Шағым себебі (мысалы, "Сұрақта қате бар", "Тайпо").
+- `details` (String): Қосымша түсіндірме.
+- `createdAt` (Timestamp): Шағым түскен уақыт.
+
+---
+
+## 📁 Жергілікті Сұрақтар Базасы (Local Static Datasets)
+
+Сұрақтар мен силлабустар өнімділікті арттыру үшін `data/questions/` папкасында модульдік TypeScript файлдары ретінде сақталады:
+
+- **`Question` интерфейсі**:
+  - `id` (String): Сұрақ коды.
+  - `subjectId` (SubjectId): `english` | `tgo` | `algo` | `db` | `pedagogy` | `psychology`
+  - `text` (String): Сұрақ мәтіні.
+  - `type` (QuestionType): `single` (1 дұрыс жауап) | `multiple` (көп дұрыс жауап).
+  - `options` (Option[]): Жауап нұсқалары (`id`, `text`).
+  - `correctAnswers` (String[]): Дұрыс жауаптардың ИД тізімі.
+  - `explanation` (String, қосымша): Түсіндірме мәтін.
+  - `readingPassage` (String, қосымша): Оқылым мәтіні немесе аудио сілтемесі.
