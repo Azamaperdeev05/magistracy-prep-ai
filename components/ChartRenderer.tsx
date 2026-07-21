@@ -27,8 +27,8 @@ interface TableChartProps {
 
 interface ComparisonTableProps {
   title?: string;
-  columnA: { header: string; content: string };
-  columnB: { header: string; content: string };
+  columnA: any;
+  columnB: any;
   question?: string;
 }
 
@@ -218,33 +218,54 @@ const ComparisonBox: React.FC<{ columnA: string; columnB: string }> = ({ columnA
   );
 };
 
-// NEW: Advanced Comparison Table (like HPV example)
+// NEW: Advanced Comparison Table (handles string, object, and mixed formats safely)
 const ComparisonTable: React.FC<ComparisonTableProps> = ({ title, columnA, columnB, question }) => {
+  const getHeader = (col: any, defaultHeader: string) => {
+    if (typeof col === 'object' && col !== null && col.header) {
+      return col.header;
+    }
+    return defaultHeader;
+  };
+
+  const getContent = (col: any) => {
+    if (typeof col === 'string') return col;
+    if (typeof col === 'number') return String(col);
+    if (typeof col === 'object' && col !== null) {
+      return col.content || col.value || col.label || col.text || JSON.stringify(col);
+    }
+    return String(col || '');
+  };
+
+  const headerA = getHeader(columnA, 'А шамасы');
+  const headerB = getHeader(columnB, 'В шамасы');
+  const contentA = getContent(columnA);
+  const contentB = getContent(columnB);
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden my-3">
       {title && (
         <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
-          <p className="text-sm text-slate-700 leading-relaxed">{title}</p>
+          <p className="text-sm font-medium text-slate-700 leading-relaxed">{title}</p>
         </div>
       )}
-      <table className="w-full text-sm">
+      <table className="w-full text-sm border-collapse">
         <thead>
-          <tr className="bg-slate-100">
-            <th className="px-4 py-3 text-center font-bold text-blue-700 border-b border-r border-slate-200 w-1/2">
-              {columnA.header}
+          <tr className="bg-slate-100 border-b border-slate-200">
+            <th className="px-4 py-3 text-center font-bold text-blue-700 border-r border-slate-200 w-1/2">
+              {headerA}
             </th>
-            <th className="px-4 py-3 text-center font-bold text-amber-700 border-b border-slate-200 w-1/2">
-              {columnB.header}
+            <th className="px-4 py-3 text-center font-bold text-amber-700 w-1/2">
+              {headerB}
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td className="px-4 py-4 text-slate-700 border-r border-slate-200 align-top">
-              <div className="whitespace-pre-line leading-relaxed">{columnA.content}</div>
+            <td className="px-4 py-4 text-slate-800 border-r border-slate-200 align-top bg-white">
+              <div className="whitespace-pre-line leading-relaxed font-medium">{contentA}</div>
             </td>
-            <td className="px-4 py-4 text-slate-700 align-top">
-              <div className="whitespace-pre-line leading-relaxed">{columnB.content}</div>
+            <td className="px-4 py-4 text-slate-800 align-top bg-white">
+              <div className="whitespace-pre-line leading-relaxed font-medium">{contentB}</div>
             </td>
           </tr>
         </tbody>
