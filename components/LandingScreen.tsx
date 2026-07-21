@@ -248,8 +248,11 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
           {/* Hero Smartphone Mockup - Touches absolute right edge of SCREEN */}
           <div className="w-full lg:w-[54%] xl:w-[50%] lg:absolute lg:right-0 lg:bottom-0 flex items-end justify-center lg:justify-end self-end pointer-events-none z-0 mt-8 lg:mt-0">
             <img
-              src="/smartphone-mockup.png"
+              src="/smartphone-mockup.webp"
               alt="MagisCore Smartphone App Mockup"
+              // @ts-ignore
+              fetchpriority="high"
+              decoding="async"
               className="w-full h-auto max-h-[360px] sm:max-h-[580px] lg:max-h-[760px] xl:max-h-[840px] scale-100 lg:scale-110 origin-bottom-right object-contain object-bottom object-center lg:object-right drop-shadow-[0_25px_60px_rgba(37,99,235,0.15)] pointer-events-auto block leading-none translate-y-1"
             />
           </div>
@@ -448,8 +451,10 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
               </div>
 
               <img
-                src="/macbook-mockup.png"
+                src="/macbook-mockup.webp"
                 alt="MagisCore Ыңғайлы Тест Интерфейсі"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-auto max-h-[520px] sm:max-h-[580px] object-contain drop-shadow-[0_25px_50px_rgba(37,99,235,0.14)] hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
