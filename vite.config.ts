@@ -38,6 +38,17 @@ export default defineConfig(({ mode }) => {
                 }
               },
               {
+                urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+                handler: 'CacheFirst',
+                options: {
+                  cacheName: 'google-fonts-gstatic',
+                  expiration: {
+                    maxEntries: 10,
+                    maxAgeSeconds: 60 * 60 * 24 * 365
+                  }
+                }
+              },
+              {
                 urlPattern: /\.(?:mp3|wav|ogg)$/i,
                 handler: 'CacheFirst',
                 options: {
@@ -73,12 +84,14 @@ export default defineConfig(({ mode }) => {
       ],
       build: {
         target: 'esnext',
+        cssCodeSplit: true,
         rollupOptions: {
           output: {
             manualChunks: {
               'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
               'recharts': ['recharts'],
               'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+              'framer': ['framer-motion'],
             }
           }
         }

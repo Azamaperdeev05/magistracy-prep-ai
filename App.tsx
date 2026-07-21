@@ -7,14 +7,10 @@ import { SPECIALTIES } from './data/specialties';
 import { generateQuestionsForSubject } from './services/apiService';
 import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
-import { auth } from './firebase';
-import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
-import AuthScreen from './components/AuthScreen';
 import ConfirmModal from './components/modals/ConfirmModal';
-import UpgradeModal from './components/modals/UpgradeModal';
-import InstallBanner from './components/InstallBanner';
 
 // Lazy loaded screens for code splitting
+const AuthScreen = lazy(() => import('./components/AuthScreen'));
 const WelcomeScreen = lazy(() => import('./components/WelcomeScreen'));
 const TestScreen = lazy(() => import('./components/TestScreen'));
 const ResultScreen = lazy(() => import('./components/ResultScreen'));
@@ -28,6 +24,8 @@ const ConsentGateScreen = lazy(() => import('./components/ConsentGateScreen'));
 const AdminScreen = lazy(() => import('./components/AdminScreen'));
 const BlogScreen = lazy(() => import('./components/BlogScreen'));
 const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
+const UpgradeModal = lazy(() => import('./components/modals/UpgradeModal'));
+const InstallBanner = lazy(() => import('./components/InstallBanner'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#07090d] flex items-center justify-center">
@@ -105,45 +103,56 @@ const RootApp: React.FC = () => {
 
   // Handle Google redirect result + listen to auth state
   useEffect(() => {
-    if (!auth) {
-      console.error('[AUTH] Firebase auth is null');
-      setIsCheckingAuth(false);
-      return;
-    }
+    let cancelled = false;
 
-    console.log('[AUTH] Starting auth flow, auth.currentUser:', auth.currentUser?.email);
+    const initAuth = async () => {
+      const { auth } = await import('./firebase');
+      const { onAuthStateChanged, getRedirectResult } = await import('firebase/auth');
 
-    // CRITICAL: Set up onAuthStateChanged IMMEDIATELY — don't wait for getRedirectResult
-    // Firebase fires onAuthStateChanged during init with persisted auth state
-    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
-      console.log('[AUTH] onAuthStateChanged fired, user:', fbUser?.email || 'null');
-      if (fbUser) {
-        try {
-          const profile = await getProfile();
-          console.log('[AUTH] Profile loaded:', profile.email);
-          setUser(profile);
-        } catch (error: any) {
-          console.error('[AUTH] getProfile error:', error.message);
+      if (cancelled || !auth) {
+        console.error('[AUTH] Firebase auth is null');
+        setIsCheckingAuth(false);
+        return;
+      }
+
+      console.log('[AUTH] Starting auth flow, auth.currentUser:', auth.currentUser?.email);
+
+      const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+        console.log('[AUTH] onAuthStateChanged fired, user:', fbUser?.email || 'null');
+        if (fbUser) {
+          try {
+            const profile = await getProfile();
+            console.log('[AUTH] Profile loaded:', profile.email);
+            setUser(profile);
+          } catch (error: any) {
+            console.error('[AUTH] getProfile error:', error.message);
+            setUser(null);
+          }
+        } else {
           setUser(null);
         }
-      } else {
-        setUser(null);
-      }
-      setIsCheckingAuth(false);
-    });
-
-    // Also call getRedirectResult to consume pending redirect (runs in parallel)
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          console.log('[AUTH] Redirect consumed:', result.user.email);
-        }
-      })
-      .catch((error) => {
-        console.error('[AUTH] getRedirectResult error:', error.code, error.message);
+        setIsCheckingAuth(false);
       });
 
-    return () => unsubscribe();
+      getRedirectResult(auth)
+        .then((result) => {
+          if (result?.user) {
+            console.log('[AUTH] Redirect consumed:', result.user.email);
+          }
+        })
+        .catch((error) => {
+          console.error('[AUTH] getRedirectResult error:', error.code, error.message);
+        });
+
+      return unsubscribe;
+    };
+
+    let unsubscribePromise = initAuth();
+
+    return () => {
+      cancelled = true;
+      unsubscribePromise.then(unsub => unsub?.());
+    };
   }, []);
 
   useEffect(() => {

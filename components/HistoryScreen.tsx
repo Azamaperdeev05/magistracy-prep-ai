@@ -36,7 +36,7 @@ import {
 import AudioPlayer from './AudioPlayer';
 import ChartRenderer from './ChartRenderer';
 import { getHistory, getHistoryItemById, HistoryItem, loginWithGoogle } from '../services/authService';
-import { STATIC_QUESTIONS } from '../data/questions';
+import { findQuestionsByIds } from '../data/questions';
 import { Question } from '../types';
 import { scoreQuestion } from '../services/scoringService';
 import { getAiExplanation } from '../services/apiService';
@@ -97,6 +97,17 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   const [aiExplanations, setAiExplanations] = useState<Record<string, string>>({});
   const [loadingExplanations, setLoadingExplanations] = useState<Record<string, boolean>>({});
   const [reportQuestion, setReportQuestion] = useState<{ id: string; text: string } | null>(null);
+
+  // Lazy-loaded questions for selected history item
+  const [selectedItemQuestions, setSelectedItemQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    if (!selectedItem?.questions_data) { setSelectedItemQuestions([]); return; }
+    try {
+      const qIds: string[] = JSON.parse(selectedItem.questions_data || '[]');
+      findQuestionsByIds(qIds).then(setSelectedItemQuestions);
+    } catch { setSelectedItemQuestions([]); }
+  }, [selectedItem]);
 
   useEffect(() => {
     fetchHistory();
@@ -250,11 +261,10 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
         }
       } catch (e) {}
     }
-    // Reconstruct from questions & answers
+    // Reconstruct from questions & answers using lazily loaded questions
     try {
-      const qIds: string[] = JSON.parse(item.questions_data || '[]');
       const answers: Record<string, string[]> = JSON.parse(item.answers_data || '{}');
-      const questions = qIds.map(id => STATIC_QUESTIONS.find(q => q.id === id)).filter(Boolean) as Question[];
+      const questions = selectedItemQuestions;
       
       const result: Record<string, { score: number; max: number }> = {};
       questions.forEach(q => {
@@ -299,14 +309,8 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
     if (!selectedItem) return null;
     
     try {
-      const questionIds: string[] = JSON.parse(selectedItem.questions_data || '[]');
       const answers: Record<string, string[]> = JSON.parse(selectedItem.answers_data || '{}');
-      
-      const questions = questionIds
-        .map(id => STATIC_QUESTIONS.find(q => q.id === id))
-        .filter(Boolean) as Question[];
-        
-      return { questions, answers };
+      return { questions: selectedItemQuestions, answers };
     } catch (e) {
       console.error("Error parsing history detailed data:", e);
       return null;

@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, addDoc } from 'firebase/firestore';
-import { STATIC_QUESTIONS } from '../data/questions';
+import { findQuestionsByIds } from '../data/questions';
 import { Question } from '../types';
 import { scoreQuestion } from '../services/scoringService';
 import CodeAwareText from './CodeAwareText';
@@ -355,22 +355,6 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
     return f.user_name.toLowerCase().includes(term) || f.user_email.toLowerCase().includes(term) || f.comment.toLowerCase().includes(term);
   });
 
-  // Reconstruct single history detail view
-  const reconstructedDetail = () => {
-    if (!selectedHistoryItem) return null;
-    try {
-      const qIds: string[] = JSON.parse(selectedHistoryItem.questions_data || '[]');
-      const answers: Record<string, string[]> = JSON.parse(selectedHistoryItem.answers_data || '{}');
-      const questions = qIds
-        .map(id => STATIC_QUESTIONS.find(q => q.id === id))
-        .filter(Boolean) as Question[];
-      return { questions, answers };
-    } catch (e) {
-      console.error(e);
-      return null;
-    }
-  };
-
   const [isDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
 
   // Theme styles
@@ -382,7 +366,23 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
   const subCardBg = isDarkMode ? 'bg-slate-900/40 border-slate-800' : 'bg-slate-50 border-slate-200/80';
   const btnBg = isDarkMode ? 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs';
 
-  const detailInfo = reconstructedDetail();
+  // Lazy-load questions for history detail view
+  const [detailQuestions, setDetailQuestions] = useState<Question[]>([]);
+  useEffect(() => {
+    if (!selectedHistoryItem) { setDetailQuestions([]); return; }
+    try {
+      const qIds: string[] = JSON.parse(selectedHistoryItem.questions_data || '[]');
+      findQuestionsByIds(qIds).then(setDetailQuestions);
+    } catch { setDetailQuestions([]); }
+  }, [selectedHistoryItem]);
+
+  const detailInfo = (() => {
+    if (!selectedHistoryItem) return null;
+    try {
+      const answers: Record<string, string[]> = JSON.parse(selectedHistoryItem.answers_data || '{}');
+      return { questions: detailQuestions, answers };
+    } catch { return null; }
+  })();
 
   return (
     <div className={`min-h-screen ${bg} ${textPrimary} p-4 md:p-8 transition-colors duration-300 select-text`}>

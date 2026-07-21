@@ -1,5 +1,5 @@
 import { Question, SubjectId } from "../types";
-import { STATIC_QUESTIONS } from "../data/questions";
+import { loadQuestionsBySubject } from "../data/questions";
 import { SYLLABUS_CONTENT } from "../data/syllabus";
 import { auth } from "../firebase";
 
@@ -20,8 +20,8 @@ const cloneQuestion = (question: Question): Question => ({
 const pickRandom = (questions: Question[], count: number): Question[] =>
   shuffle(questions).slice(0, count).map(cloneQuestion);
 
-const generateEnglishQuestions = (count: number): Question[] => {
-  const englishQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === SubjectId.ENGLISH);
+const generateEnglishQuestions = async (count: number): Promise<Question[]> => {
+  const englishQuestions = await loadQuestionsBySubject('english');
   const listening = englishQuestions.filter(q => q.audioUrl || q.topic?.toLowerCase().includes('listening'));
   const grammar = englishQuestions.filter(q => {
     const topic = q.topic?.toLowerCase() || '';
@@ -64,8 +64,8 @@ const generateEnglishQuestions = (count: number): Question[] => {
   return selected.slice(0, count);
 };
 
-const generateTgoQuestions = (count: number): Question[] => {
-  const tgoQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === SubjectId.TGO);
+const generateTgoQuestions = async (count: number): Promise<Question[]> => {
+  const tgoQuestions = await loadQuestionsBySubject('tgo');
   const analyticalQuestions = tgoQuestions.filter(q => q.topic === 'Мәтінді талдау');
   const criticalQuestions = tgoQuestions.filter(q => q.topic !== 'Мәтінді талдау');
   const analyticalCount = Math.floor(count / 2);
@@ -82,7 +82,6 @@ const generateTgoQuestions = (count: number): Question[] => {
     )
   ];
   const selectedAnalytical = pickRandom(analyticalQuestions, analyticalCount);
-  // Shuffle critical and analytical separately to prevent mixing them
   const shuffledCritical = shuffle(selectedCritical);
   const shuffledAnalytical = shuffle(selectedAnalytical);
 
@@ -99,8 +98,8 @@ const DB_TOPIC_DISTRIBUTION = [
   { topics: ['Нормализация'], count: 3 },
 ];
 
-const generateDbQuestions = (count: number): Question[] => {
-  const dbQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === SubjectId.DB);
+const generateDbQuestions = async (count: number): Promise<Question[]> => {
+  const dbQuestions = await loadQuestionsBySubject('db');
   const slots = DB_TOPIC_DISTRIBUTION.flatMap(group => Array(group.count).fill(group));
   const selected: Question[] = [];
   const selectedIds = new Set<string>();
@@ -125,9 +124,7 @@ const generateDbQuestions = (count: number): Question[] => {
 
   return shuffle(selected).slice(0, count);
 };
-// ALGO spec: 10 topics, 3 questions each = 30 total
-// (A=9, B=12, C=9 difficulty distribution is from the spec but questions
-//  currently don't have reliable difficulty tags, so we pick by topic count)
+
 const ALGO_TOPIC_DISTRIBUTION: { topic: string; count: number }[] = [
   { topic: 'Негізгі процедуралық-бағытталған алгоритмдік тіл', count: 3 },
   { topic: 'Алгоритмдік тіл операторлары', count: 3 },
@@ -141,8 +138,8 @@ const ALGO_TOPIC_DISTRIBUTION: { topic: string; count: number }[] = [
   { topic: 'Графтар және графтар алгоритмдері', count: 3 },
 ];
 
-const generateAlgoQuestions = (count: number): Question[] => {
-  const algoQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === SubjectId.ALGO);
+const generateAlgoQuestions = async (count: number): Promise<Question[]> => {
+  const algoQuestions = await loadQuestionsBySubject('algo');
   const selected: Question[] = [];
   const selectedIds = new Set<string>();
 
@@ -154,7 +151,6 @@ const generateAlgoQuestions = (count: number): Question[] => {
     selected.push(...picked);
   }
 
-  // Fill any gaps if a topic didn't have enough questions
   if (selected.length < count) {
     const remaining = algoQuestions.filter(q => !selectedIds.has(q.id));
     selected.push(...pickRandom(remaining, count - selected.length));
@@ -183,20 +179,18 @@ export const generateQuestionsForSubject = async (
     return generateAlgoQuestions(count);
   }
 
-  // M095 Algorithmic Programming - topic-based distribution
   if (subjectId === SubjectId.M095_ALGO) {
-    const algoQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === 'm095_algo');
+    const algoQuestions = await loadQuestionsBySubject('m095_algo');
     return pickRandom(algoQuestions, count);
   }
 
-  // M095 Information Security - topic-based distribution
   if (subjectId === SubjectId.M095_INFOSEC) {
-    const infosecQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === 'm095_infosec');
+    const infosecQuestions = await loadQuestionsBySubject('m095_infosec');
     return pickRandom(infosecQuestions, count);
   }
 
   // M001 and M002 subjects
-  const subjectQuestions = STATIC_QUESTIONS.filter(q => q.subjectId === subjectId);
+  const subjectQuestions = await loadQuestionsBySubject(subjectId);
   return pickRandom(subjectQuestions, count);
 };
 
