@@ -83,45 +83,82 @@ export default async function handler(request: Request) {
       }
     }
 
-    // 3. Process DeepSeek AI Call
+    // 3. Process AI Explanation Call (Qwen API with DeepSeek API Fallback)
     const { systemPrompt, userPrompt, history } = await request.json();
-    const apiKey = process.env.DEEPSEEK_API_KEY || "";
-    const apiUrl = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/v1";
+    
+    const qwenApiKey = process.env.QWEN_API_KEY || "sk-ws-H.HYLMII.uSEl.MEUCIQDyIG4MXUhrNX2qB87wzsfHPjnHAv4b9bqNHmzEmIAuSQIgBZcVpnQ6lvEhYBgHQLQfr57QfVct57_WWDSahG7Wl-8";
+    const qwenApiUrl = process.env.QWEN_API_URL || "https://ws-0xupo36814pi68qv.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1";
+    const qwenModel = process.env.QWEN_MODEL || "qwen-turbo";
 
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'DeepSeek API кілті бапталмаған.' }), {
+    const deepseekApiKey = process.env.DEEPSEEK_API_KEY || "";
+    const deepseekApiUrl = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/v1";
+
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      ...(history || []).map((h: any) => ({ role: h.role, content: h.content })),
+      { role: 'user', content: userPrompt }
+    ];
+
+    let result = "";
+
+    // Try Qwen API
+    if (qwenApiKey) {
+      try {
+        const qwenRes = await fetch(`${qwenApiUrl.replace(/\/$/, '')}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${qwenApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: qwenModel,
+            messages,
+            temperature: 0.6
+          })
+        });
+
+        if (qwenRes.ok) {
+          const data = await qwenRes.json();
+          result = data.choices?.[0]?.message?.content || "";
+        } else {
+          console.warn("[AI API] Qwen API returned status:", qwenRes.status);
+        }
+      } catch (err) {
+        console.warn("[AI API] Qwen API fetch failed:", err);
+      }
+    }
+
+    // Fallback to DeepSeek API if Qwen did not return a result
+    if (!result && deepseekApiKey) {
+      try {
+        const deepseekRes = await fetch(`${deepseekApiUrl.replace(/\/$/, '')}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${deepseekApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            messages,
+            temperature: 0.6
+          })
+        });
+
+        if (deepseekRes.ok) {
+          const data = await deepseekRes.json();
+          result = data.choices?.[0]?.message?.content || "";
+        }
+      } catch (err) {
+        console.warn("[AI API] DeepSeek API fetch failed:", err);
+      }
+    }
+
+    if (!result) {
+      return new Response(JSON.stringify({ error: 'ИИ қызметінен жауап алу мүмкін болмады (Qwen/DeepSeek API).' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
     }
-
-    const response = await fetch(`${apiUrl.replace(/\/$/, '')}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...(history || []).map((h: any) => ({ role: h.role, content: h.content })),
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.6
-      })
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      return new Response(JSON.stringify({ error: `DeepSeek API қатесі: ${errText}` }), {
-        status: response.status,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    const data = await response.json();
-    const result = data.choices?.[0]?.message?.content || "";
 
     // 4. Update the usage count in Firestore
     const fields: any = {
