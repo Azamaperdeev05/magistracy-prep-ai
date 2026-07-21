@@ -16,7 +16,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
     setError('');
     setIsLoading(true);
     try {
-      await loginWithGoogle();
+      const result = await loginWithGoogle();
+      // Popup нәтижесі болса — тікелей кіру
+      if (result && 'user' in result) {
+        onAuthSuccess(result.user);
+      }
+      // Redirect болса — бет автоматты түрде ауысады
     } catch (err: any) {
       setError(err.message || 'Google арқылы кіру кезінде қате орын алды');
       setIsLoading(false);

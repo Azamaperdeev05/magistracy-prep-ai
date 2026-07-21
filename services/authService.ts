@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
+  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
   GoogleAuthProvider,
@@ -215,18 +216,66 @@ export async function login(email: string, password: string): Promise<AuthRespon
   return { access_token: idToken, token_type: 'bearer', user: profile };
 }
 
-/** Google Sign-In — redirect арқылы */
-export async function loginWithGoogle(): Promise<void> {
+/** Google Sign-In — автоматты таңдау: popup немесе redirect */
+export async function loginWithGoogle(): Promise<AuthResponse | void> {
   ensureFirebaseReady();
-  console.log('[AUTH-SERVICE] loginWithGoogle called, auth:', auth?.currentUser?.email || 'no user');
   const provider = googleProvider || (() => {
     const p = new GoogleAuthProvider();
     p.setCustomParameters({ prompt: 'select_account' });
     return p;
   })();
-  console.log('[AUTH-SERVICE] Calling signInWithRedirect...');
-  await signInWithRedirect(auth, provider);
-  console.log('[AUTH-SERVICE] signInWithRedirect returned (page should redirect)');
+
+  try {
+    // Popup-ты бірінші сынап көру (desktop жұмыс істейді)
+    const userCredential = await signInWithPopup(auth, provider);
+    const fbUser = userCredential.user;
+
+    const numericId = getOrCreateNumericId(fbUser.uid);
+    const profile: UserProfile = {
+      id: numericId,
+      uid: fbUser.uid,
+      email: fbUser.email || "",
+      full_name: fbUser.displayName || 'Google Пайдаланушысы',
+      is_active: true
+    };
+
+    if (db) {
+      try {
+        const userDocRef = doc(db, "users", fbUser.uid);
+        const userSnap = await getDoc(userDocRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.consent) profile.consent = data.consent as UserConsent;
+          profile.is_premium = !!data.is_premium;
+        }
+      } catch (e) {
+        console.warn("Firestore consent fetch on Google login failed:", e);
+      }
+    }
+
+    const idToken = await fbUser.getIdToken();
+    setToken(idToken);
+    saveUser(profile);
+    return { access_token: idToken, token_type: 'bearer', user: profile };
+
+  } catch (popupError: any) {
+    console.warn('[AUTH] Popup failed, trying redirect:', popupError.code);
+
+    // Popup blocked/shut down → redirect-ке ауысу
+    if (
+      popupError.code === 'auth/popup-blocked' ||
+      popupError.code === 'auth/popup-closed-by-user' ||
+      popupError.code === 'auth/cancelled-popup-request' ||
+      popupError.code === 'auth/operation-not-allowed'
+    ) {
+      await signInWithRedirect(auth, provider);
+      return;
+    }
+
+    // Басқа қателер — redirect-ке ауысу
+    await signInWithRedirect(auth, provider);
+    return;
+  }
 }
 
 /** Redirect-тен кейінгі нәтижені өңдеу */
