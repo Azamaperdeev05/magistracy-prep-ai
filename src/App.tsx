@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { Analytics } from '@vercel/analytics/react';
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { SPECIALTIES } from '../data/specialties';
@@ -531,6 +532,7 @@ const App: React.FC = () => (
   <HelmetProvider>
     <Router>
       <RootApp />
+      <Analytics />
     </Router>
   </HelmetProvider>
 );
