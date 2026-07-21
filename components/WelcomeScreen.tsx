@@ -118,16 +118,14 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
               const gradient = gradientKey ? CITY_COLORS[gradientKey] : 'from-slate-500/10 to-slate-400/5 border-slate-500/20';
 
               return (
-                <motion.a
+                <a
                   key={uni.url || idx}
                   href={uni.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.03 }}
-                  whileHover={{ y: -3, scale: 1.01 }}
-                  className={`group relative rounded-2xl border p-5 flex flex-col gap-3 transition-all cursor-pointer no-underline ${cardBase}`}
+                  className={`group relative rounded-2xl border p-5 flex flex-col gap-3 cursor-pointer no-underline
+                    transition-all duration-200 hover:-translate-y-1 hover:scale-[1.01] ${cardBase}`}
+                  style={{ textDecoration: 'none' }}
                 >
                   {/* Gradient accent top */}
                   <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
@@ -144,7 +142,7 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
 
                   {/* Title */}
                   <div className="relative z-10">
-                    <h3 className={`text-sm font-black leading-tight line-clamp-2 ${textPrimary} group-hover:text-blue-500 transition-colors`}>
+                    <h3 className={`text-sm font-black leading-tight line-clamp-2 group-hover:text-blue-500 transition-colors ${textPrimary}`}>
                       {uni.title}
                     </h3>
                   </div>
@@ -174,7 +172,7 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
                       </span>
                     )}
                   </div>
-                </motion.a>
+                </a>
               );
             })}
           </div>
