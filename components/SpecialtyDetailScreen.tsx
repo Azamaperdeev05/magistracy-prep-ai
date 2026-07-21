@@ -37,6 +37,29 @@ const SpecialtyDetailScreen: React.FC = () => {
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   // Load JSON data lazily
+  // Helper to extract clean group data from master JSON
+  const extractGroupData = useCallback((mpData: any, targetCode?: string) => {
+    if (!mpData || !targetCode) return null;
+    const group = (mpData.groups as any[])?.find((g: any) => g.code === targetCode);
+    if (!group) return null;
+
+    const progs = group.programs || [];
+    const derivedUnis = (group.universities && group.universities.length > 0)
+      ? group.universities
+      : Array.from(new Set(progs.map((p: any) => p.university).filter(Boolean)));
+
+    return {
+      code: group.code || targetCode,
+      title: group.title || `${targetCode} ${specialty?.name || ''}`,
+      url: group.url || null,
+      general_info: group.general_info || {},
+      grants: group.grants || [],
+      programs: progs,
+      universities: derivedUnis
+    };
+  }, [specialty?.name]);
+
+  // Load JSON data lazily
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -44,8 +67,23 @@ const SpecialtyDetailScreen: React.FC = () => {
           loadMasterProgramsData(),
           loadUniversitiesData()
         ]);
-        setMasterProgramsData(programs.default || programs);
-        setUniversitiesData(universities.default || universities);
+        const pData = programs.default || programs;
+        const uData = universities.default || universities;
+        setMasterProgramsData(pData);
+        setUniversitiesData(uData);
+
+        const cached = extractGroupData(pData, code);
+        if (cached) {
+          setProgramData(prev => ({
+            ...cached,
+            ...(prev.isLive ? {
+              general_info: (prev.general_info && Object.keys(prev.general_info).length > 0) ? prev.general_info : cached.general_info,
+              grants: (prev.grants && prev.grants.length > 0) ? prev.grants : cached.grants,
+              programs: (prev.programs && prev.programs.length > 0) ? prev.programs : cached.programs,
+              universities: (prev.universities && prev.universities.length > 0) ? prev.universities : cached.universities
+            } : {})
+          }));
+        }
       } catch (e) {
         console.error('Error loading data:', e);
       } finally {
@@ -53,34 +91,20 @@ const SpecialtyDetailScreen: React.FC = () => {
       }
     };
     loadData();
-  }, []);
+  }, [code, extractGroupData]);
 
-  // Initial cached data from JSON
-  const initialCached = masterProgramsData 
-    ? (masterProgramsData.groups as any[]).find((g: any) => g.code === code) || {
-        code: code || '',
-        title: `${code} ${specialty?.name || ''}`,
-        url: null,
-        general_info: {
-          "Академиялық дәреже": "Магистратура",
-          "Білім беру саласы": "Анықталмаған",
-          "Дайындық бағыты": "Анықталмаған"
-        },
-        grants: [],
-        programs: [],
-        universities: []
-      }
-    : {
-        code: code || '',
-        title: `${code} ${specialty?.name || ''}`,
-        url: null,
-        general_info: {},
-        grants: [],
-        programs: [],
-        universities: []
-      };
+  // Initial cached data fallback
+  const initialCached = extractGroupData(masterProgramsData, code) || {
+    code: code || '',
+    title: `${code} ${specialty?.name || ''}`,
+    url: null,
+    general_info: {},
+    grants: [],
+    programs: [],
+    universities: []
+  };
 
-  // Reactive state for program data (starts instant with cached, updates with real-time)
+  // Reactive state for program data
   const [programData, setProgramData] = useState<LiveProgramData>(initialCached);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLive, setIsLive] = useState(false);
@@ -93,14 +117,23 @@ const SpecialtyDetailScreen: React.FC = () => {
     try {
       const liveData = await fetchLiveSpecialtyDetail(code);
       if (liveData) {
-        setProgramData(prev => ({
-          ...prev,
-          ...liveData,
-          general_info: liveData.general_info || prev.general_info,
-          grants: (liveData.grants && liveData.grants.length > 0) ? liveData.grants : prev.grants,
-          programs: (liveData.programs && liveData.programs.length > 0) ? liveData.programs : prev.programs,
-          universities: (liveData.universities && liveData.universities.length > 0) ? liveData.universities : prev.universities
-        }));
+        setProgramData(prev => {
+          const mergedPrograms = (liveData.programs && liveData.programs.length > 0) ? liveData.programs : prev.programs;
+          const mergedUnis = (liveData.universities && liveData.universities.length > 0)
+            ? liveData.universities
+            : (prev.universities && prev.universities.length > 0)
+              ? prev.universities
+              : Array.from(new Set((mergedPrograms || []).map((p: any) => p.university).filter(Boolean)));
+
+          return {
+            ...prev,
+            ...liveData,
+            general_info: (liveData.general_info && Object.keys(liveData.general_info).length > 0) ? liveData.general_info : prev.general_info,
+            grants: (liveData.grants && liveData.grants.length > 0) ? liveData.grants : prev.grants,
+            programs: mergedPrograms,
+            universities: mergedUnis
+          };
+        });
         setIsLive(true);
         setLastSyncTime(liveData.lastFetchedAt || new Date().toLocaleTimeString());
       }

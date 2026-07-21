@@ -11,16 +11,8 @@
  * "pure" режимінде cheerio қажет емес, бірақ парсинг дәлдігі төмендеу.
  */
 
-const { Agent, setGlobalDispatcher } = require('undici');
-
-/* Connection-pool арқылы TCP+TLS хендшейктерді қайта пайдалану */
-setGlobalDispatcher(new Agent({
-  keepAliveTimeout: 60000,
-  keepAliveMaxTimeout: 120000,
-  connections: 200,           // бір хостқа макс 200 параллель
-  pipelining: 10,             // бір қосылыста 10 request тізіп жіберу
-  connect: { rejectUnauthorized: false }
-}));
+import fs from 'fs';
+import path from 'path';
 
 const BASE = "https://univision.kz";
 const MASTER_URL = `${BASE}/kk/edu-program/group/degree/master.html`;
