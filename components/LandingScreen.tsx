@@ -113,8 +113,8 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
       </nav>
 
       {/* ── Hero ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-20 flex flex-col lg:flex-row items-center gap-12">
-        <div className="flex-1 text-center lg:text-left">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 lg:pt-16 pb-0 flex flex-col lg:flex-row items-center lg:items-end justify-between gap-8 lg:gap-12 overflow-hidden">
+        <div className="flex-1 text-center lg:text-left py-4 lg:py-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-6 text-[11px] font-black uppercase tracking-wider border-blue-500/30 bg-blue-500/10 text-blue-400">
             <Zap className="w-3 h-3" /> Магистратура дайындығының ең тиімді платформасы
           </div>
@@ -151,13 +151,13 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
           </div>
         </div>
 
-        {/* Hero Smartphone Mockup */}
-        <div className="flex-1 w-full max-w-md lg:max-w-xl flex items-center justify-center relative">
-          <div className="absolute w-72 h-72 bg-blue-500/20 rounded-full blur-3xl -z-10 animate-pulse" />
+        {/* Hero Smartphone Mockup - Flush right & bottom */}
+        <div className="flex-1 w-full max-w-md lg:max-w-xl flex items-end justify-end relative self-end -mb-1 -mr-4 sm:-mr-6 lg:-mr-6">
+          <div className="absolute w-72 h-72 bg-blue-500/15 rounded-full blur-3xl -z-10 bottom-0 right-0 animate-pulse" />
           <img
             src="/smartphone-mockup.png"
             alt="MagisCore Smartphone App Mockup"
-            className="w-full h-auto max-h-[520px] object-contain drop-shadow-[0_20px_50px_rgba(37,99,235,0.25)] hover:scale-[1.02] transition-transform duration-500"
+            className="w-full h-auto max-h-[580px] object-contain object-bottom drop-shadow-[0_20px_50px_rgba(37,99,235,0.2)] hover:scale-[1.02] transition-transform duration-500 block leading-none translate-y-1 translate-x-2 sm:translate-x-4 lg:translate-x-6"
           />
         </div>
       </section>
