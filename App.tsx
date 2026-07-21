@@ -30,8 +30,8 @@ const UpgradeModal = lazy(() => import('./components/modals/UpgradeModal'));
 const InstallBanner = lazy(() => import('./components/InstallBanner'));
 
 const LoadingFallback = () => (
-  <div className="min-h-screen bg-[#07090d] flex items-center justify-center">
-    <div className="text-slate-400 font-bold animate-pulse">Жүктелуде...</div>
+  <div className="min-h-screen bg-[#FAFCFF] flex items-center justify-center">
+    <div className="text-slate-500 font-bold animate-pulse">Жүктелуде...</div>
   </div>
 );
 
