@@ -111,7 +111,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   const lines = normalizeMarkdownContent(content).split('\n');
 
   return (
-    <div className="space-y-3.5 text-left text-sm text-slate-700 leading-relaxed font-normal select-none">
+    <div className="space-y-3.5 text-left text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal select-none">
       {parseMarkdown(lines)}
     </div>
   );
@@ -153,14 +153,12 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
       while (i < lines.length && (lines[i].trim().startsWith('>') || lines[i].trim() === '')) {
         const qLine = lines[i].trim();
         if (qLine.startsWith('>')) {
-          // Remove the leading '>' and up to one space after it
           let contentPart = qLine.slice(1);
           if (contentPart.startsWith(' ')) {
             contentPart = contentPart.slice(1);
           }
           quoteLines.push(contentPart);
         } else {
-          // It's an empty line inside a blockquote
           quoteLines.push('');
         }
         i++;
@@ -169,7 +167,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
       elements.push(
         <blockquote 
           key={`quote-${i}`} 
-          className="border-l-4 border-blue-500 bg-slate-50/70 py-3 px-5 my-4 italic text-slate-600 rounded-r-2xl space-y-2 shadow-sm"
+          className="border-l-4 border-blue-500 bg-slate-50/70 dark:bg-slate-900/50 py-3 px-5 my-4 italic text-slate-600 dark:text-slate-300 rounded-r-2xl space-y-2 shadow-sm"
         >
           {parseMarkdown(quoteLines)}
         </blockquote>
@@ -191,7 +189,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
         i++;
       }
       elements.push(
-        <ul key={`ul-${i}`} className="list-disc pl-6 space-y-1.5 my-3 text-sm text-slate-700">
+        <ul key={`ul-${i}`} className="list-disc pl-6 space-y-1.5 my-3 text-sm text-slate-700 dark:text-slate-300">
           {listItems}
         </ul>
       );
@@ -213,7 +211,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
         i++;
       }
       elements.push(
-        <ol key={`ol-${i}`} className="list-decimal pl-6 space-y-1.5 my-3 text-sm text-slate-700">
+        <ol key={`ol-${i}`} className="list-decimal pl-6 space-y-1.5 my-3 text-sm text-slate-700 dark:text-slate-300">
           {listItems}
         </ol>
       );
@@ -242,25 +240,25 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
         const rows = bodyLines.map(line => parseRow(line));
         
         elements.push(
-          <div key={`table-${i}`} className="my-4 overflow-x-auto shadow-sm border border-slate-200 rounded-2xl bg-white">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50/80">
+          <div key={`table-${i}`} className="my-4 overflow-x-auto shadow-sm border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-[#0f1219]">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+              <thead className="bg-slate-50/80 dark:bg-slate-900/80">
                 <tr>
                   {headers.map((h, hIdx) => (
                     <th 
                       key={hIdx} 
-                      className="px-5 py-3 text-left font-bold text-slate-700 uppercase tracking-wider text-xs border-b border-slate-200"
+                      className="px-5 py-3 text-left font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider text-xs border-b border-slate-200 dark:border-slate-800"
                     >
                       {parseInline(h)}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-[#0f1219]">
                 {rows.map((row, rIdx) => (
-                  <tr key={rIdx} className="hover:bg-slate-50/55 transition-colors">
+                  <tr key={rIdx} className="hover:bg-slate-50/55 dark:hover:bg-slate-800/40 transition-colors">
                     {row.map((cell, cIdx) => (
-                      <td key={cIdx} className="px-5 py-2.5 text-slate-600 leading-relaxed">
+                      <td key={cIdx} className="px-5 py-2.5 text-slate-600 dark:text-slate-300 leading-relaxed">
                         {parseInline(cell)}
                       </td>
                     ))}
@@ -276,7 +274,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
 
     // 6. Horizontal Rule
     if (trimmed === '---') {
-      elements.push(<hr key={`hr-${i}`} className="border-t border-slate-200 my-5" />);
+      elements.push(<hr key={`hr-${i}`} className="border-t border-slate-200 dark:border-slate-800 my-5" />);
       i++;
       continue;
     }
@@ -284,7 +282,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
     // 7. Headings
     if (trimmed.startsWith('# ')) {
       elements.push(
-        <h1 key={`h1-${i}`} className="font-bold text-xl md:text-2xl text-slate-900 pt-4 pb-2 border-b border-slate-100 mb-3 tracking-tight">
+        <h1 key={`h1-${i}`} className="font-bold text-xl md:text-2xl text-slate-900 dark:text-white pt-4 pb-2 border-b border-slate-100 dark:border-slate-800 mb-3 tracking-tight">
           {parseInline(trimmed.slice(2))}
         </h1>
       );
@@ -293,7 +291,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
     }
     if (trimmed.startsWith('## ')) {
       elements.push(
-        <h2 key={`h2-${i}`} className="font-bold text-lg md:text-xl text-slate-800 pt-4 pb-1.5 mt-4 tracking-tight">
+        <h2 key={`h2-${i}`} className="font-bold text-lg md:text-xl text-slate-800 dark:text-slate-100 pt-4 pb-1.5 mt-4 tracking-tight">
           {parseInline(trimmed.slice(3))}
         </h2>
       );
@@ -302,7 +300,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
     }
     if (trimmed.startsWith('### ')) {
       elements.push(
-        <h3 key={`h3-${i}`} className="font-bold text-base text-slate-800 pt-3 pb-1 mt-3 tracking-tight">
+        <h3 key={`h3-${i}`} className="font-bold text-base text-slate-800 dark:text-slate-200 pt-3 pb-1 mt-3 tracking-tight">
           {parseInline(trimmed.slice(4))}
         </h3>
       );
@@ -319,7 +317,7 @@ const parseMarkdown = (lines: string[]): React.ReactNode[] => {
 
     // 9. Regular Paragraph
     elements.push(
-      <p key={`p-${i}`} className="text-sm text-slate-700 leading-relaxed py-0.5">
+      <p key={`p-${i}`} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed py-0.5">
         {parseInline(line)}
       </p>
     );
@@ -350,20 +348,20 @@ const parseInline = (text: string): React.ReactNode => {
       parts.push(
         <span
           key={matchIdx}
-          className="inline-block align-baseline rounded-md border border-blue-100 bg-blue-50 px-1.5 py-0.5 font-mono text-[0.95em] font-semibold leading-normal text-blue-950"
+          className="inline-block align-baseline rounded-md border border-blue-100 dark:border-blue-800/60 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 font-mono text-[0.95em] font-semibold leading-normal text-blue-950 dark:text-blue-300"
         >
           {matchStr.slice(1, -1)}
         </span>
       );
     } else if (matchStr.startsWith('**') && matchStr.endsWith('**')) {
       parts.push(
-        <strong key={matchIdx} className="font-bold text-slate-900">
+        <strong key={matchIdx} className="font-bold text-slate-900 dark:text-white">
           {parseInline(matchStr.slice(2, -2))}
         </strong>
       );
     } else if (matchStr.startsWith('*') && matchStr.endsWith('*')) {
       parts.push(
-        <em key={matchIdx} className="italic text-slate-800">
+        <em key={matchIdx} className="italic text-slate-800 dark:text-slate-200">
           {matchStr.slice(1, -1)}
         </em>
       );
