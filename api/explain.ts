@@ -88,7 +88,7 @@ export default async function handler(request: Request) {
     
     const openrouterApiKey = process.env.OPENROUTER_API_KEY || "";
     const openrouterApiUrl = process.env.OPENROUTER_API_URL || "https://openrouter.ai/api/v1";
-    const openrouterModel = process.env.OPENROUTER_MODEL || "nvidia/nemotron-3-nano-30b-a3b:free";
+    const openrouterModel = process.env.OPENROUTER_MODEL || "google/gemma-4-26b-a4b-it:free";
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -98,11 +98,11 @@ export default async function handler(request: Request) {
 
     let result = "";
 
-    // OpenRouter API (Ultra-fast response within 6s timeout)
+    // OpenRouter API (High-quality Kazakh model, 8.5s timeout)
     if (openrouterApiKey) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const timeoutId = setTimeout(() => controller.abort(), 8500);
 
         const orRes = await fetch(`${openrouterApiUrl.replace(/\/$/, '')}/chat/completions`, {
           method: 'POST',
@@ -115,8 +115,8 @@ export default async function handler(request: Request) {
           body: JSON.stringify({
             model: openrouterModel,
             messages,
-            max_tokens: 300,
-            temperature: 0.6
+            max_tokens: 450,
+            temperature: 0.5
           }),
           signal: controller.signal
         });
@@ -125,7 +125,15 @@ export default async function handler(request: Request) {
 
         if (orRes.ok) {
           const data = await orRes.json();
-          result = data.choices?.[0]?.message?.content || "";
+          let rawContent = data.choices?.[0]?.message?.content || "";
+          
+          // Sanitize reasoning text / chain of thought leak if any
+          rawContent = rawContent.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+          rawContent = rawContent.replace(/^We need to respond[\s\S]*?\n\n/gi, '').trim();
+          rawContent = rawContent.replace(/^Let's craft[\s\S]*?\n\n/gi, '').trim();
+          rawContent = rawContent.replace(/^The user asks[\s\S]*?\n\n/gi, '').trim();
+
+          result = rawContent;
         } else {
           console.warn("[AI API] OpenRouter API returned status:", orRes.status);
         }
