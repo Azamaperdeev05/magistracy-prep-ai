@@ -6,7 +6,7 @@ import {
   Menu, X, Sparkles, ChevronRight, Play, ExternalLink,
   MessageSquare, Star, Users, CheckCircle, LogOut, History, Info,
   Sun, Moon, Crown, Settings, BarChart2, Layers, Search,
-  MapPin, Building2, Loader2
+  MapPin, Building2, Loader2, FileText
 } from 'lucide-react';
 import { SUBJECTS } from '../constants';
 import { SubjectId } from '../types';
@@ -196,6 +196,74 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
         </>
       )}
     </motion.div>
+  );
+};
+
+// ─── University Preview List (for Q2 quadrant) ───────────────────────────────
+
+const UniversityPreviewList: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
+  const [unis, setUnis] = useState<University[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    import('../univision_universities.json')
+      .then((mod: any) => {
+        const data = mod.default || mod;
+        setUnis(Array.isArray(data.universities) ? data.universities.slice(0, 8) : []);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const textPrimary = isDarkMode ? 'text-white' : 'text-slate-800';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-500';
+  const rowBase = isDarkMode
+    ? 'hover:bg-white/5 border-white/5'
+    : 'hover:bg-slate-50 border-slate-100';
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-8 gap-2 text-slate-400 text-xs">
+      <Loader2 className="w-4 h-4 animate-spin text-blue-500" /> Жүктелуде...
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-1">
+      {unis.map((uni, i) => (
+        <a
+          key={i}
+          href={uni.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all group ${rowBase}`}
+          style={{ textDecoration: 'none' }}
+        >
+          <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-black ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>
+            {i + 1}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className={`text-[11px] font-black leading-tight truncate ${textPrimary} group-hover:text-blue-500 transition-colors`}>
+              {uni.title}
+            </p>
+            {uni.general_info?.city && (
+              <p className={`text-[10px] ${textMuted} flex items-center gap-1 mt-0.5`}>
+                <MapPin className="w-2.5 h-2.5 shrink-0" />{uni.general_info.city}
+              </p>
+            )}
+          </div>
+          <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-blue-500 transition-colors shrink-0" />
+        </a>
+      ))}
+      <a
+        href="https://univision.kz"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 text-center text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-widest flex items-center justify-center gap-1"
+        style={{ textDecoration: 'none' }}
+      >
+        Барлық 125 ЖОО <ChevronRight className="w-3 h-3" />
+      </a>
+    </div>
   );
 };
 
@@ -683,213 +751,169 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           </div>
         </motion.div>
 
-        {/* 3. Specialty Training Hub (Grid) */}
+        {/* 3–5. Unified 4-Panel Hub Grid */}
         <motion.div {...fadeInUp} transition={{ delay: 0.15 }} className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className={`text-xl sm:text-2xl font-black uppercase tracking-tight ${textTitle}`}>
-                Мамандықтар Бөлімі & Бағдарламалар
+                Дайындық Хабы
               </h2>
               <p className={`text-xs ${textMuted}`}>
-                Магистратура КТ бағыттары мен профильдік пәндер спецификациясы
+                Барлық ресурстар бір жерде — мамандықтар, ЖОО-лар, нәтижелер
               </p>
             </div>
-
-            <button
-              onClick={() => onViewSpecialties()}
-              className="flex items-center gap-1.5 text-xs font-black text-blue-500 hover:text-blue-600 uppercase tracking-widest"
-            >
-              Барлығын Көру <ChevronRight className="w-4 h-4" />
-            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            
-            {/* M094 - IT */}
-            <motion.div
-              whileHover={{ y: -4 }}
-              onClick={() => onStart('M094')}
-              className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-blue-500/50 hover:shadow-xl ${cardBg}`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
-                    isDarkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
-                  }`}>
-                    <Zap className="w-6 h-6" />
+          {/* 2×2 Quadrant Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            {/* ── Q1: Мамандықтар ── */}
+            <div className={`rounded-3xl border overflow-hidden flex flex-col ${cardBg}`}>
+              <div className={`px-6 pt-5 pb-4 flex items-center justify-between border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'}`}>
+                    <Layers className="w-4 h-4" />
                   </div>
-                  <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase tracking-wider">
-                    M094
-                  </span>
-                </div>
-
-                <h3 className={`text-lg font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-                  Ақпараттық Технологиялар
-                </h3>
-                <p className={`text-xs leading-relaxed ${textMuted}`}>
-                  Профильдер: Алгоритмдер & C++, Деректер базасы.
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-blue-500">
-                <span>Мамандықпен бастау</span>
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </motion.div>
-
-            {/* M095 - Cyber Security */}
-            <motion.div
-              whileHover={{ y: -4 }}
-              onClick={() => onStart('M095')}
-              className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl ${cardBg}`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
-                    isDarkMode ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 'bg-purple-50 border-purple-200 text-purple-600'
-                  }`}>
-                    <Shield className="w-6 h-6" />
+                  <div>
+                    <h3 className={`text-sm font-black uppercase tracking-tight ${textTitle}`}>Мамандықтар</h3>
+                    <p className={`text-[10px] ${textMuted}`}>133 мамандық тобы</p>
                   </div>
-                  <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-500 border border-purple-500/20 uppercase tracking-wider">
-                    M095
-                  </span>
                 </div>
-
-                <h3 className={`text-lg font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-                  Ақпараттық Қауіпсіздік
-                </h3>
-                <p className={`text-xs leading-relaxed ${textMuted}`}>
-                  Профильдер: Бағдарламалау тілдері & Қауіпсіздік.
-                </p>
+                <button onClick={() => onViewSpecialties()} className="text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-widest flex items-center gap-1">
+                  Барлығы <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-purple-500">
-                <span>Мамандықпен бастау</span>
-                <ArrowRight className="w-4 h-4" />
+              <div className="p-4 grid grid-cols-2 gap-3 flex-1">
+                {([
+                  { code: 'M094', label: 'Ақпараттық Технологиялар', sub: 'Алгоритмдер & C++, Дерекқор', color: 'blue', icon: <Zap className="w-4 h-4" />, action: () => onStart('M094') },
+                  { code: 'M095', label: 'Ақпараттық Қауіпсіздік', sub: 'Бағд. тілдері & Қауіпсіздік', color: 'purple', icon: <Shield className="w-4 h-4" />, action: () => onStart('M095') },
+                  { code: 'M001', label: 'Педагогика & Психология', sub: 'Педагогика теориясы, Психология', color: 'emerald', icon: <GraduationCap className="w-4 h-4" />, action: () => onStart('M001') },
+                  { code: 'M070', label: 'Экономика & Бизнес', sub: 'Кәсіпорын экономикасы', color: 'amber', icon: <TrendingUp className="w-4 h-4" />, action: () => onViewSpecialties() },
+                ] as const).map(({ code, label, sub, color, icon, action }) => (
+                  <button key={code} onClick={action}
+                    className={`text-left p-4 rounded-2xl border transition-all hover:-translate-y-0.5 active:scale-[0.98] flex flex-col gap-2 ${
+                      isDarkMode ? 'border-slate-800/80 hover:border-slate-600 bg-slate-900/30' : 'border-slate-200 hover:border-slate-300 bg-slate-50/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                        isDarkMode ? 'bg-slate-800 text-slate-300' : 'bg-white border border-slate-200 text-slate-600'
+                      }`}>{icon}</div>
+                      <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${
+                        isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-600'
+                      }`}>{code}</span>
+                    </div>
+                    <div>
+                      <p className={`text-xs font-black leading-tight ${textTitle}`}>{label}</p>
+                      <p className={`text-[10px] leading-tight mt-0.5 ${textMuted}`}>{sub}</p>
+                    </div>
+                  </button>
+                ))}
               </div>
-            </motion.div>
+            </div>
 
-            {/* M001 - Pedagogy */}
-            <motion.div
-              whileHover={{ y: -4 }}
-              onClick={() => onStart('M001')}
-              className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-emerald-500/50 hover:shadow-xl ${cardBg}`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
-                    isDarkMode ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-600'
-                  }`}>
-                    <GraduationCap className="w-6 h-6" />
+            {/* ── Q2: ЖОО-лар ── */}
+            <div className={`rounded-3xl border overflow-hidden flex flex-col ${cardBg}`}>
+              <div className={`px-6 pt-5 pb-4 flex items-center justify-between border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${isDarkMode ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-rose-50 border-rose-200 text-rose-600'}`}>
+                    <Building2 className="w-4 h-4" />
                   </div>
-                  <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 uppercase tracking-wider">
-                    M001
-                  </span>
-                </div>
-
-                <h3 className={`text-lg font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-                  Педагогика & Психология
-                </h3>
-                <p className={`text-xs leading-relaxed ${textMuted}`}>
-                  Профильдер: Педагогика теориясы, Психология.
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-emerald-500">
-                <span>Мамандықпен бастау</span>
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </motion.div>
-
-            {/* M070 - Economics */}
-            <motion.div
-              whileHover={{ y: -4 }}
-              onClick={() => onViewSpecialties()}
-              className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-amber-500/50 hover:shadow-xl ${cardBg}`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
-                    isDarkMode ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' : 'bg-amber-50 border-amber-200 text-amber-600'
-                  }`}>
-                    <TrendingUp className="w-6 h-6" />
+                  <div>
+                    <h3 className={`text-sm font-black uppercase tracking-tight ${textTitle}`}>Қазақстан ЖОО-лары</h3>
+                    <p className={`text-[10px] ${textMuted}`}>125 университет · Univision деректері</p>
                   </div>
-                  <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase tracking-wider">
-                    M070
-                  </span>
                 </div>
+              </div>
+              <div className="p-4 flex-1 overflow-hidden">
+                <UniversityPreviewList isDarkMode={isDarkMode} />
+              </div>
+            </div>
 
-                <h3 className={`text-lg font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-                  Экономика Және Бизнес
-                </h3>
-                <p className={`text-xs leading-relaxed ${textMuted}`}>
-                  Профильдер: Кәсіпорын экономикасы, Макроэкономика.
-                </p>
+            {/* ── Q3: КТ Құрылымы ── */}
+            <div onClick={onViewPrep} className={`rounded-3xl border cursor-pointer group transition-all hover:border-blue-500/40 overflow-hidden flex flex-col ${cardBg}`}>
+              <div className={`px-6 pt-5 pb-4 flex items-center justify-between border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${isDarkMode ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' : 'bg-indigo-50 border-indigo-200 text-indigo-600'}`}>
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className={`text-sm font-black uppercase tracking-tight ${textTitle}`}>Магистратура КТ Құрылымы</h3>
+                    <p className={`text-[10px] ${textMuted}`}>Тест форматы & баллдық шектер</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
+              </div>
+              <div className="p-4 flex-1 grid grid-cols-2 gap-3">
+                {[
+                  { label: 'Ағылшын тілі', value: '50 сұрақ', sub: '50 балл', color: isDarkMode ? 'text-blue-400' : 'text-blue-600', bg: isDarkMode ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50 border-blue-200' },
+                  { label: 'ТҒО (ОДАТ)', value: '30 сұрақ', sub: '30 балл', color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/20' : 'bg-violet-50 border-violet-200' },
+                  { label: '1-Бейіндік пән', value: '35 сұрақ', sub: '35 балл', color: isDarkMode ? 'text-emerald-400' : 'text-emerald-600', bg: isDarkMode ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-emerald-50 border-emerald-200' },
+                  { label: '2-Бейіндік пән', value: '35 сұрақ', sub: '35 балл', color: isDarkMode ? 'text-amber-400' : 'text-amber-600', bg: isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50 border-amber-200' },
+                ].map(({ label, value, sub, color, bg }) => (
+                  <div key={label} className={`p-3 rounded-2xl border flex flex-col gap-1 ${bg}`}>
+                    <p className={`text-[10px] font-bold ${textMuted}`}>{label}</p>
+                    <p className={`text-base font-black ${color}`}>{value}</p>
+                    <p className={`text-[10px] font-bold ${textMuted}`}>{sub}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="px-6 pb-5 flex items-center gap-2 text-xs font-black text-blue-500 group-hover:gap-3 transition-all">
+                <span>Толық ережені қарау</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* ── Q4: Тарих & PRO & Спецификация ── */}
+            <div className="flex flex-col gap-3">
+              <div onClick={onViewHistory} className={`rounded-2xl border cursor-pointer group transition-all hover:border-indigo-500/40 p-5 flex items-center gap-4 ${cardBg}`}>
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 ${isDarkMode ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' : 'bg-indigo-50 border-indigo-200 text-indigo-600'}`}>
+                  <History className="w-5 h-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className={`text-sm font-black uppercase tracking-tight ${textTitle}`}>Тест Нәтижелері Тарихы</h4>
+                  <p className={`text-xs ${textMuted} mt-0.5`}>Орындалған тесттер, қателер, аналитика.</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0" />
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-amber-500">
-                <span>Мамандық профилі</span>
-                <ArrowRight className="w-4 h-4" />
+              <div onClick={() => onViewProgram()} className={`rounded-2xl border cursor-pointer group transition-all hover:border-blue-500/40 p-5 flex items-center gap-4 ${cardBg}`}>
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'}`}>
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className={`text-sm font-black uppercase tracking-tight ${textTitle}`}>Тест Спецификациялары</h4>
+                  <p className={`text-xs ${textMuted} mt-0.5`}>133 мамандықтың ресми ҰТО спецификациялары.</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors shrink-0" />
               </div>
-            </motion.div>
+
+              <div onClick={() => { if (!isPremium && onUpgrade) onUpgrade(); }}
+                className={`rounded-2xl border cursor-pointer group transition-all p-5 flex items-center gap-4 flex-1 ${
+                  isPremium
+                    ? (isDarkMode ? 'border-amber-500/30 bg-amber-500/5 hover:border-amber-400/50' : 'border-amber-300 bg-amber-50/60 hover:border-amber-400')
+                    : (isDarkMode ? `${cardBg} hover:border-amber-500/40` : `${cardBg} hover:border-amber-400`)
+                }`}
+              >
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 ${isDarkMode ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' : 'bg-amber-50 border-amber-200 text-amber-600'}`}>
+                  <Crown className={`w-5 h-5 ${isPremium ? 'animate-pulse' : ''}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className={`text-sm font-black uppercase tracking-tight ${textTitle}`}>
+                    {isPremium ? 'PRO Тьютор Белсенді ✓' : 'PRO Мүмкіндіктерді Ашу'}
+                  </h4>
+                  <p className={`text-xs ${textMuted} mt-0.5`}>ИИ ассистент сұрақтарды қадамдық түсіндіреді.</p>
+                </div>
+                {!isPremium && <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-amber-500 transition-colors shrink-0" />}
+              </div>
+            </div>
 
           </div>
         </motion.div>
 
-        {/* 4. Secondary Quick Action Tools (Listening / AI / History) */}
-        <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          
-          <div 
-            onClick={onViewPrep}
-            className={`p-6 rounded-3xl border cursor-pointer hover:border-blue-500/40 transition-all ${cardBg}`}
-          >
-            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center mb-4">
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <h4 className={`text-base font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-              Магистратура КТ Құрылымы
-            </h4>
-            <p className={`text-xs leading-relaxed ${textMuted}`}>
-              КТ тест форматы, пәндер бөлінісі және баллдық шектер ережесі.
-            </p>
-          </div>
 
-          <div 
-            onClick={onViewHistory}
-            className={`p-6 rounded-3xl border cursor-pointer hover:border-blue-500/40 transition-all ${cardBg}`}
-          >
-            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-4">
-              <History className="w-5 h-5" />
-            </div>
-            <h4 className={`text-base font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-              Тест Нәтижелері Тарихы
-            </h4>
-            <p className={`text-xs leading-relaxed ${textMuted}`}>
-              Барлық орындалған тесттер, қателермен жұмыс және аналитика.
-            </p>
-          </div>
 
-          <div 
-            onClick={() => {
-              if (!isPremium && onUpgrade) onUpgrade();
-            }}
-            className={`p-6 rounded-3xl border cursor-pointer hover:border-amber-500/40 transition-all ${cardBg}`}
-          >
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-4">
-              <Crown className="w-5 h-5" />
-            </div>
-            <h4 className={`text-base font-black uppercase tracking-tight mb-1 ${textTitle}`}>
-              {isPremium ? 'PRO Тьютор Белсенді' : 'PRO Мүмкіндіктер'}
-            </h4>
-            <p className={`text-xs leading-relaxed ${textMuted}`}>
-              ИИ ассистент сұрақтарды қадамдық түсіндіреді және талдайды.
-            </p>
-          </div>
 
-        </motion.div>
-
-        {/* 5. Universities Section */}
-        <UniversitiesSection isDarkMode={isDarkMode} />
 
       </main>
 
