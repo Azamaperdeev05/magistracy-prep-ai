@@ -55,8 +55,6 @@ export interface UserProfile {
   is_premium?: boolean;
   ai_queries_today?: number;
   ai_queries_date?: string;
-  active_devices?: string[];
-  is_device_limit_exceeded?: boolean;
 }
 
 export interface AuthResponse {
@@ -263,15 +261,6 @@ export async function logout(): Promise<void> {
   removeToken();
 }
 
-export function getDeviceId(): string {
-  let deviceId = localStorage.getItem('magistracy_device_id');
-  if (!deviceId) {
-    deviceId = 'dev_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    localStorage.setItem('magistracy_device_id', deviceId);
-  }
-  return deviceId;
-}
-
 /** Профиль алу */
 export async function getProfile(): Promise<UserProfile> {
   ensureFirebaseReady();
@@ -287,10 +276,6 @@ export async function getProfile(): Promise<UserProfile> {
   let isPremium = false;
   let aiQueriesToday = 0;
   let aiQueriesDate = "";
-  let activeDevices: string[] = [];
-  let isDeviceLimitExceeded = false;
-
-  const currentDeviceId = getDeviceId();
 
   // Track consent from Firestore
   let firestoreConsent: UserConsent | undefined = savedUser?.consent;
@@ -305,35 +290,17 @@ export async function getProfile(): Promise<UserProfile> {
         isPremium = !!data.is_premium;
         aiQueriesToday = data.ai_queries_today || 0;
         aiQueriesDate = data.ai_queries_date || "";
-        activeDevices = data.active_devices || [];
 
         // Read consent from Firestore (source of truth)
         if (data.consent) {
           firestoreConsent = data.consent as UserConsent;
         }
-
-        // Check device limit (Max: 2)
-        if (activeDevices.includes(currentDeviceId)) {
-          // Device is already registered
-        } else {
-          if (activeDevices.length < 2) {
-            // Register new device ID
-            const updatedDevices = [...activeDevices, currentDeviceId];
-            await updateDoc(userDocRef, { active_devices: updatedDevices });
-            activeDevices = updatedDevices;
-          } else {
-            // Exceeded limit!
-            isDeviceLimitExceeded = true;
-          }
-        }
       } else {
-        // Create initial document and bind current device
-        activeDevices = [currentDeviceId];
+        // Create initial document
         await setDoc(userDocRef, {
           email: currentUser.email || "",
           full_name: currentUser.displayName || savedUser?.full_name || 'Қолданушы',
           is_premium: false,
-          active_devices: activeDevices,
           created_at: new Date().toISOString()
         });
       }
@@ -342,8 +309,6 @@ export async function getProfile(): Promise<UserProfile> {
       isPremium = !!savedUser?.is_premium;
       aiQueriesToday = savedUser?.ai_queries_today || 0;
       aiQueriesDate = savedUser?.ai_queries_date || "";
-      activeDevices = savedUser?.active_devices || [];
-      isDeviceLimitExceeded = !!savedUser?.is_device_limit_exceeded;
     }
   }
 
@@ -364,9 +329,7 @@ export async function getProfile(): Promise<UserProfile> {
     consent: firestoreConsent,
     is_premium: isPremium,
     ai_queries_today: aiQueriesToday,
-    ai_queries_date: aiQueriesDate,
-    active_devices: activeDevices,
-    is_device_limit_exceeded: isDeviceLimitExceeded
+    ai_queries_date: aiQueriesDate
   };
   saveUser(profile);
   return profile;

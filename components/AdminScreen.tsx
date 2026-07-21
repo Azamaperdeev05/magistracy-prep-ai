@@ -34,7 +34,6 @@ interface FirestoreUser {
   specialty_code?: string;
   specialty_name?: string;
   created_at?: string;
-  active_devices?: string[];
 }
 
 interface AdminHistoryItem {
@@ -118,8 +117,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
           is_premium: !!data.is_premium,
           specialty_code: data.specialty_code,
           specialty_name: data.specialty_name,
-          created_at: data.created_at,
-          active_devices: data.active_devices || []
+          created_at: data.created_at
         });
       });
 
@@ -248,27 +246,6 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
     } catch (err) {
       console.error("Error updating premium status:", err);
       alert("Жазылымды өзгерту сәтсіз аяқталды");
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  // Reset user devices
-  const handleResetDevices = async (targetUser: FirestoreUser) => {
-    if (!db) return;
-    if (!window.confirm(`${targetUser.full_name} қолданушының байланған құрылғыларын нөлдеуді растайсыз ба?`)) return;
-
-    setActionLoading(`reset-${targetUser.uid}`);
-    try {
-      const userRef = doc(db, "users", targetUser.uid);
-      await updateDoc(userRef, { active_devices: [] });
-      
-      // Update local state
-      setUsers(prev => prev.map(u => u.uid === targetUser.uid ? { ...u, active_devices: [] } : u));
-      alert("Құрылғылар сәтті нөлденді!");
-    } catch (err) {
-      console.error("Error resetting devices:", err);
-      alert("Құрылғыларды нөлдеу сәтсіз аяқталды");
     } finally {
       setActionLoading(null);
     }
@@ -587,18 +564,6 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                                     'Жазылымды алу'
                                   ) : (
                                     'Жазылым қосу'
-                                  )}
-                                </button>
-                                <button
-                                  onClick={() => handleResetDevices(u)}
-                                  disabled={actionLoading === `reset-${u.uid}`}
-                                  className="px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg font-bold transition-all"
-                                  title={`Байланған құрылғылар саны: ${(u.active_devices || []).length}`}
-                                >
-                                  {actionLoading === `reset-${u.uid}` ? (
-                                    <Loader2 className="w-3 animate-spin" />
-                                  ) : (
-                                    `Құрылғыларды нөлдеу (${(u.active_devices || []).length})`
                                   )}
                                 </button>
                               </td>
