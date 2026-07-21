@@ -88,7 +88,7 @@ export default async function handler(request: Request) {
     
     const openrouterApiKey = process.env.OPENROUTER_API_KEY || "";
     const openrouterApiUrl = process.env.OPENROUTER_API_URL || "https://openrouter.ai/api/v1";
-    const openrouterModel = process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free";
+    const openrouterModel = process.env.OPENROUTER_MODEL || "nvidia/nemotron-3-nano-30b-a3b:free";
 
     const qwenApiKey = process.env.QWEN_API_KEY || "";
     const qwenApiUrl = process.env.QWEN_API_URL || "https://ws-0xupo36814pi68qv.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1";
@@ -105,9 +105,12 @@ export default async function handler(request: Request) {
 
     let result = "";
 
-    // 1. Primary: Try OpenRouter API (Cohere North Mini Code / Free High Performance AI)
+    // 1. Primary: Try OpenRouter API (Ultra-fast response within 6s timeout)
     if (openrouterApiKey) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+
         const orRes = await fetch(`${openrouterApiUrl.replace(/\/$/, '')}/chat/completions`, {
           method: 'POST',
           headers: {
@@ -119,9 +122,13 @@ export default async function handler(request: Request) {
           body: JSON.stringify({
             model: openrouterModel,
             messages,
+            max_tokens: 300,
             temperature: 0.6
-          })
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (orRes.ok) {
           const data = await orRes.json();
@@ -129,8 +136,8 @@ export default async function handler(request: Request) {
         } else {
           console.warn("[AI API] OpenRouter API returned status:", orRes.status);
         }
-      } catch (err) {
-        console.warn("[AI API] OpenRouter API fetch failed:", err);
+      } catch (err: any) {
+        console.warn("[AI API] OpenRouter API fetch failed/timed out:", err.message || err);
       }
     }
 
