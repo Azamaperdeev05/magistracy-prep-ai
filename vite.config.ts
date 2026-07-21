@@ -24,6 +24,9 @@ export default defineConfig(({ mode }) => {
         VitePWA({
           registerType: 'autoUpdate',
           workbox: {
+            skipWaiting: true,
+            clientsClaim: true,
+            cleanupOutdatedCaches: true,
             maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
             runtimeCaching: [
               {

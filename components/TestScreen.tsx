@@ -594,16 +594,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                       <div className="flex-1">
                           {/* English Listening Section - Audio Only */}
                           {isEnglishListening && (
-                              <div className="mb-6 space-y-3">
-                                  <div className="text-sm font-semibold text-slate-600 flex items-center justify-between">
-                                      <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 border border-blue-100">
-                                          🎧 Listening Section (Тыңдалым)
-                                      </span>
-                                      <span className="text-xs text-slate-500 font-normal">
-                                          Аудионы мұқият тыңдап, төмендегі сұраққа жауап беріңіз.
-                                      </span>
-                                  </div>
-
+                              <div className="mb-6">
                                   <AudioPlayer 
                                     src={currentQuestion.audioUrl} 
                                     transcriptText={currentQuestion.codeSnippet || currentQuestion.readingPassage || currentQuestion.context}

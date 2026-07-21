@@ -240,7 +240,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, transcriptText, onErrorS
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs font-semibold text-blue-700 flex items-center gap-1.5">
               <Volume2 className="w-3.5 h-3.5 text-blue-600" />
-              {useTTS ? 'Дауыстық синтезатор (TTS Voice)' : 'Аудиожазба (Original Audio)'}
+              {useTTS ? 'Дауыстық синтезатор (TTS Voice)' : 'Аудиожазба'}
             </span>
             <span className="text-xs text-blue-600 font-medium">
               {formatTime(currentTime)} / {formatTime(duration)}

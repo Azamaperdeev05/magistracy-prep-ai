@@ -127,7 +127,18 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
     }
   };
 
-  // Manual Drag Logic
+  // Position initialization: center modal on screen when opened
+  useEffect(() => {
+    if (isOpen) {
+      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400;
+      const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 700;
+      const initialX = Math.max(8, Math.min((screenWidth - 320) / 2, screenWidth - 328));
+      const initialY = Math.max(16, Math.min(80, screenHeight - 520));
+      setPosition({ x: initialX, y: initialY });
+    }
+  }, [isOpen]);
+
+  // Mouse & Touch Dragging Logic
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     dragStartPos.current = {
@@ -136,23 +147,57 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
     };
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      dragStartPos.current = {
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y
+      };
+    }
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
+      const maxX = Math.max(0, window.innerWidth - 320);
+      const maxY = Math.max(0, window.innerHeight - 350);
+      const newX = e.clientX - dragStartPos.current.x;
+      const newY = e.clientY - dragStartPos.current.y;
       setPosition({
-        x: e.clientX - dragStartPos.current.x,
-        y: e.clientY - dragStartPos.current.y
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY))
       });
     };
-    const handleMouseUp = () => setIsDragging(false);
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      const maxX = Math.max(0, window.innerWidth - 320);
+      const maxY = Math.max(0, window.innerHeight - 350);
+      const touch = e.touches[0];
+      const newX = touch.clientX - dragStartPos.current.x;
+      const newY = touch.clientY - dragStartPos.current.y;
+      setPosition({
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY))
+      });
+    };
+
+    const handleDragEnd = () => setIsDragging(false);
 
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchend', handleDragEnd);
+      window.addEventListener('touchcancel', handleDragEnd);
     }
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleDragEnd);
+      window.removeEventListener('touchcancel', handleDragEnd);
     };
   }, [isDragging]);
 
@@ -162,12 +207,13 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
     <div className="fixed inset-0 pointer-events-none z-[100]">
       <div 
         style={{ left: position.x, top: position.y }}
-        className="pointer-events-auto bg-[#1f1f1f] rounded-lg shadow-2xl w-[320px] overflow-hidden border border-white/10 absolute cursor-default flex flex-col"
+        className="pointer-events-auto bg-[#1f1f1f] rounded-xl shadow-2xl w-[310px] sm:w-[320px] overflow-hidden border border-white/10 absolute cursor-default flex flex-col transition-shadow"
       >
         {/* Windows 11 Style Title Bar */}
         <div 
           onMouseDown={handleMouseDown}
-          className="bg-[#1f1f1f] text-white px-3 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
+          onTouchStart={handleTouchStart}
+          className="bg-[#1f1f1f] text-white px-3 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing select-none touch-none border-b border-white/5"
         >
           <div className="flex items-center gap-2 pointer-events-none">
             <div className="w-4 h-4 bg-blue-500 rounded-sm flex items-center justify-center">
@@ -176,7 +222,7 @@ const CalculatorModal: React.FC<CalculatorModalProps> = ({ isOpen, onClose }) =>
             </div>
             <span className="text-[11px] font-medium text-gray-300">Есептегіш</span>
           </div>
-          <div className="flex items-center" onMouseDown={e => e.stopPropagation()}>
+          <div className="flex items-center" onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
              <button className="p-2 hover:bg-white/10 transition-colors"><Minus className="w-3 h-3 text-gray-400" /></button>
              <button className="p-2 hover:bg-white/10 transition-colors"><Square className="w-2.5 h-2.5 text-gray-400" /></button>
              <button onClick={onClose} className="p-2 hover:bg-[#e81123] transition-colors group">
