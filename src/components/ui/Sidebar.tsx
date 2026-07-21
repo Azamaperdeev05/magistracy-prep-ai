@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { User, FileText, Map, Calculator, Table, FlaskConical, LogOut } from 'lucide-react';
-import ConfirmModal from './modals/ConfirmModal';
-
+import ConfirmModal from '../../features/test-engine/modals/ConfirmModal';
+ 
 interface SidebarProps {
   onFinish: () => void;
 }
-
+ 
 const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState<{
@@ -14,7 +14,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
     isAlert?: boolean;
     title?: string;
   } | null>(null);
-
+ 
   const showAlert = (message: string) => {
     setModalConfig({
       message,
@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
     });
     setModalOpen(true);
   };
-
+ 
   const showConfirm = (message: string, onConfirm: () => void) => {
     setModalConfig({
       message,
@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
     });
     setModalOpen(true);
   };
-
+ 
   const tools = [
     { icon: <User className="w-6 h-6" />, label: "Жасұлан" },
     { icon: <FileText className="w-6 h-6" />, label: "Бөлімдер" },
@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
     { icon: <Table className="w-6 h-6" />, label: "Менделеев кестесі" },
     { icon: <FlaskConical className="w-6 h-6" />, label: "Ерігіштік кестесі" },
   ];
-
+ 
   return (
     <div className="w-full h-full flex flex-col items-center py-4 text-white text-center">
         {/* User / Tools */}
@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
                 </div>
             ))}
         </div>
-
+ 
         <div className="mt-auto mb-4 w-full">
              <button 
                 onClick={() => {
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
                 <span className="text-[10px] font-bold text-red-500">Аяқтау</span>
              </button>
         </div>
-
+ 
         {modalConfig && (
           <ConfirmModal
             isOpen={modalOpen}
@@ -85,5 +85,5 @@ const Sidebar: React.FC<SidebarProps> = ({ onFinish }) => {
     </div>
   );
 };
-
+ 
 export default Sidebar;

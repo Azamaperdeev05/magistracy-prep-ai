@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, AlertTriangle, Send, Loader2 } from 'lucide-react';
-import { sendQuestionReport } from '../../../../services/authService';
+import { sendQuestionReport } from '../../../services/authService';
 
 interface ReportModalProps {
   isOpen: boolean;

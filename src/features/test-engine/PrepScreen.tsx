@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { 
   ArrowLeft, GraduationCap, Globe, Brain, Database, Zap, BookOpen, 
   Award, Info, FileCheck, ExternalLink, Layers, ShieldCheck, Sparkles
 } from 'lucide-react';
-import { getSavedUser, UserProfile } from '../../../services/authService';
+import { getSavedUser, UserProfile } from '../../services/authService';
 import { SPECIALTIES } from '../../../data/specialties';
-import { getSpecialtyIconByCode } from '../../../utils/specialtyIcons';
-import SEO from '../../../components/SEO';
+import { getSpecialtyIconByCode } from '../../utils/specialtyIcons';
+import SEO from '../../components/ui/SEO';
 
 interface PrepScreenProps {
   onBack: () => void;

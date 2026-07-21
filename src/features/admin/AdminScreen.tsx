@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { 
   Shield, Users, History, AlertTriangle, Award, Search, 
   Loader2, CheckCircle2, Calendar, ChevronRight, ArrowLeft, 
   Crown, MessageSquare, Trash2, RefreshCw, Terminal, Info, Check, X, Star
 } from 'lucide-react';
-import { isFirebaseConfigured, getDb } from '../../../firebase';
+import { isFirebaseConfigured, getDb } from '../../firebase';
 import { findQuestionsByIds } from '../../../data/questions';
-import { Question } from '../../../types';
-import { scoreQuestion } from '../../../services/scoringService';
+import { Question } from '../../types';
+import { scoreQuestion } from '../../services/scoringService';
 import CodeAwareText from '../test-engine/CodeAwareText';
 
 interface AdminScreenProps {

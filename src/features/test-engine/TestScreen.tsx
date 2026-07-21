@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Question, SubjectId, UserAnswers, QuestionType } from '../../../types';
-import { SUBJECTS } from '../../../constants';
+import { Question, SubjectId, UserAnswers, QuestionType } from '../../types';
+import { SUBJECTS } from '../../constants';
 import { Menu, User, FileText, Map, Calculator, Table, FlaskConical, LogOut, BrainCircuit, X, Send, AlertTriangle, Clock, Wrench } from 'lucide-react';
-import { askAiQuestion, ChatMessage, getAiExplanation, AiQuestionContext } from '../../../services/apiService';
+import { askAiQuestion, ChatMessage, getAiExplanation, AiQuestionContext } from '../../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';
 import { getTheoryForQuestion } from '../../../data/textbooks';
-import { checkAndIncrementAiLimit, UserProfile } from '../../../services/authService';
+import { checkAndIncrementAiLimit, UserProfile } from '../../services/authService';
 
 // Import Modals
 import SectionsModal from './modals/SectionsModal';

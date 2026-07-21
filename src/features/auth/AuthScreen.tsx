@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { AlertCircle } from 'lucide-react';
-import { loginWithGoogle } from '../../../services/authService';
+import { loginWithGoogle } from '../../services/authService';
 
 const isFirebaseConfigured = !!(import.meta.env.VITE_FIREBASE_API_KEY);
 

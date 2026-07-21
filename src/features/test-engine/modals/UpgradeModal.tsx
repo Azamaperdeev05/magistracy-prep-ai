@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from '../../../../components/Motion';
+import { motion, AnimatePresence } from '../../../components/ui/Motion';
 import { X, Crown, Check, ArrowRight, Phone } from 'lucide-react';
 
 interface UpgradeModalProps {

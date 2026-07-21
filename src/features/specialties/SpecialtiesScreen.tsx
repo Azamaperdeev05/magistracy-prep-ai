@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { 
   Search, ArrowLeft, Check, Info, Sparkles, GraduationCap,
   Zap, ShieldCheck, Brain, TrendingUp, Scale, FlaskConical,
@@ -16,11 +16,11 @@ import {
   Pill, PenTool, HardHat, Boxes, Network, Waves, CheckSquare, Sprout,
   Fish, Stethoscope, HeartPulse, Syringe, Coffee, Car, Package, X, ExternalLink
 } from 'lucide-react';
-import { getSpecialtyIconByCode } from '../../../utils/specialtyIcons';
+import { getSpecialtyIconByCode } from '../../utils/specialtyIcons';
 import { SPECIALTIES, Specialty } from '../../../data/specialties';
-import { getSavedUser, updateUserSpecialty, UserProfile } from '../../../services/authService';
+import { getSavedUser, updateUserSpecialty, UserProfile } from '../../services/authService';
 import ConfirmModal from '../test-engine/modals/ConfirmModal';
-import SEO from '../../../components/SEO';
+import SEO from '../../components/ui/SEO';
 
 interface SpecialtiesScreenProps {
   onBack: () => void;

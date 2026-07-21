@@ -3,31 +3,31 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'r
 import { HelmetProvider } from 'react-helmet-async';
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
-import { SPECIALTIES } from './data/specialties';
+import { SPECIALTIES } from '../data/specialties';
 import { generateQuestionsForSubject } from './services/apiService';
 import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
-import ConfirmModal from './components/modals/ConfirmModal';
+import ConfirmModal from './features/test-engine/modals/ConfirmModal';
 import { useYandexMetrica } from './hooks/useYandexMetrica';
 
 // Feature-Sliced Architecture: Lazy loaded domain screens for code splitting
-const AuthScreen = lazy(() => import('./src/features/auth/AuthScreen'));
-const LandingScreen = lazy(() => import('./src/features/landing/LandingScreen'));
-const WelcomeScreen = lazy(() => import('./src/features/auth/WelcomeScreen'));
-const TestScreen = lazy(() => import('./src/features/test-engine/TestScreen'));
-const ResultScreen = lazy(() => import('./src/features/analytics/ResultScreen'));
-const SyllabusScreen = lazy(() => import('./src/features/specialties/SyllabusScreen'));
-const HistoryScreen = lazy(() => import('./src/features/analytics/HistoryScreen'));
-const PrepScreen = lazy(() => import('./src/features/test-engine/PrepScreen'));
-const SpecialtiesScreen = lazy(() => import('./src/features/specialties/SpecialtiesScreen'));
-const SpecialtyDetailScreen = lazy(() => import('./src/features/specialties/SpecialtyDetailScreen'));
-const TestSetupScreen = lazy(() => import('./src/features/test-engine/TestSetupScreen'));
-const ConsentGateScreen = lazy(() => import('./src/features/auth/ConsentGateScreen'));
-const AdminScreen = lazy(() => import('./src/features/admin/AdminScreen'));
-const BlogScreen = lazy(() => import('./components/BlogScreen'));
-const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
-const UpgradeModal = lazy(() => import('./components/modals/UpgradeModal'));
-const InstallBanner = lazy(() => import('./components/InstallBanner'));
+const AuthScreen = lazy(() => import('./features/auth/AuthScreen'));
+const LandingScreen = lazy(() => import('./features/landing/LandingScreen'));
+const WelcomeScreen = lazy(() => import('./features/auth/WelcomeScreen'));
+const TestScreen = lazy(() => import('./features/test-engine/TestScreen'));
+const ResultScreen = lazy(() => import('./features/analytics/ResultScreen'));
+const SyllabusScreen = lazy(() => import('./features/specialties/SyllabusScreen'));
+const HistoryScreen = lazy(() => import('./features/analytics/HistoryScreen'));
+const PrepScreen = lazy(() => import('./features/test-engine/PrepScreen'));
+const SpecialtiesScreen = lazy(() => import('./features/specialties/SpecialtiesScreen'));
+const SpecialtyDetailScreen = lazy(() => import('./features/specialties/SpecialtyDetailScreen'));
+const TestSetupScreen = lazy(() => import('./features/test-engine/TestSetupScreen'));
+const ConsentGateScreen = lazy(() => import('./features/auth/ConsentGateScreen'));
+const AdminScreen = lazy(() => import('./features/admin/AdminScreen'));
+const BlogScreen = lazy(() => import('./features/blog/BlogScreen'));
+const BlogPostScreen = lazy(() => import('./features/blog/BlogPostScreen'));
+const UpgradeModal = lazy(() => import('./features/test-engine/modals/UpgradeModal'));
+const InstallBanner = lazy(() => import('./components/ui/InstallBanner'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#FAFCFF] flex items-center justify-center">
@@ -498,6 +498,7 @@ const RootApp: React.FC = () => {
               questions={questions}
               answers={userAnswers}
               onRestart={handleRestart}
+              onRestartTest={handleRestart}
               onPracticeWrong={handlePracticeWrong}
               userName={user.full_name}
             />

@@ -1,7 +1,7 @@
 import { SubjectConfig, SubjectId } from './types';
-
+ 
 export const EXAM_DURATION_MINUTES = 235;
-
+ 
 export const SUBJECTS: Record<SubjectId, SubjectConfig> = {
   [SubjectId.ENGLISH]: {
     id: SubjectId.ENGLISH,
@@ -169,7 +169,7 @@ export const SUBJECTS: Record<SubjectId, SubjectConfig> = {
       "Идентификация, Аутентификация, Авторизация",
       "Желінің қауіпсіздігі",
       "Зиянды бағдарлама",
-      "Ақпараттық қауіпсіздік технологиялары",
+      "Ақпараттық қауіпсіздік technologyлары",
       "Зиянкестердің түрлері"
     ]
   }

@@ -5,7 +5,7 @@ import {
   CheckCircle2, Layers, Globe, ChevronDown, ChevronUp
 } from 'lucide-react';
 import MarkdownRenderer from '../test-engine/MarkdownRenderer';
-import { getSavedUser, getProfile, UserProfile } from '../../../services/authService';
+import { getSavedUser, getProfile, UserProfile } from '../../services/authService';
 
 interface SyllabusScreenProps {
   onBack: () => void;

@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone } from 'lucide-react';
-import { usePwaInstall } from '../hooks/usePwaInstall';
-
+import { usePwaInstall } from '../../hooks/usePwaInstall';
+ 
 const DISMISS_KEY = 'magiscore_pwa_install_dismissed';
-
+ 
 const InstallBanner: React.FC = () => {
   const { canInstall, isInstalled, promptInstall, isIOS } = usePwaInstall();
   const [dismissed, setDismissed] = useState(false);
-
+ 
   useEffect(() => {
     const wasDismissed = localStorage.getItem(DISMISS_KEY);
     if (wasDismissed) setDismissed(true);
   }, []);
-
+ 
   const handleDismiss = () => {
     setDismissed(true);
     localStorage.setItem(DISMISS_KEY, Date.now().toString());
   };
-
+ 
   const handleInstall = async () => {
     await promptInstall();
   };
-
+ 
   if (isInstalled || dismissed || (!canInstall && !isIOS)) return null;
-
+ 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 pointer-events-none">
       <div className="max-w-lg mx-auto pointer-events-auto">
@@ -65,5 +65,5 @@ const InstallBanner: React.FC = () => {
     </div>
   );
 };
-
+ 
 export default InstallBanner;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from './Motion';
+import { motion } from '../../components/ui/Motion';
 import { 
   ArrowLeft, Calendar, BookOpen, Lightbulb, Clock,
   GraduationCap, Target, TrendingUp, ChevronRight
 } from 'lucide-react';
-import SEO from './SEO';
+import SEO from '../../components/ui/SEO';
 
 interface BlogScreenProps {
   onBack?: () => void;
@@ -93,7 +93,7 @@ const BlogScreen: React.FC<BlogScreenProps> = ({ onBack }) => {
           <h1 className="text-xl font-bold">Блог</h1>
         </div>
       </header>
-
+ 
       {/* Content */}
       <main className="max-w-4xl mx-auto px-4 md:px-8 py-8">
         <div className="mb-8">
@@ -102,7 +102,7 @@ const BlogScreen: React.FC<BlogScreenProps> = ({ onBack }) => {
             Магистратураға түсуге дайындық бойынша пайдалы мақалалар мен стратегиялар
           </p>
         </div>
-
+ 
         <div className="grid gap-6">
           {blogPosts.map((post, index) => (
             <motion.article

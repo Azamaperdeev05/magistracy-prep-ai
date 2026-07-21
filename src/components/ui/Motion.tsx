@@ -1,5 +1,5 @@
 import React, { useEffect, useState, type ReactNode, type CSSProperties, type MouseEvent } from 'react';
-
+ 
 interface MotionDivProps {
   children?: ReactNode;
   className?: string;
@@ -10,7 +10,7 @@ interface MotionDivProps {
   exit?: { opacity?: number; y?: number };
   onClick?: (e: MouseEvent<HTMLDivElement>) => void;
 }
-
+ 
 const MotionDiv: React.FC<MotionDivProps> = ({
   children,
   className = '',
@@ -21,19 +21,19 @@ const MotionDiv: React.FC<MotionDivProps> = ({
   onClick,
 }) => {
   const [mounted, setMounted] = useState(false);
-
+ 
   useEffect(() => {
     const delay = (transition?.delay || 0) * 1000;
     const timer = setTimeout(() => setMounted(true), delay + 16);
     return () => clearTimeout(timer);
   }, [transition?.delay]);
-
+ 
   const duration = transition?.duration ?? 0.4;
   const delay = transition?.delay ?? 0;
-
+ 
   const initialStyles: CSSProperties = {};
   const animateStyles: CSSProperties = {};
-
+ 
   if (initial) {
     if (initial.opacity !== undefined) initialStyles.opacity = initial.opacity;
     const transforms: string[] = [];
@@ -42,7 +42,7 @@ const MotionDiv: React.FC<MotionDivProps> = ({
     if (initial.scale !== undefined) transforms.push(`scale(${initial.scale})`);
     if (transforms.length) initialStyles.transform = transforms.join(' ');
   }
-
+ 
   if (animate) {
     if (animate.opacity !== undefined) animateStyles.opacity = animate.opacity;
     const transforms: string[] = [];
@@ -51,9 +51,9 @@ const MotionDiv: React.FC<MotionDivProps> = ({
     if (animate.scale !== undefined) transforms.push(`scale(${animate.scale})`);
     if (transforms.length) animateStyles.transform = transforms.join(' ');
   }
-
+ 
   const currentStyles = mounted ? animateStyles : initialStyles;
-
+ 
   return (
     <div
       className={className}
@@ -68,6 +68,6 @@ const MotionDiv: React.FC<MotionDivProps> = ({
     </div>
   );
 };
-
+ 
 export const motion = { div: MotionDiv };
 export const AnimatePresence: React.FC<{ children: ReactNode; mode?: string }> = ({ children }) => <>{children}</>;

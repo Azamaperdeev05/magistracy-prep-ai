@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Question, SubjectId, UserAnswers } from '../../../types';
-import { SUBJECTS } from '../../../constants';
+import { Question, SubjectId, UserAnswers } from '../../types';
+import { SUBJECTS } from '../../constants';
 import { ChevronDown, ChevronUp, CheckCircle, XCircle, Trophy, Home, RotateCcw, BookOpen, TrendingUp, Target, BarChart3, BrainCircuit, AlertTriangle, Star, MessageSquare } from 'lucide-react';
-import { saveTestResult, checkAndIncrementAiLimit, getSavedUser, getHistoryItemById } from '../../../services/authService';
-import { calculateTestResult, scoreQuestion } from '../../../services/scoringService';
-import { getAiExplanation, AiQuestionContext } from '../../../services/apiService';
+import { saveTestResult, checkAndIncrementAiLimit, getSavedUser, getHistoryItemById } from '../../services/authService';
+import { calculateTestResult, scoreQuestion } from '../../services/scoringService';
+import { getAiExplanation, AiQuestionContext } from '../../services/apiService';
 import MarkdownRenderer from '../test-engine/MarkdownRenderer';
 import CodeAwareText from '../test-engine/CodeAwareText';
 import ReportModal from '../test-engine/modals/ReportModal';
@@ -309,7 +309,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     setIsSubmittingFeedback(true);
     setFeedbackError('');
     try {
-      const { getDb } = await import('../../../firebase');
+      const { getDb } = await import('../../firebase');
       const { collection, addDoc } = await import('firebase/firestore');
       const db = await getDb();
       if (!db) {

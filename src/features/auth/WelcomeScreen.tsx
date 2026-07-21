@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { 
   BookOpen, Brain, Clock, Database, Globe, ArrowRight, 
   Award, Zap, Target, GraduationCap, TrendingUp, Shield, 
@@ -8,9 +8,9 @@ import {
   Sun, Moon, Crown, Settings, BarChart2, Layers, Search,
   MapPin, Building2, Loader2, FileText
 } from 'lucide-react';
-import { SUBJECTS } from '../../../constants';
-import { SubjectId } from '../../../types';
-import SEO from '../../../components/SEO';
+import { SUBJECTS } from '../../constants';
+import { SubjectId } from '../../types';
+import SEO from '../../components/ui/SEO';
 
 // ─── Universities Section ─────────────────────────────────────────────────────
 
@@ -38,7 +38,7 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
   const [visibleCount, setVisibleCount] = useState(9);
 
   useEffect(() => {
-    import('../../../univision_universities.json')
+    import('../../../data/univision_universities.json')
       .then((mod: any) => {
         const data = mod.default || mod;
         setUniversities(Array.isArray(data.universities) ? data.universities : []);
@@ -206,7 +206,7 @@ const UniversityPreviewList: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    import('../../../univision_universities.json')
+    import('../../../data/univision_universities.json')
       .then((mod: any) => {
         const data = mod.default || mod;
         setUnis(Array.isArray(data.universities) ? data.universities.slice(0, 8) : []);

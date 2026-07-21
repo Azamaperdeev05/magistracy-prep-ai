@@ -3,7 +3,7 @@ let masterProgramsData: any = null;
 
 const loadMasterProgramsData = async () => {
   if (!masterProgramsData) {
-    const module = await import('../univision_master_programs.json');
+    const module = await import('../../data/univision_master_programs.json');
     masterProgramsData = module.default || module;
   }
   return masterProgramsData;

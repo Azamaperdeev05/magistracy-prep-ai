@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SPECIALTIES, Specialty } from '../../../data/specialties';
-import { getSavedUser, getProfile, getHistory, updateUserProfileFields, UserProfile, HistoryItem } from '../../../services/authService';
+import { getSavedUser, getProfile, getHistory, updateUserProfileFields, UserProfile, HistoryItem } from '../../services/authService';
 import { ArrowLeft, Info, ChevronDown, Loader2 } from 'lucide-react';
 import ConfirmModal from './modals/ConfirmModal';
-import UpgradeModal from '../../../components/modals/UpgradeModal';
+import UpgradeModal from './modals/UpgradeModal';
 
 interface TestSetupScreenProps {
   onStart: (name: string) => Promise<void>;

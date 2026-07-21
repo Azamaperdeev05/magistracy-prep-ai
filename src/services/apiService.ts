@@ -1,6 +1,6 @@
 import { Question, SubjectId } from "../types";
-import { loadQuestionsBySubject } from "../data/questions";
-import { SYLLABUS_CONTENT } from "../data/syllabus";
+import { loadQuestionsBySubject } from "../../data/questions";
+import { SYLLABUS_CONTENT } from "../../data/syllabus";
 
 const shuffle = <T,>(items: T[] = []): T[] => {
   if (!Array.isArray(items)) return [];

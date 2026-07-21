@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import {
   ArrowLeft, ExternalLink, Building2, Check, Info,
   GraduationCap, MapPin, Globe, Users, ChevronDown,
   BookOpen, Award, Layers, Search
 } from 'lucide-react';
 import { SPECIALTIES } from '../../../data/specialties';
-import { fetchLiveSpecialtyDetail, LiveProgramData } from '../../../services/univisionService';
-import SEO from '../../../components/SEO';
+import { fetchLiveSpecialtyDetail, LiveProgramData } from '../../services/univisionService';
+import SEO from '../../components/ui/SEO';
 
 // Lazy load large JSON data
-const loadMasterProgramsData = () => import('../../../univision_master_programs.json');
-const loadUniversitiesData = () => import('../../../univision_universities.json');
+const loadMasterProgramsData = () => import('../../../data/univision_master_programs.json');
+const loadUniversitiesData = () => import('../../../data/univision_universities.json');
 
 const SpecialtyDetailScreen: React.FC = () => {
   const { code } = useParams<{ code: string }>();

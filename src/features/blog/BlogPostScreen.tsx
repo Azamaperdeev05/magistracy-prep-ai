@@ -1,11 +1,11 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from './Motion';
+import { motion } from '../../components/ui/Motion';
 import { 
   ArrowLeft, Calendar, BookOpen, Lightbulb, Clock,
   GraduationCap, Target, TrendingUp, Share2, BookmarkPlus
 } from 'lucide-react';
-import SEO from './SEO';
+import SEO from '../../components/ui/SEO';
 
 interface BlogPostScreenProps {
   onBack?: () => void;
@@ -149,7 +149,7 @@ const blogContent: Record<string, {
             { num: 2, title: 'Бағдарламаны толық зерттеңіз', desc: 'Әр пәннің тест форматын, сұрақ түрлерін және балл жүйесін біліңіз.' },
             { num: 3, title: 'Тест тапсыру тәжірибесі', desc: 'Нақты уақыт режимінде тест тапсырып, уақытты басқаруды үйреніңіз.' },
             { num: 4, title: 'Әлсіз тұстарды анықтаңыз', desc: 'Қате жауаптарды талдау арқылы әлсіз тұстарыңызды табыңыз.' },
-            { num: 5, title: 'Стрессіз тапсыру', desc: 'Тестке дейін жақсы демалыңыз. Тыныштық сақтаңыз.' },
+            { num: 5, title: 'Стрессіз тапсыру', desc: 'Тестке досыңызбен немесе топпен қатысыңыз немесе жеке талдаңыз. Дұрыс ұйқы мен демалыс аса маңызды.' },
             { num: 6, title: 'Уақытты бөліңіз', desc: 'Әр сұраққа орта есеппен 3-4 минут бөліңіз. Бір сұрақта тым көп уақыт жұмсамаңыз.' },
             { num: 7, title: 'Барлық сұрақтарды қараңыз', desc: 'Әуелі барлық сұрақтарды қарап шығыңыз, жеңістерден бастаңыз.' },
             { num: 8, title: 'Дұрыс жауапты таңдаңыз', desc: 'Бірнеше дұрыс жауап болса, барлығын таңдаңыз (MULTIPLE).' },
@@ -313,7 +313,7 @@ const blogContent: Record<string, {
           <div className="bg-[#0f1219] border border-white/5 rounded-xl p-4">
             <h4 className="font-medium mb-2 text-blue-400">1. Сыни ойлау (Critical Thinking)</h4>
             <p className="text-sm text-slate-400">
-              Логикалыққорытындылар жасау, дәлелдерді бағалау, 
+              Логикалық қорытындылар жасау, дәлелдерді бағалау, 
               қарама-қайшылықтарды табу жаттығуларын орындаңыз.
             </p>
           </div>

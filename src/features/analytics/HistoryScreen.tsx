@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { 
   History, 
   ChevronRight, 
@@ -35,11 +35,11 @@ import {
 } from 'lucide-react';
 import AudioPlayer from '../test-engine/AudioPlayer';
 import ChartRenderer from './ChartRenderer';
-import { getHistory, getHistoryItemById, HistoryItem, loginWithGoogle } from '../../../services/authService';
+import { getHistory, getHistoryItemById, HistoryItem, loginWithGoogle } from '../../services/authService';
 import { findQuestionsByIds } from '../../../data/questions';
-import { Question } from '../../../types';
-import { scoreQuestion } from '../../../services/scoringService';
-import { getAiExplanation } from '../../../services/apiService';
+import { Question } from '../../types';
+import { scoreQuestion } from '../../services/scoringService';
+import { getAiExplanation } from '../../services/apiService';
 import MarkdownRenderer from '../test-engine/MarkdownRenderer';
 import CodeAwareText from '../test-engine/CodeAwareText';
 import ReportModal from '../test-engine/modals/ReportModal';

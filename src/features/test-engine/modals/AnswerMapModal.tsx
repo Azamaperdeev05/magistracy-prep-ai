@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Map } from 'lucide-react';
-import { SubjectId, Question, UserAnswers } from '../../../../types';
-import { SUBJECTS } from '../../../../constants';
+import { SubjectId, Question, UserAnswers } from '../../../types';
+import { SUBJECTS } from '../../../constants';
 
 interface AnswerMapModalProps {
   isOpen: boolean;

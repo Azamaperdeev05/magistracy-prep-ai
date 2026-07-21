@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from '../../../components/Motion';
+import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { Shield, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
-import { UserConsent } from '../../../services/authService';
+import { UserConsent } from '../../services/authService';
 
 interface ConsentGateScreenProps {
   onAccept: (consent: UserConsent) => void;
