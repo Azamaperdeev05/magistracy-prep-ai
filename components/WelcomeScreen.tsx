@@ -141,7 +141,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               <span className={`text-base font-extrabold tracking-tight uppercase whitespace-nowrap ${textTitle}`}>
                 Magis<span className="text-blue-500">Core</span>
               </span>
-              <span className="text-[9px] font-bold text-slate-500 tracking-widest uppercase -mt-1">
+              <span className="text-[9px] font-bold text-slate-400 tracking-widest uppercase -mt-1">
                 Student Hub
               </span>
             </div>
@@ -342,7 +342,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 </div>
                 <div>
                   <div className={`text-[10px] font-extrabold uppercase tracking-wider ${
-                    isDarkMode ? 'text-slate-500' : 'text-blue-200'
+                    isDarkMode ? 'text-slate-400' : 'text-blue-200'
                   }`}>Таңдалған Мамандық:</div>
                   <div className={`text-xs sm:text-sm font-black truncate max-w-[280px] sm:max-w-xs ${
                     isDarkMode ? 'text-slate-200' : 'text-white'
@@ -402,22 +402,22 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                   }`}>
                     <BarChart2 className="w-6 h-6" />
                   </div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">
-                    Экспресс Статистика
+                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+                     Экспресс Статистика
                   </span>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-xs border-b border-dashed border-slate-800/20 pb-2">
-                    <span className="text-slate-500 font-bold">Тест Сұрақтары:</span>
+                    <span className="text-slate-400 font-bold">Тест Сұрақтары:</span>
                     <span className={`font-black ${textTitle}`}>150 Сұрақ</span>
                   </div>
                   <div className="flex justify-between items-center text-xs border-b border-dashed border-slate-800/20 pb-2">
-                    <span className="text-slate-500 font-bold">Ресми Емтихан Уақыты:</span>
+                    <span className="text-slate-400 font-bold">Ресми Емтихан Уақыты:</span>
                     <span className={`font-black ${textTitle}`}>3 Сағ 50 Мин</span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-500 font-bold">Шекті Балл (Профиль):</span>
+                    <span className="text-slate-400 font-bold">Шекті Балл (Профиль):</span>
                     <span className="font-black text-emerald-500">75+ Ұпай</span>
                   </div>
                 </div>
@@ -702,7 +702,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 
       {/* Footer */}
       <footer className="py-12 border-t relative z-10" style={{ borderColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-400">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center text-white">
               <GraduationCap className="w-4 h-4" />
@@ -773,7 +773,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                     {emailCopied ? (
                       <span className="text-[10px] text-green-400 font-bold bg-green-500/10 px-1.5 py-0.5 rounded animate-pulse">Көшірілді!</span>
                     ) : (
-                      <span className="text-[9px] text-slate-500 border border-slate-800 px-1 py-0.2 rounded bg-slate-950/40">көшіру</span>
+                       <span className="text-[9px] text-slate-400 border border-slate-800 px-1 py-0.2 rounded bg-slate-950/40">көшіру</span>
                     )}
                   </div>
                 </div>

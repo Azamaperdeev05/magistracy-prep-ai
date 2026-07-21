@@ -58,7 +58,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             <AlertTriangle className="w-5 h-5" />
             <h2 className="text-base font-black text-white uppercase tracking-wider">Қате туралы хабарлау</h2>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-white p-1 rounded-lg hover:bg-slate-800/50 transition">
+          <button onClick={onClose} className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800/50 transition">
             <X className="w-5 h-5" />
           </button>
         </div>

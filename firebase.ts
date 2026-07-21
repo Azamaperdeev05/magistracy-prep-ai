@@ -16,7 +16,11 @@ let _auth: Auth | null = null;
 let _db: Firestore | null = null;
 let _googleProvider: any = null;
 
-async function getApp(): Promise<FirebaseApp> {
+export function isFirebaseConfigured(): boolean {
+  return !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+}
+
+export async function getApp(): Promise<FirebaseApp> {
   if (!_app) {
     const { initializeApp } = await import('firebase/app');
     _app = initializeApp(firebaseConfig);
@@ -50,21 +54,3 @@ export async function getGoogleProvider() {
   }
   return _googleProvider;
 }
-
-export const auth = new Proxy({} as Auth, {
-  get(_, prop) {
-    return (getAuthInstance() as any)[prop];
-  }
-});
-
-export const db = new Proxy({} as Firestore, {
-  get(_, prop) {
-    return (getDb() as any)[prop];
-  }
-});
-
-export const googleProvider = new Proxy({} as any, {
-  get(_, prop) {
-    return (getGoogleProvider() as any)[prop];
-  }
-});

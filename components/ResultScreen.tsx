@@ -305,14 +305,18 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
       setFeedbackError('Сессия аяқталды, жүйеге қайта кіріңіз');
       return;
     }
-    if (!db) {
-      setFeedbackError('Базамен байланыс орнату мүмкін емес');
-      return;
-    }
 
     setIsSubmittingFeedback(true);
     setFeedbackError('');
     try {
+      const { getDb } = await import('../firebase');
+      const { collection, addDoc } = await import('firebase/firestore');
+      const db = await getDb();
+      if (!db) {
+        setFeedbackError('Базамен байланыс орнату мүмкін емес');
+        setIsSubmittingFeedback(false);
+        return;
+      }
       await addDoc(collection(db, 'feedbacks'), {
         user_uid: currentUser.uid,
         user_name: currentUser.full_name,
@@ -412,7 +416,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
       <header className="py-12 text-center">
         <Trophy className="w-14 h-14 text-amber-500 mx-auto mb-3 animate-bounce" />
         <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-slate-800">Тест нәтижесі</h1>
-        <p className="text-slate-500 text-sm font-bold uppercase tracking-wider">{userName}, құттықтаймыз!</p>
+        <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">{userName}, құттықтаймыз!</p>
       </header>
 
       <div className="max-w-5xl mx-auto px-4">
@@ -637,7 +641,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
             <MessageSquare className="w-6 h-6 text-blue-500" />
             <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight">Кері байланыс</h3>
           </div>
-          <p className="text-sm text-slate-500 mb-6 font-medium leading-relaxed">
+          <p className="text-sm text-slate-400 mb-6 font-medium leading-relaxed">
             Тест сапасын арттыру және платформаны жақсарту үшін өз пікіріңізді қалдырыңыз. Сұрақтардың сапасы немесе сайт жұмысы туралы ойыңыз бізге өте маңызды!
           </p>
 

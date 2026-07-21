@@ -188,7 +188,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         {/* Back Button */}
         <button 
           onClick={() => navigate('/home')}
-          className="mb-6 flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors font-bold text-sm"
+          className="mb-6 flex items-center gap-2 text-slate-400 hover:text-blue-600 transition-colors font-bold text-sm"
         >
           <ArrowLeft className="w-4 h-4" /> Басты бетке қайту
         </button>
@@ -267,7 +267,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             >
               <option value="қазақша">Қазақша</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           </div>
 
           <div className="flex items-center">Шет тілі</div>
@@ -279,7 +279,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             >
               <option value="ағылшын">Ағылшын тілі</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           </div>
 
           <div className="flex items-center">ОДАТ (ТГО) тапсыру тілі</div>
@@ -291,7 +291,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             >
               <option value="қазақша">Қазақша</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           </div>
 
           <div className="flex items-center">Мамандықтар тобы (БББТ / ГОП)</div>
@@ -307,7 +307,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           </div>
         </div>
 

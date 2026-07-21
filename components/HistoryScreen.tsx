@@ -355,7 +355,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';
   const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
   const textSecondary = isDarkMode ? 'text-slate-400' : 'text-slate-600';
-  const textMuted = isDarkMode ? 'text-slate-500' : 'text-slate-400';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-400';
   const cardBg = isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-sm';
   const subCardBg = isDarkMode ? 'bg-slate-900/40 border-slate-800' : 'bg-slate-50 border-slate-200/80';
   const btnBg = isDarkMode ? 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs';

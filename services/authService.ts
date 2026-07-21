@@ -89,35 +89,24 @@ let _googleProvider: any = null;
 
 async function getFirebaseAuth() {
   if (!_auth) {
-    const { getAuth } = await import('firebase/auth');
-    const { initializeApp } = await import('firebase/app');
-    const app = initializeApp({
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-      appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
-    });
-    _auth = getAuth(app);
+    const { getAuthInstance } = await import('../firebase');
+    _auth = await getAuthInstance();
   }
   return _auth;
 }
 
 async function getFirebaseDb() {
   if (!_db) {
-    const { getFirestore } = await import('firebase/firestore');
-    const authInstance = await getFirebaseAuth();
-    _db = getFirestore(authInstance.app);
+    const { getDb } = await import('../firebase');
+    _db = await getDb();
   }
   return _db;
 }
 
 async function getFirebaseGoogleProvider() {
   if (!_googleProvider) {
-    const { GoogleAuthProvider } = await import('firebase/auth');
-    _googleProvider = new GoogleAuthProvider();
-    _googleProvider.setCustomParameters({ prompt: 'select_account' });
+    const { getGoogleProvider } = await import('../firebase');
+    _googleProvider = await getGoogleProvider();
   }
   return _googleProvider;
 }

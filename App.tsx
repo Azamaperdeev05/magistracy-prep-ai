@@ -8,6 +8,7 @@ import { generateQuestionsForSubject } from './services/apiService';
 import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
 import ConfirmModal from './components/modals/ConfirmModal';
+import { useYandexMetrica } from './hooks/useYandexMetrica';
 
 // Lazy loaded screens for code splitting
 const AuthScreen = lazy(() => import('./components/AuthScreen'));
@@ -29,11 +30,12 @@ const InstallBanner = lazy(() => import('./components/InstallBanner'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#07090d] flex items-center justify-center">
-    <div className="text-slate-500 font-bold animate-pulse">Жүктелуде...</div>
+    <div className="text-slate-400 font-bold animate-pulse">Жүктелуде...</div>
   </div>
 );
 
 const RootApp: React.FC = () => {
+  useYandexMetrica();
   const [user, setUser] = useState<UserProfile | null>(getSavedUser());
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [questions, setQuestions] = useState<Question[]>(() => {
@@ -106,8 +108,17 @@ const RootApp: React.FC = () => {
     let cancelled = false;
 
     const initAuth = async () => {
-      const { auth } = await import('./firebase');
+      const { getAuthInstance } = await import('./firebase');
       const { onAuthStateChanged, getRedirectResult } = await import('firebase/auth');
+
+      let auth;
+      try {
+        auth = await getAuthInstance();
+      } catch (e) {
+        console.error('[AUTH] Firebase init failed:', e);
+        setIsCheckingAuth(false);
+        return;
+      }
 
       if (cancelled || !auth) {
         console.error('[AUTH] Firebase auth is null');
@@ -134,8 +145,8 @@ const RootApp: React.FC = () => {
         setIsCheckingAuth(false);
       });
 
-      getRedirectResult(auth)
-        .then((result) => {
+      getRedirectResult(auth as any)
+        .then((result: any) => {
           if (result?.user) {
             console.log('[AUTH] Redirect consumed:', result.user.email);
           }
@@ -284,7 +295,7 @@ const RootApp: React.FC = () => {
   if (isCheckingAuth) {
     return (
       <div className="min-h-screen bg-[#07090d] flex items-center justify-center">
-        <div className="text-slate-500 font-bold animate-pulse">Жүктелуде...</div>
+        <div className="text-slate-400 font-bold animate-pulse">Жүктелуде...</div>
       </div>
     );
   }

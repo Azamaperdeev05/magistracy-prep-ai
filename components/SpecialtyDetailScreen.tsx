@@ -148,7 +148,7 @@ const SpecialtyDetailScreen: React.FC = () => {
   const cardBg = isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-sm';
   const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
   const textSecondary = isDarkMode ? 'text-slate-400' : 'text-slate-600';
-  const textMuted = isDarkMode ? 'text-slate-500' : 'text-slate-400';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-400';
   const inputBg = isDarkMode
     ? 'bg-slate-900/60 border-white/5 text-white placeholder-slate-600'
     : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 shadow-sm';
@@ -345,7 +345,7 @@ const SpecialtyDetailScreen: React.FC = () => {
                   </div>
                 ) : (
                   <div className={`p-8 rounded-2xl border text-center text-sm font-semibold ${
-                    isDarkMode ? 'bg-slate-900/20 border-slate-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-400'
+                    isDarkMode ? 'bg-slate-900/20 border-slate-800 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-400'
                   }`}>
                     Бұл бағыт бойынша мемлекеттік грант деректері табылмады.
                   </div>
@@ -559,7 +559,7 @@ const SpecialtyDetailScreen: React.FC = () => {
                 </div>
               ) : (
                 <div className={`p-16 rounded-3xl border text-center text-sm font-semibold ${
-                  isDarkMode ? 'bg-[#0f1219] border-slate-800 text-slate-500' : 'bg-white border-slate-200 text-slate-400 shadow-sm'
+                  isDarkMode ? 'bg-[#0f1219] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-400 shadow-sm'
                 }`}>
                   {uniSearch ? 'Іздеу нәтижесі табылмады.' : 'ЖОО тізімі анықталмады.'}
                 </div>
@@ -645,7 +645,7 @@ const SpecialtyDetailScreen: React.FC = () => {
                 </div>
               ) : (
                 <div className={`p-16 rounded-3xl border text-center text-sm font-semibold ${
-                  isDarkMode ? 'bg-[#0f1219] border-slate-800 text-slate-500' : 'bg-white border-slate-200 text-slate-400 shadow-sm'
+                  isDarkMode ? 'bg-[#0f1219] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-400 shadow-sm'
                 }`}>
                   {progSearch ? 'Іздеу нәтижесі табылмады.' : 'Бағдарламалар тізімі анықталмады.'}
                 </div>

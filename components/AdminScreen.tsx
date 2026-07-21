@@ -5,8 +5,7 @@ import {
   Loader2, CheckCircle2, Calendar, ChevronRight, ArrowLeft, 
   Crown, MessageSquare, Trash2, RefreshCw, Terminal, Info, Check, X, Star
 } from 'lucide-react';
-import { db } from '../firebase';
-import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, addDoc } from 'firebase/firestore';
+import { isFirebaseConfigured, getDb } from '../firebase';
 import { findQuestionsByIds } from '../data/questions';
 import { Question } from '../types';
 import { scoreQuestion } from '../services/scoringService';
@@ -99,14 +98,16 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      if (!db) {
+      const database = await getDb();
+      const { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy } = await import('firebase/firestore');
+      if (!database) {
         console.error("Firestore database instance not found");
         setIsLoading(false);
         return;
       }
 
       // Fetch all users
-      const usersSnap = await getDocs(collection(db, "users"));
+      const usersSnap = await getDocs(collection(database, "users"));
       const fetchedUsers: FirestoreUser[] = [];
       usersSnap.forEach(docSnap => {
         const data = docSnap.data();
@@ -122,7 +123,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
       });
 
       // Fetch all history logs
-      const historySnap = await getDocs(collection(db, "history"));
+      const historySnap = await getDocs(collection(database, "history"));
       const fetchedHistory: AdminHistoryItem[] = [];
       historySnap.forEach(docSnap => {
         const data = docSnap.data();
@@ -143,7 +144,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
       fetchedHistory.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       // Fetch all reports
-      const reportsSnap = await getDocs(collection(db, "reports"));
+      const reportsSnap = await getDocs(collection(database, "reports"));
       const fetchedReports: UserReport[] = [];
       reportsSnap.forEach(docSnap => {
         const data = docSnap.data();
@@ -161,7 +162,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
       fetchedReports.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       // Fetch all client errors
-      const logsSnap = await getDocs(collection(db, "client_errors"));
+      const logsSnap = await getDocs(collection(database, "client_errors"));
       const fetchedLogs: ClientErrorLog[] = [];
       logsSnap.forEach(docSnap => {
         const data = docSnap.data();
@@ -179,7 +180,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
       fetchedLogs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       // Fetch all feedbacks
-      const feedbacksSnap = await getDocs(collection(db, "feedbacks"));
+      const feedbacksSnap = await getDocs(collection(database, "feedbacks"));
       const fetchedFeedbacks: UserFeedback[] = [];
       feedbacksSnap.forEach(docSnap => {
         const data = docSnap.data();
@@ -230,11 +231,13 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
 
   // Toggle user premium
   const handleTogglePremium = async (targetUser: FirestoreUser) => {
-    if (!db) return;
+    const database = await getDb();
+    const { doc, updateDoc } = await import('firebase/firestore');
+    if (!database) return;
     const newStatus = !targetUser.is_premium;
     setActionLoading(targetUser.uid);
     try {
-      const userRef = doc(db, "users", targetUser.uid);
+      const userRef = doc(database, "users", targetUser.uid);
       await updateDoc(userRef, { is_premium: newStatus });
       
       // Update local state
@@ -253,13 +256,15 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
 
   // Delete history item
   const handleDeleteHistory = async (itemId: number) => {
-    if (!db) return;
+    const database = await getDb();
+    const { collection, getDocs, doc, deleteDoc } = await import('firebase/firestore');
+    if (!database) return;
     if (!window.confirm("Бұл тест нәтижесін өшіруді растайсыз ба?")) return;
     
     setActionLoading(`history-${itemId}`);
     try {
       // Find document in firestore
-      const qSnap = await getDocs(collection(db, "history"));
+      const qSnap = await getDocs(collection(database, "history"));
       let docIdToDelete = '';
       qSnap.forEach(d => {
         if (d.data().id === itemId) {
@@ -268,7 +273,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
       });
 
       if (docIdToDelete) {
-        await deleteDoc(doc(db, "history", docIdToDelete));
+        await deleteDoc(doc(database, "history", docIdToDelete));
         setHistoryItems(prev => prev.filter(item => item.id !== itemId));
         setStats(prev => ({ ...prev, totalTests: Math.max(0, prev.totalTests - 1) }));
       }
@@ -281,12 +286,14 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
 
   // Delete report
   const handleDeleteReport = async (reportId: string) => {
-    if (!db) return;
+    const database = await getDb();
+    const { doc, deleteDoc } = await import('firebase/firestore');
+    if (!database) return;
     if (!window.confirm("Бұл есепті өшіруді растайсыз ба?")) return;
 
     setActionLoading(`report-${reportId}`);
     try {
-      await deleteDoc(doc(db, "reports", reportId));
+      await deleteDoc(doc(database, "reports", reportId));
       setReports(prev => prev.filter(r => r.id !== reportId));
       setStats(prev => ({ ...prev, activeReports: Math.max(0, prev.activeReports - 1) }));
     } catch (err) {
@@ -298,12 +305,14 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
 
   // Delete feedback
   const handleDeleteFeedback = async (feedbackId: string) => {
-    if (!db) return;
+    const database = await getDb();
+    const { doc, deleteDoc } = await import('firebase/firestore');
+    if (!database) return;
     if (!window.confirm("Бұл кері байланысты өшіруді растайсыз ба?")) return;
 
     setActionLoading(`feedback-${feedbackId}`);
     try {
-      await deleteDoc(doc(db, "feedbacks", feedbackId));
+      await deleteDoc(doc(database, "feedbacks", feedbackId));
       setFeedbacks(prev => prev.filter(f => f.id !== feedbackId));
       setStats(prev => ({ ...prev, totalFeedbacks: Math.max(0, prev.totalFeedbacks - 1) }));
     } catch (err) {
@@ -361,7 +370,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
   const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';
   const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
   const textSecondary = isDarkMode ? 'text-slate-400' : 'text-slate-600';
-  const textMuted = isDarkMode ? 'text-slate-500' : 'text-slate-400';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-400';
   const cardBg = isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-sm';
   const subCardBg = isDarkMode ? 'bg-slate-900/40 border-slate-800' : 'bg-slate-50 border-slate-200/80';
   const btnBg = isDarkMode ? 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs';
@@ -485,7 +494,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-32 gap-4">
               <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-              <p className="text-slate-500 font-bold uppercase tracking-wider text-xs">Деректер жүктелуде...</p>
+              <p className="text-slate-400 font-bold uppercase tracking-wider text-xs">Деректер жүктелуде...</p>
             </div>
           ) : (
             <AnimatePresence mode="wait">
@@ -501,7 +510,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-slate-800 bg-slate-900/30 text-[10px] font-extrabold uppercase tracking-widest text-slate-500">
+                        <tr className="border-b border-slate-800 bg-slate-900/30 text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
                           <th className="py-4 px-6">Қолданушы</th>
                           <th className="py-4 px-6">Мамандық</th>
                           <th className="py-4 px-6">Тіркелген күні</th>
@@ -512,14 +521,14 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                       <tbody className="divide-y divide-slate-800 text-xs font-semibold">
                         {filteredUsers.length === 0 ? (
                           <tr>
-                            <td colSpan={5} className="py-12 text-center text-slate-500 font-medium">Ешқандай қолданушы табылмады.</td>
+                            <td colSpan={5} className="py-12 text-center text-slate-400 font-medium">Ешқандай қолданушы табылмады.</td>
                           </tr>
                         ) : (
                           filteredUsers.map(u => (
                             <tr key={u.uid} className="hover:bg-slate-900/10 transition-colors">
                               <td className="py-4 px-6">
                                 <div className="font-bold text-white text-sm">{u.full_name}</div>
-                                <div className="text-slate-500 font-mono text-[10px] mt-0.5">{u.email}</div>
+                                <div className="text-slate-400 font-mono text-[10px] mt-0.5">{u.email}</div>
                               </td>
                               <td className="py-4 px-6 text-slate-400">
                                 {u.specialty_code ? (
@@ -528,7 +537,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                                   <span className="text-slate-600">-</span>
                                 )}
                               </td>
-                              <td className="py-4 px-6 text-slate-500">
+                              <td className="py-4 px-6 text-slate-400">
                                 {formatDate(u.created_at)}
                               </td>
                               <td className="py-4 px-6">
@@ -537,7 +546,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                                     👑 Premium
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-wider rounded-full border border-slate-700/50">
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-wider rounded-full border border-slate-700/50">
                                     Тегін
                                   </span>
                                 )}
@@ -593,13 +602,13 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                     </button>
                     <div>
                       <h2 className="text-xl font-bold text-white">{selectedUser.full_name} — Нәтижелер тарихы</h2>
-                      <p className="text-slate-500 text-xs">{selectedUser.email}</p>
+                      <p className="text-slate-400 text-xs">{selectedUser.email}</p>
                     </div>
                   </div>
 
                   <div className="grid gap-4">
                     {historyItems.filter(h => h.user_uid === selectedUser.uid).length === 0 ? (
-                      <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-500 font-medium">
+                      <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-400 font-medium">
                         Қолданушы әлі бірде-бір тест тапсырмаған.
                       </div>
                     ) : (
@@ -614,7 +623,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                               <Award className="w-5 h-5" />
                             </div>
                             <div>
-                              <div className="text-xs text-slate-500 font-bold mb-1 flex items-center gap-1.5">
+                              <div className="text-xs text-slate-400 font-bold mb-1 flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5" /> {formatDate(h.created_at)}
                               </div>
                               <h4 className="text-lg font-black text-white">Ұпай: {h.total_score} / {h.max_score}</h4>
@@ -626,7 +635,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                               <div className="text-xl font-black text-blue-400">
                                 {Math.round((h.total_score / h.max_score) * 100)}%
                               </div>
-                              <span className="text-[9px] uppercase tracking-wider font-bold text-slate-500">Табыстылық</span>
+                              <span className="text-[9px] uppercase tracking-wider font-bold text-slate-400">Табыстылық</span>
                             </div>
                             <ChevronRight className="w-5 h-5 text-slate-600" />
                           </div>
@@ -648,7 +657,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-slate-800 bg-slate-900/30 text-[10px] font-extrabold uppercase tracking-widest text-slate-500">
+                        <tr className="border-b border-slate-800 bg-slate-900/30 text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
                           <th className="py-4 px-6">Қолданушы</th>
                           <th className="py-4 px-6">Ұпай</th>
                           <th className="py-4 px-6">Уақыты</th>
@@ -658,7 +667,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                       <tbody className="divide-y divide-slate-800 text-xs font-semibold">
                         {filteredHistory.length === 0 ? (
                           <tr>
-                            <td colSpan={4} className="py-12 text-center text-slate-500 font-medium">Ешқандай тест тарихы табылмады.</td>
+                            <td colSpan={4} className="py-12 text-center text-slate-400 font-medium">Ешқандай тест тарихы табылмады.</td>
                           </tr>
                         ) : (
                           filteredHistory.map(h => {
@@ -669,15 +678,15 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                                   <div className="font-bold text-white text-sm">
                                     {testUser ? testUser.full_name : 'Жойылған қолданушы'}
                                   </div>
-                                  <div className="text-slate-500 font-mono text-[10px] mt-0.5">
+                                  <div className="text-slate-400 font-mono text-[10px] mt-0.5">
                                     {testUser ? testUser.email : h.user_uid}
                                   </div>
                                 </td>
                                 <td className="py-4 px-6">
                                   <div className="font-extrabold text-sm text-blue-400">{h.total_score} / {h.max_score}</div>
-                                  <div className="text-[10px] text-slate-500 mt-0.5">{Math.round((h.total_score / h.max_score) * 100)}% табыстылық</div>
+                                  <div className="text-[10px] text-slate-400 mt-0.5">{Math.round((h.total_score / h.max_score) * 100)}% табыстылық</div>
                                 </td>
-                                <td className="py-4 px-6 text-slate-500">
+                                <td className="py-4 px-6 text-slate-400">
                                   {formatDate(h.created_at)}
                                 </td>
                                 <td className="py-4 px-6 text-right space-x-2">
@@ -727,7 +736,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                     </button>
                     <div>
                       <h2 className="text-xl font-bold text-white">Тест нәтижесін талдау</h2>
-                      <p className="text-slate-500 text-xs">
+                      <p className="text-slate-400 text-xs">
                         Қолданушы: {userMap.get(selectedHistoryItem.user_uid)?.full_name || 'Белгісіз'} ({userMap.get(selectedHistoryItem.user_uid)?.email || selectedHistoryItem.user_uid})
                       </p>
                     </div>
@@ -736,7 +745,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                   {/* Banner */}
                   <div className="bg-[#0f1219] border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Тест нәтижесі</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Тест нәтижесі</span>
                       <h3 className="text-2xl font-black text-white mt-1">
                         {selectedHistoryItem.total_score} / {selectedHistoryItem.max_score} ұпай
                       </h3>
@@ -748,13 +757,13 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                       <h2 className="text-4xl font-black text-blue-400">
                         {Math.round((selectedHistoryItem.total_score / selectedHistoryItem.max_score) * 100)}%
                       </h2>
-                      <span className="text-[9px] uppercase tracking-wider font-bold text-slate-500">Табыстылық көрсеткіші</span>
+                      <span className="text-[9px] uppercase tracking-wider font-bold text-slate-400">Табыстылық көрсеткіші</span>
                     </div>
                   </div>
 
                   {/* Question Cards */}
                   {(!detailInfo || detailInfo.questions.length === 0) ? (
-                    <div className="text-center py-16 bg-[#0f1219] border border-slate-800 rounded-2xl text-slate-500">
+                    <div className="text-center py-16 bg-[#0f1219] border border-slate-800 rounded-2xl text-slate-400">
                       Егжей-тегжейлі деректер жүктелмеді немесе бұл ескі тест нұсқасы.
                     </div>
                   ) : (
@@ -830,7 +839,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                   className="space-y-4 text-left"
                 >
                   {filteredReports.length === 0 ? (
-                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-500 font-medium">
+                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-400 font-medium">
                       Қазіргі уақытта ешқандай қате туралы есеп жоқ.
                     </div>
                   ) : (
@@ -838,7 +847,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                       <div key={r.id} className="bg-[#0f1219] border border-slate-800 rounded-2xl p-5 space-y-4">
                         <div className="flex justify-between items-start gap-4">
                           <div>
-                            <div className="text-xs text-slate-500 font-bold mb-1 flex items-center gap-1.5">
+                            <div className="text-xs text-slate-400 font-bold mb-1 flex items-center gap-1.5">
                               <Calendar className="w-3.5 h-3.5" /> {formatDate(r.created_at)}
                             </div>
                             <h4 className="font-extrabold text-sm text-slate-350">
@@ -883,7 +892,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                   className="space-y-4 text-left"
                 >
                   {filteredLogs.length === 0 ? (
-                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-500 font-medium">
+                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-400 font-medium">
                       Қате журналдары бос. Керемет, ешқандай crash жоқ!
                     </div>
                   ) : (
@@ -891,7 +900,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                       <div key={log.id} className="bg-[#0f1219] border border-slate-800 rounded-2xl p-5 space-y-3 font-mono text-xs">
                         <div className="flex justify-between items-start gap-4">
                           <div>
-                            <div className="text-[10px] text-slate-500 font-bold mb-1 flex items-center gap-1.5">
+                            <div className="text-[10px] text-slate-400 font-bold mb-1 flex items-center gap-1.5">
                               <Calendar className="w-3.5 h-3.5" /> {formatDate(log.created_at)}
                             </div>
                             <h4 className="text-rose-400 font-bold text-sm leading-relaxed">{log.message}</h4>
@@ -929,7 +938,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                   className="space-y-4 text-left"
                 >
                   {filteredFeedbacks.length === 0 ? (
-                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-500 font-medium">
+                    <div className="bg-[#0f1219] border border-dashed border-slate-800 p-12 text-center rounded-2xl text-slate-400 font-medium">
                       Кері байланыс әлі қалдырылмады.
                     </div>
                   ) : (
@@ -937,7 +946,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
                       <div key={f.id} className="bg-[#0f1219] border border-slate-800 rounded-2xl p-5 space-y-4">
                         <div className="flex justify-between items-start gap-4">
                           <div>
-                            <div className="text-xs text-slate-500 font-bold mb-1 flex items-center gap-1.5">
+                            <div className="text-xs text-slate-400 font-bold mb-1 flex items-center gap-1.5">
                               <Calendar className="w-3.5 h-3.5" /> {formatDate(f.created_at)}
                             </div>
                             <h4 className="font-extrabold text-sm text-slate-350">

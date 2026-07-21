@@ -84,6 +84,7 @@ export default defineConfig(({ mode }) => {
       ],
       build: {
         target: 'esnext',
+        sourcemap: true,
         cssCodeSplit: true,
         rollupOptions: {
           output: {

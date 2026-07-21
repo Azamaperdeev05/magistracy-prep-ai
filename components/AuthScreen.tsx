@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from './Motion';
 import { AlertCircle } from 'lucide-react';
 import { loginWithGoogle } from '../services/authService';
 
+const isFirebaseConfigured = !!(import.meta.env.VITE_FIREBASE_API_KEY);
+
 interface AuthScreenProps {
   onAuthSuccess: (user: { id: number; email: string; full_name: string }) => void;
 }
@@ -48,8 +50,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
           <h1 className="text-4xl font-extrabold tracking-tight uppercase">
             Magis<span className="text-blue-500">Core</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-2 font-medium">
-            {!auth ? 'Жүйе баптаулары қажет' : 'Платформаға кіру'}
+          <p className="text-slate-400 text-sm mt-2 font-medium">
+            {!isFirebaseConfigured ? 'Жүйе баптаулары қажет' : 'Платформаға кіру'}
           </p>
         </div>
 
@@ -70,7 +72,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
                 <div>VITE_FIREBASE_MESSAGING_SENDER_ID</div>
                 <div>VITE_FIREBASE_APP_ID</div>
               </div>
-              <p className="text-[10px] text-slate-500">
+              <p className="text-slate-400 text-[10px]">
                 Жергілікті тестілеу үшін жоба түбіріндегі <code>.env</code> файлында осы кілттерді толтырып шығыңыз.
               </p>
             </div>
@@ -105,7 +107,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
                 className="w-full py-4 bg-white hover:bg-slate-100 text-slate-900 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all active:scale-[0.98] disabled:opacity-50"
               >
                 {isLoading ? (
-                  <span className="text-slate-500">Жүктелуде...</span>
+                  <span className="text-slate-400">Жүктелуде...</span>
                 ) : (
                   <>
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -120,7 +122,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
               </button>
               
               {/* Registration Disclaimer */}
-              <div className="pt-6 border-t border-white/5 text-[11px] text-slate-500 font-semibold leading-relaxed space-y-2.5">
+              <div className="pt-6 border-t border-white/5 text-[11px] text-slate-400 font-semibold leading-relaxed space-y-2.5">
                 <p>
                   <span className="text-slate-300 font-bold">MagisCore</span> — магистратура КТ емтиханына дайындалуға арналған тәуелсіз онлайн симулятор. Бұл Ұлттық тестілеу орталығының ресми сайты емес.
                 </p>

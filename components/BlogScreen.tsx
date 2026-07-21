@@ -122,7 +122,7 @@ const BlogScreen: React.FC<BlogScreenProps> = ({ onBack }) => {
                     {post.title}
                   </h3>
                   <p className="text-slate-400 text-sm mb-3">{post.description}</p>
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {post.readTime}

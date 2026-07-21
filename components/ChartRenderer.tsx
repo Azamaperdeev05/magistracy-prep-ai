@@ -966,7 +966,7 @@ const TgoComparisonEquations: React.FC<Extract<ChartData, { type: 'tgo_compariso
         </div>
         
         {/* AND / және */}
-        <span className="text-slate-500 font-semibold text-lg">және</span>
+        <span className="text-slate-400 font-semibold text-lg">және</span>
 
         {/* Equation 2 */}
         <div className="flex items-center gap-2">

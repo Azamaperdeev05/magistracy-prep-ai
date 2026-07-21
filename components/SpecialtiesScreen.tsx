@@ -192,14 +192,14 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
             isDarkMode ? 'bg-slate-900/30 border-white/5' : 'bg-white border-slate-200 shadow-sm'
           }`}>
             <h3 className={`text-base font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-700'}`}>Сіз әлі мамандық таңдамадыңыз</h3>
-            <p className="text-xs text-slate-500 mt-1">Төмендегі тізімнен өз бағытыңызды тауып, «Таңдау» батырмасын басыңыз.</p>
+            <p className="text-xs text-slate-400 mt-1">Төмендегі тізімнен өз бағытыңызды тауып, «Таңдау» батырмасын басыңыз.</p>
           </div>
         )}
 
         {/* Specialties Grid Container (Төрт бұрышты Карточкалар Торы) */}
         {filteredSpecialties.length === 0 ? (
           <div className={`border rounded-3xl p-16 text-center font-bold ${
-            isDarkMode ? 'bg-[#0f1219] border-white/5 text-slate-500' : 'bg-white border-slate-200 text-slate-500 shadow-sm'
+            isDarkMode ? 'bg-[#0f1219] border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-400 shadow-sm'
           }`}>
             Мамандық табылмады. Басқаша іздеп көріңіз.
           </div>

@@ -103,7 +103,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, userEmail 
             {/* Payment Info */}
             <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 text-center space-y-4">
               <div>
-                <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Premium бағасы</span>
+                <span className="text-xs font-black text-slate-400 uppercase tracking-wider">Premium бағасы</span>
                 <div className="text-4xl font-black text-amber-400 mt-1.5">
                   2 990 тг <span className="text-sm font-normal text-slate-400">/ айына</span>
                 </div>
@@ -122,14 +122,14 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, userEmail 
                   {copied ? (
                     <span className="text-[10px] text-green-400 font-bold bg-green-500/10 px-2 py-0.5 rounded-md animate-pulse">Көшірілді!</span>
                   ) : (
-                    <span className="text-[9px] text-slate-500 border border-slate-800 px-1.5 py-0.5 rounded bg-slate-950/40 font-normal">көшіру</span>
+                    <span className="text-[9px] text-slate-400 border border-slate-800 px-1.5 py-0.5 rounded bg-slate-950/40 font-normal">көшіру</span>
                   )}
                 </div>
-                <div className="text-xs text-slate-500 font-semibold">(Азамат П.)</div>
+                <div className="text-xs text-slate-400 font-semibold">(Азамат П.)</div>
               </div>
 
               <div className="bg-slate-950/40 rounded-xl p-4 border border-slate-800/30 text-left max-w-sm mx-auto">
-                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Нұсқаулық:</div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Нұсқаулық:</div>
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
                   Төлем жасаған соң, чекті төмендегі батырманы басып бізге жіберіңіз. 5 минут ішінде жазылым белсендіріледі.
                 </p>
@@ -137,7 +137,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, userEmail 
 
               <div className="h-px bg-slate-800/50 w-2/3 mx-auto" />
 
-              <div className="text-xs text-slate-500 font-semibold">
+              <div className="text-xs text-slate-400 font-semibold">
                 Жүйедегі поштаңыз: <span className="font-bold text-slate-400 select-all">{userEmail}</span>
               </div>
             </div>

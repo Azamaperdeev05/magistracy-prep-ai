@@ -92,7 +92,7 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
   const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';
   const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
   const textSecondary = isDarkMode ? 'text-slate-400' : 'text-slate-600';
-  const textMuted = isDarkMode ? 'text-slate-500' : 'text-slate-400';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-400';
   const cardBg = isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-sm';
   const subCardBg = isDarkMode ? 'bg-slate-900/40 border-slate-800' : 'bg-slate-50 border-slate-200/80';
   const headerBg = isDarkMode ? 'bg-[#07090d]/80 border-white/5' : 'bg-white/90 border-slate-200 shadow-sm';

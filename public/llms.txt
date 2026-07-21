@@ -1,37 +1,49 @@
-# MagisCore — Магистратураға Дайындық
+# MagisCore — Магистратураға Дайындық Платформасы
 
-> Тегін онлайн дайындық платформасы Қазақстан магистратураға түсушілерге арналған.
+> MagisCore — Қазақстан магистратураға түсушілерге арналған тегін онлайн дайындық платформасы. Кешенді тестілеу (КТ) форматында 7000+ сұрақ.
 
 ## About
 
-MagisCore — бұл Қазақстан магистратураға түсушілерге арналған тегін онлайн дайындық платформасы. Платформа кешенді тестілеу (КТ) форматында 7000+ сұрақ ұсынады.
+MagisCore — бұл Қазақстан магистратураға түсушілерге арналған тегін онлайн дайындық платформасы. Платформа кешенді тестілеу (КТ) форматында 7000+ сұрақ ұсынады. 4 мамандық бойынша дайындық: педагогика (M001, M002), құқықтану (M094), ақпараттық технологиялар (M095).
 
 ## Features
 
 - 7000+ тест сұрақтары 4 мамандық бойынша (M001, M002, M094, M095)
-- Кешенді тестілеу форматында дайындық
-- Тақырыптық жаттығу режимі
-- Тарих және статистика
-- Тегін қолжетімділік
+- Кешенді тестілеу форматында дайындық (150 сұрақ, 3 сағат 50 минут)
+- Тақырыптық жаттығу режимі — әр тақырып бойынша бөлек жаттығу
+- Тарих және статистика — барлық тест нәтижелері сақталады
+- AI көмекші — сұрақтардың түсіндірмесі
+- Тегін қолжетімділік — тіркелусіз-ақ қолдануға болады
+- PWA — офлайн режимде жұмыс істейді
 
-## Modes
+## Pages
 
-- **Тест тапсыру** — КТ форматында толық тестілеу
-- **Дайындық** — әр тақырып бойынша жаттығу
-- **Тарих** — нәтижелерді сақтау және қарау
+- [Басты бет](https://magis-core.vercel.app/) — Кіру / Тіркелу
+- [Тест тапсыру](https://magis-core.vercel.app/test) — КТ форматында тестілеу
+- [Дайындық](https://magis-core.vercel.app/prep) — Тақырыптық жаттығу
+- [Тарих](https://magis-core.vercel.app/history) — Тест нәтижелері
+- [Блог](https://magis-core.vercel.app/blog) — Пайдалы мақалалар
+- [Мамандықтар](https://magis-core.vercel.app/specialties) — Барлық мамандықтар
+
+## Documentation
+
+- [Блог: КТ күнтізбесі 2026](https://magis-core.vercel.app/blog/kt-calendar-2026)
+- [Блог: M094 дайындық](https://magis-core.vercel.app/blog/m094-daindyq)
+- [Блог: M095 дайындық](https://magis-core.vercel.app/blog/m095-daindyq)
+- [Блог: English дайындық](https://magis-core.vercel.app/blog/english-daindyq)
+- [Блог: ТГО дайындық](https://magis-core.vercel.app/blog/tgo-daindyq)
+- [Блог: КТ кестесі](https://magis-core.vercel.app/blog/kt-kelestery)
 
 ## Tech Stack
 
 - Frontend: React 18, TypeScript, Tailwind CSS v4
 - Backend: Firebase (Auth, Firestore)
 - Deployment: Vercel
-- PWA: веб-приложение с офлайн-режимом
+- PWA: Service Worker + Workbox
 
-## API
-
-Платформа Firebase Auth қолданады авторизация үшін. Барлық деректер Firestore-да сақталады.
-
-## Contact
+## Links
 
 - Сайт: https://magis-core.vercel.app
-- Жоба: https://github.com/user/magistracy-prep-ai
+- GitHub: https://github.com/Azamaperdeev05/magistracy-prep-ai
+- Мамандықтар: https://magis-core.vercel.app/specialties
+- Блог: https://magis-core.vercel.app/blog
