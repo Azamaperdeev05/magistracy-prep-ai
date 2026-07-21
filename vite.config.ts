@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
         VitePWA({
           registerType: 'autoUpdate',
           workbox: {
-            maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
+            maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
             runtimeCaching: [
               {
                 urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -65,8 +65,8 @@ export default defineConfig(({ mode }) => {
             name: 'MagisCore — Магистратураға Дайындық',
             short_name: 'MagisCore',
             description: 'КТ-ге дайындық: 7000+ сұрақ, 4 мамандық',
-            theme_color: '#07090d',
-            background_color: '#07090d',
+            theme_color: '#f8fafc',
+            background_color: '#f8fafc',
             display: 'standalone',
             orientation: 'portrait',
             start_url: '/',
@@ -84,13 +84,36 @@ export default defineConfig(({ mode }) => {
       ],
       build: {
         target: 'esnext',
-        sourcemap: true,
+        sourcemap: mode === 'development',
         cssCodeSplit: true,
+        chunkSizeWarningLimit: 300,
         rollupOptions: {
           output: {
-            manualChunks: {
-              'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
-              'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            manualChunks(id) {
+              // Firebase chunks — only one bundle for all Firebase
+              if (id.includes('firebase/')) {
+                return 'firebase';
+              }
+              // Core React vendor
+              if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) {
+                return 'vendor';
+              }
+              // React Router
+              if (id.includes('react-router')) {
+                return 'vendor';
+              }
+              // UI icons (lucide)
+              if (id.includes('lucide-react')) {
+                return 'ui-icons';
+              }
+              // Helmet
+              if (id.includes('react-helmet-async')) {
+                return 'vendor';
+              }
+              // Audio/question data (large but rarely used)
+              if (id.includes('/data/questions/')) {
+                return 'question-data';
+              }
             }
           }
         }

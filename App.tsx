@@ -104,8 +104,18 @@ const RootApp: React.FC = () => {
   };
 
   // Handle Google redirect result + listen to auth state
+  // Optimization: Firebase is only loaded if user is already signed in (saved in localStorage)
+  // or if redirect URL might contain auth result (e.g., Google redirect back)
   useEffect(() => {
     let cancelled = false;
+    const savedUser = getSavedUser();
+
+    // If no saved user and not a redirect back from Google, skip Firebase entirely
+    const isAuthRedirect = window.location.search.includes('code=') || window.location.search.includes('state=');
+    if (!savedUser && !isAuthRedirect) {
+      setIsCheckingAuth(false);
+      return;
+    }
 
     const initAuth = async () => {
       const { getAuthInstance } = await import('./firebase');

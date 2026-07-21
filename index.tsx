@@ -24,6 +24,9 @@ const onIdle = (cb: () => void) => {
 };
 
 onIdle(async () => {
+  // Initialize Yandex Metrica — non-critical analytics, after first paint
+  initYandexMetrica();
+
   // Initialize global client error logging
   const { initGlobalLogger } = await import('./services/loggerService');
   initGlobalLogger();
@@ -72,3 +75,64 @@ onIdle(async () => {
     });
   }
 });
+
+/**
+ * Lazy-initialize Yandex Metrica after first paint.
+ * Uses requestIdleCallback so it never blocks the critical path.
+ * Only loads when the browser is idle AND user has interacted.
+ */
+function initYandexMetrica() {
+  const YM_COUNTER_ID = 110918184;
+
+  // Don't load in SSR/SSG environments
+  if (typeof window === 'undefined') return;
+
+  // Wait for first user interaction OR idle callback
+  const loadMetrica = () => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = `https://mc.yandex.ru/metrika/tag.js?id=${YM_COUNTER_ID}`;
+    script.onload = () => {
+      if (typeof window.ym === 'function') {
+        window.ym(YM_COUNTER_ID, 'init', {
+          ssr: true,
+          webvisor: true,
+          clickmap: true,
+          ecommerce: 'dataLayer',
+          referrer: document.referrer,
+          url: location.href,
+          accurateTrackBounce: true,
+          trackLinks: true
+        });
+      }
+    };
+    document.head.appendChild(script);
+
+    // Add noscript fallback for users without JavaScript
+    const noscript = document.createElement('noscript');
+    const img = document.createElement('img');
+    img.src = `https://mc.yandex.ru/watch/${YM_COUNTER_ID}`;
+    img.style.position = 'absolute';
+    img.style.left = '-9999px';
+    img.alt = '';
+    noscript.appendChild(img);
+    document.body.appendChild(noscript);
+  };
+
+  // Try loading during idle time first
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadMetrica, { timeout: 5000 });
+  } else {
+    // Fallback: load after first user interaction
+    const events = ['click', 'touchstart', 'scroll', 'keydown'] as const;
+    const onInteraction = () => {
+      events.forEach(e => window.removeEventListener(e, onInteraction, { once: true } as any));
+      loadMetrica();
+    };
+    events.forEach(e => window.addEventListener(e, onInteraction, { once: true }));
+    // Also try after 5s timeout as last resort
+    setTimeout(loadMetrica, 5000);
+  }
+}
+
