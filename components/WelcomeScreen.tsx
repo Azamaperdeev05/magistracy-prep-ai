@@ -1,15 +1,207 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from './Motion';
 import { 
   BookOpen, Brain, Clock, Database, Globe, ArrowRight, 
   Award, Zap, Target, GraduationCap, TrendingUp, Shield, 
   Menu, X, Sparkles, ChevronRight, Play, ExternalLink,
   MessageSquare, Star, Users, CheckCircle, LogOut, History, Info,
-  Sun, Moon, Crown, Settings, BarChart2, Layers
+  Sun, Moon, Crown, Settings, BarChart2, Layers, Search,
+  MapPin, Building2, Loader2
 } from 'lucide-react';
 import { SUBJECTS } from '../constants';
 import { SubjectId } from '../types';
 import SEO from './SEO';
+
+// ─── Universities Section ─────────────────────────────────────────────────────
+
+interface University {
+  code: string;
+  title: string;
+  url: string;
+  description: string;
+  general_info?: { city?: string; type?: string; students?: string | number; founded?: string | number };
+  students?: string | number;
+  teachers?: string | number;
+}
+
+const CITY_COLORS: Record<string, string> = {
+  'Алматы': 'from-rose-500/20 to-pink-500/10 border-rose-500/30',
+  'Астана': 'from-blue-500/20 to-indigo-500/10 border-blue-500/30',
+  'Шымкент': 'from-emerald-500/20 to-teal-500/10 border-emerald-500/30',
+  'Қарағанды': 'from-amber-500/20 to-orange-500/10 border-amber-500/30',
+};
+
+const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [visibleCount, setVisibleCount] = useState(9);
+
+  useEffect(() => {
+    import('../univision_universities.json')
+      .then((mod: any) => {
+        const data = mod.default || mod;
+        setUniversities(Array.isArray(data.universities) ? data.universities : []);
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return universities;
+    const q = search.toLowerCase();
+    return universities.filter(u =>
+      u.title?.toLowerCase().includes(q) ||
+      u.general_info?.city?.toLowerCase().includes(q)
+    );
+  }, [universities, search]);
+
+  const shown = filtered.slice(0, visibleCount);
+
+  const cardBase = isDarkMode
+    ? 'bg-[#0f1219] border-slate-800/80 hover:border-slate-600'
+    : 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300';
+
+  const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-500';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25 }}
+      className="space-y-5 mt-2"
+    >
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className={`text-xl sm:text-2xl font-black uppercase tracking-tight ${textPrimary}`}>
+            Қазақстан ЖОО-лары
+          </h2>
+          <p className={`text-xs ${textMuted}`}>
+            Магистратура бағдарламалары бар {universities.length}+ университет
+          </p>
+        </div>
+
+        {/* Search */}
+        <div className="relative w-full sm:w-64">
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setVisibleCount(9); }}
+            placeholder="ЖОО іздеу..."
+            className={`w-full pl-9 pr-4 py-2.5 rounded-xl border text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+              isDarkMode
+                ? 'bg-[#0f1219] border-slate-800 text-white placeholder-slate-500'
+                : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+            }`}
+          />
+        </div>
+      </div>
+
+      {/* Grid */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16 gap-2 text-slate-400 text-xs font-bold">
+          <Loader2 className="w-5 h-5 animate-spin text-blue-500" /> Жүктелуде...
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="py-12 text-center text-slate-400 text-xs font-semibold">
+          ЖОО табылмады
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {shown.map((uni, idx) => {
+              const city = uni.general_info?.city || '';
+              const gradientKey = Object.keys(CITY_COLORS).find(k => city.includes(k)) || '';
+              const gradient = gradientKey ? CITY_COLORS[gradientKey] : 'from-slate-500/10 to-slate-400/5 border-slate-500/20';
+
+              return (
+                <motion.a
+                  key={uni.url || idx}
+                  href={uni.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.03 }}
+                  whileHover={{ y: -3, scale: 1.01 }}
+                  className={`group relative rounded-2xl border p-5 flex flex-col gap-3 transition-all cursor-pointer no-underline ${cardBase}`}
+                >
+                  {/* Gradient accent top */}
+                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+
+                  {/* Top row */}
+                  <div className="flex items-start justify-between gap-3 relative z-10">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
+                      isDarkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
+                    }`}>
+                      <Building2 className="w-5 h-5" />
+                    </div>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors shrink-0 mt-1" />
+                  </div>
+
+                  {/* Title */}
+                  <div className="relative z-10">
+                    <h3 className={`text-sm font-black leading-tight line-clamp-2 ${textPrimary} group-hover:text-blue-500 transition-colors`}>
+                      {uni.title}
+                    </h3>
+                  </div>
+
+                  {/* Description */}
+                  {uni.description && (
+                    <p className={`text-[11px] leading-relaxed line-clamp-2 ${textMuted} relative z-10`}>
+                      {uni.description}
+                    </p>
+                  )}
+
+                  {/* Footer stats */}
+                  <div className="mt-auto flex items-center gap-3 text-[10px] font-bold relative z-10">
+                    {city && (
+                      <span className={`flex items-center gap-1 ${textMuted}`}>
+                        <MapPin className="w-3 h-3" /> {city}
+                      </span>
+                    )}
+                    {uni.general_info?.students && (
+                      <span className={`flex items-center gap-1 ${textMuted}`}>
+                        <Users className="w-3 h-3" /> {uni.general_info.students}
+                      </span>
+                    )}
+                    {uni.general_info?.founded && (
+                      <span className={`flex items-center gap-1 ${textMuted}`}>
+                        <Star className="w-3 h-3" /> {uni.general_info.founded}
+                      </span>
+                    )}
+                  </div>
+                </motion.a>
+              );
+            })}
+          </div>
+
+          {/* Load More */}
+          {visibleCount < filtered.length && (
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={() => setVisibleCount(v => v + 9)}
+                className={`px-8 py-3 rounded-2xl border text-xs font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 ${
+                  isDarkMode
+                    ? 'border-slate-800 text-slate-300 hover:bg-slate-800'
+                    : 'border-slate-200 text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                Тағы {Math.min(9, filtered.length - visibleCount)} ЖОО көру
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </motion.div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface WelcomeScreenProps {
   onStart: (gopCode?: string) => void;
@@ -697,6 +889,9 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           </div>
 
         </motion.div>
+
+        {/* 5. Universities Section */}
+        <UniversitiesSection isDarkMode={isDarkMode} />
 
       </main>
 
