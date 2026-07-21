@@ -4,7 +4,7 @@ import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { SPECIALTIES } from './data/specialties';
 import { generateQuestionsForSubject } from './services/apiService';
-import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
+import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult, handleGoogleRedirectResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -98,22 +98,33 @@ const RootApp: React.FC = () => {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
-      if (fbUser) {
-        try {
-          const profile = await getProfile();
-          setUser(profile);
-        } catch (error) {
-          console.error("Error setting user profile on auth change:", error);
+    const init = async () => {
+      // Handle Google redirect result first
+      await handleGoogleRedirectResult();
+
+      // Then listen to auth state
+      const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+        if (fbUser) {
+          try {
+            const profile = await getProfile();
+            setUser(profile);
+          } catch (error) {
+            console.error("Error setting user profile on auth change:", error);
+            setUser(null);
+          }
+        } else {
           setUser(null);
         }
-      } else {
-        setUser(null);
-      }
-      setIsCheckingAuth(false);
-    });
+        setIsCheckingAuth(false);
+      });
 
-    return () => unsubscribe();
+      return () => unsubscribe();
+    };
+
+    let cleanup: (() => void) | undefined;
+    init().then((unsub) => { cleanup = unsub; });
+
+    return () => { cleanup?.(); };
   }, []);
 
   useEffect(() => {

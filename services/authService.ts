@@ -8,7 +8,9 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
   signOut,
   sendPasswordResetEmail
 } from 'firebase/auth';
@@ -213,44 +215,63 @@ export async function login(email: string, password: string): Promise<AuthRespon
   return { access_token: idToken, token_type: 'bearer', user: profile };
 }
 
-/** Google Sign-In */
-export async function loginWithGoogle(): Promise<AuthResponse> {
+/** Google Sign-In — redirect арқылы */
+export async function loginWithGoogle(): Promise<void> {
   ensureFirebaseReady();
-  
-  const userCredential = await signInWithPopup(auth, googleProvider);
-  const fbUser = userCredential.user;
+  const provider = googleProvider || (() => {
+    const p = new GoogleAuthProvider();
+    p.setCustomParameters({ prompt: 'select_account' });
+    return p;
+  })();
+  await signInWithRedirect(auth, provider);
+}
 
-  const numericId = getOrCreateNumericId(fbUser.uid);
-  const profile: UserProfile = {
-    id: numericId,
-    uid: fbUser.uid,
-    email: fbUser.email || "",
-    full_name: fbUser.displayName || 'Google Пайдаланушысы',
-    is_active: true
-  };
+/** Redirect-тен кейінгі нәтижені өңдеу */
+export async function handleGoogleRedirectResult(): Promise<AuthResponse | null> {
+  ensureFirebaseReady();
+  try {
+    const result = await getRedirectResult(auth);
+    if (!result || !result.user) return null;
 
-  // Load consent from Firestore so it persists across sessions
-  if (db) {
-    try {
-      const userDocRef = doc(db, "users", fbUser.uid);
-      const userSnap = await getDoc(userDocRef);
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        if (data.consent) {
-          profile.consent = data.consent as UserConsent;
+    const fbUser = result.user;
+    const numericId = getOrCreateNumericId(fbUser.uid);
+    const profile: UserProfile = {
+      id: numericId,
+      uid: fbUser.uid,
+      email: fbUser.email || "",
+      full_name: fbUser.displayName || 'Google Пайдаланушысы',
+      is_active: true
+    };
+
+    // Load consent from Firestore
+    if (db) {
+      try {
+        const userDocRef = doc(db, "users", fbUser.uid);
+        const userSnap = await getDoc(userDocRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.consent) {
+            profile.consent = data.consent as UserConsent;
+          }
+          profile.is_premium = !!data.is_premium;
         }
-        profile.is_premium = !!data.is_premium;
+      } catch (e) {
+        console.warn("Firestore consent fetch on redirect login failed:", e);
       }
-    } catch (e) {
-      console.warn("Firestore consent fetch on Google login failed:", e);
     }
+
+    const idToken = await fbUser.getIdToken();
+    setToken(idToken);
+    saveUser(profile);
+
+    return { access_token: idToken, token_type: 'bearer', user: profile };
+  } catch (error: any) {
+    // user cancelled the redirect
+    if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+      return null;
+    }
+    throw error;
   }
-
-  const idToken = await fbUser.getIdToken();
-  setToken(idToken);
-  saveUser(profile);
-
-  return { access_token: idToken, token_type: 'bearer', user: profile };
 }
 
 /** Шығу */

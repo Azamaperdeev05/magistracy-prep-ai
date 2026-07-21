@@ -199,16 +199,9 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   const handleGoogleAuth = async () => {
     try {
       setIsAuthLoading(true);
-      const res = await loginWithGoogle();
-      localStorage.removeItem('magistracy_guest_clicks'); // Clear guest counter once logged in!
-      if (onAuthSuccess) {
-        onAuthSuccess(res.user);
-      }
-      setShowSoftAuthModal(false);
-      setShowHardAuthModal(false);
+      await loginWithGoogle();
     } catch (e: any) {
       console.error("Auth failed:", e);
-    } finally {
       setIsAuthLoading(false);
     }
   };
