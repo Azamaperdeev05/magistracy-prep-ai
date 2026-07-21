@@ -276,6 +276,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
   const [showMobileTools, setShowMobileTools] = useState(false);
+  const [audioFailed, setAudioFailed] = useState(false);
 
   // Compute subject summaries for ҰТО finish modal
   const subjectSummaries = useMemo(() => {
@@ -598,28 +599,31 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                                       <span className="mr-2 inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-700 border border-blue-100">
                                           Тыңдалым
                                       </span>
-                                      {currentQuestion.audioUrl ? (
+                                      {currentQuestion.audioUrl && !audioFailed ? (
                                           <span>{currentQuestion.context || 'Аудионы тыңдап, сұраққа жауап беріңіз.'}</span>
                                       ) : (
-                                          <span>TTS әлі қосылмаған. Төмендегі мәтінді оқып, сұрақтарға жауап беріңіз.</span>
+                                          <span>Мәтінді оқып, сұраққа жауап беріңіз.</span>
                                       )}
-                                      {!currentQuestion.audioUrl && currentQuestion.context && (
+                                      {(!currentQuestion.audioUrl || audioFailed) && currentQuestion.context && (
                                           <div className="mt-1 text-xs font-medium text-slate-500">
                                               {currentQuestion.context.replace(/^Listen\b/i, 'Read')}
                                           </div>
                                       )}
                                   </div>
 
-                                  {currentQuestion.audioUrl ? (
-                                      <AudioPlayer src={currentQuestion.audioUrl} />
-                                  ) : (
-                                      showListeningTranscript && (
-                                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 shadow-sm">
-                                              <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed">
-                                                  <p className="whitespace-pre-line">{currentQuestion.codeSnippet}</p>
-                                              </div>
+                                  {currentQuestion.audioUrl && (
+                                      <AudioPlayer 
+                                        src={currentQuestion.audioUrl} 
+                                        onErrorStateChange={(failed) => setAudioFailed(failed)} 
+                                      />
+                                  )}
+
+                                  {(!currentQuestion.audioUrl || audioFailed || showListeningTranscript) && currentQuestion.codeSnippet && (
+                                      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 shadow-sm">
+                                          <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed">
+                                              <p className="whitespace-pre-line">{currentQuestion.codeSnippet}</p>
                                           </div>
-                                      )
+                                      </div>
                                   )}
                               </div>
                           )}

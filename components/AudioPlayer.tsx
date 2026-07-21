@@ -3,15 +3,17 @@ import { Play, Pause, RotateCcw, Volume2, Loader2 } from 'lucide-react';
 
 interface AudioPlayerProps {
   src: string;
+  onErrorStateChange?: (hasError: boolean) => void;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, onErrorStateChange }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     setIsPlaying(false);
@@ -19,16 +21,30 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
     setCurrentTime(0);
     setDuration(0);
     setIsBuffering(false);
+    setHasError(false);
+    onErrorStateChange?.(false);
   }, [src]);
 
+  const handleAudioError = () => {
+    setIsBuffering(false);
+    setIsPlaying(false);
+    setHasError(true);
+    onErrorStateChange?.(true);
+  };
+
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || hasError) return;
     if (isPlaying) {
       audioRef.current.pause();
+      setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch((err) => {
+        console.warn("[AudioPlayer] play error:", err);
+        handleAudioError();
+      });
     }
-    setIsPlaying(!isPlaying);
   };
 
   const handleTimeUpdate = () => {
@@ -50,7 +66,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   };
 
   const handleRestart = () => {
-    if (audioRef.current) {
+    if (audioRef.current && !hasError) {
       audioRef.current.currentTime = 0;
       setProgress(0);
       setCurrentTime(0);
@@ -58,7 +74,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   };
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !duration) return;
+    if (!audioRef.current || !duration || hasError) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     audioRef.current.currentTime = (x / rect.width) * duration;
@@ -71,6 +87,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
+  if (hasError) {
+    return (
+      <div className="bg-amber-50 border border-amber-300 rounded-xl p-3.5 flex items-center justify-between text-xs text-amber-800 font-semibold shadow-xs">
+        <div className="flex items-center gap-2">
+          <Volume2 className="w-4 h-4 text-amber-600 shrink-0" />
+          <span>Аудио жүктелмеді. Төмендегі транскрипция мәтінін оқып жауап беріңіз.</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
       <audio
@@ -81,8 +108,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
         onEnded={handleEnded}
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onWaiting={() => setIsBuffering(true)}
-        onCanPlay={() => setIsBuffering(false)}
+        onCanPlay={() => {
+          setIsBuffering(false);
+          setHasError(false);
+        }}
         onPlaying={() => setIsBuffering(false)}
+        onError={handleAudioError}
       />
 
       <div className="flex items-center gap-3">
