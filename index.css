@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --brand-primary: #3b82f6;
   --brand-secondary: #6366f1;
@@ -28,6 +30,16 @@ body {
   background-color: #07090d;
   color: #f8fafc;
   overflow-x: hidden;
+}
+
+body.light-theme {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+body:not(.light-theme) {
+  background-color: #07090d !important;
+  color: #f8fafc !important;
 }
 
 /* Custom Scrollbar */
