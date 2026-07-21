@@ -113,7 +113,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
   const bg = isDark ? 'bg-[#07090d]' : 'bg-[#FAFCFF]';
   const cardBg = isDark ? 'bg-[#0f1219] border-slate-800' : 'bg-white border-slate-200/80 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.06)] hover:border-blue-200 transition-all duration-300';
   const text = isDark ? 'text-white' : 'text-slate-900';
-  const muted = isDark ? 'text-slate-400' : 'text-slate-500';
+  const muted = isDark ? 'text-slate-400' : 'text-slate-600';
   const navBg = isDark ? 'bg-[#07090d]/90 border-slate-800' : 'bg-white/90 border-slate-200/80';
   const altBg = isDark ? 'bg-[#0a0c12] border-slate-800' : 'bg-slate-50 border-slate-200/60';
 
@@ -247,14 +247,17 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
 
           {/* Hero Smartphone Mockup - Touches absolute right edge of SCREEN */}
           <div className="w-full lg:w-[54%] xl:w-[50%] lg:absolute lg:right-0 lg:bottom-0 flex items-end justify-center lg:justify-end self-end pointer-events-none z-0 mt-8 lg:mt-0">
-            <img
-              src="/smartphone-mockup.webp"
-              alt="MagisCore Smartphone App Mockup"
-              // @ts-ignore
-              fetchpriority="high"
-              decoding="async"
-              className="w-full h-auto max-h-[360px] sm:max-h-[580px] lg:max-h-[760px] xl:max-h-[840px] scale-100 lg:scale-110 origin-bottom-right object-contain object-bottom object-center lg:object-right drop-shadow-[0_25px_60px_rgba(37,99,235,0.15)] pointer-events-auto block leading-none translate-y-1"
-            />
+            <picture className="w-full h-auto flex items-end justify-center lg:justify-end">
+              <source media="(max-width: 640px)" srcSet="/smartphone-mockup-mobile.webp" type="image/webp" />
+              <img
+                src="/smartphone-mockup.webp"
+                alt="MagisCore Smartphone App Mockup"
+                // @ts-ignore
+                fetchpriority="high"
+                decoding="async"
+                className="w-full h-auto max-h-[360px] sm:max-h-[580px] lg:max-h-[760px] xl:max-h-[840px] scale-100 lg:scale-110 origin-bottom-right object-contain object-bottom object-center lg:object-right drop-shadow-[0_25px_60px_rgba(37,99,235,0.15)] pointer-events-auto block leading-none translate-y-1"
+              />
+            </picture>
           </div>
         </div>
       </section>
@@ -575,6 +578,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
                     href={href}
                     target="_blank"
                     rel="noreferrer"
+                    aria-label={`MagisCore ${name} арнасы`}
                     className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all duration-300 hover:scale-110 ${
                       isDark
                         ? 'bg-slate-900 border-slate-800 hover:bg-slate-800 hover:border-slate-700'
@@ -589,8 +593,8 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
 
             {/* Col 2: ПЛАТФОРМА */}
             <div className="space-y-4">
-              <h4 className={`text-xs font-black uppercase tracking-widest ${text}`}>Платформа</h4>
-              <ul className="space-y-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <h3 className={`text-xs font-black uppercase tracking-widest ${text}`}>Платформа</h3>
+              <ul className="space-y-2.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
                 <li><button onClick={onRegister} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Спецификациялар</button></li>
                 <li><button onClick={onRegister} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">КТ Симуляторы</button></li>
                 <li><button onClick={onRegister} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">ИИ Тьютор</button></li>
@@ -601,8 +605,8 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
 
             {/* Col 3: БАҒДАРЛАМАЛАР */}
             <div className="space-y-4">
-              <h4 className={`text-xs font-black uppercase tracking-widest ${text}`}>Бағдарламалар</h4>
-              <ul className="space-y-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <h3 className={`text-xs font-black uppercase tracking-widest ${text}`}>Бағдарламалар</h3>
+              <ul className="space-y-2.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
                 <li><button onClick={onRegister} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">M094 Ақпараттық Технологиялар</button></li>
                 <li><button onClick={onRegister} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">M095 Ақпараттық Қауіпсіздік</button></li>
                 <li><button onClick={onRegister} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">M001 Педагогика & Психология</button></li>
@@ -613,8 +617,8 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
 
             {/* Col 4: КӨМЕК */}
             <div className="space-y-4">
-              <h4 className={`text-xs font-black uppercase tracking-widest ${text}`}>Көмек</h4>
-              <ul className="space-y-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <h3 className={`text-xs font-black uppercase tracking-widest ${text}`}>Көмек</h3>
+              <ul className="space-y-2.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
                 <li><button onClick={() => setActiveModal('faq')} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Сұрақ-жауап (FAQ)</button></li>
                 <li><button onClick={() => setActiveModal('support')} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Қолдау көрсету</button></li>
                 <li><button onClick={() => setActiveModal('privacy')} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Құпиялылық саясаты</button></li>
