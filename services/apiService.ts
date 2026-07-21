@@ -13,7 +13,7 @@ const shuffle = <T,>(items: T[]): T[] => {
 
 const cloneQuestion = (question: Question): Question => ({
   ...question,
-  options: shuffle(question.options),
+  options: question.options ? shuffle(question.options) : [],
 });
 
 const pickRandom = (questions: Question[], count: number): Question[] =>
