@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -7,9 +7,12 @@ import {
   BookOpen, Award, Layers, Search
 } from 'lucide-react';
 import { SPECIALTIES } from '../data/specialties';
-import masterProgramsData from '../univision_master_programs.json';
-import universitiesData from '../univision_universities.json';
 import { fetchLiveSpecialtyDetail, LiveProgramData } from '../services/univisionService';
+import SEO from './SEO';
+
+// Lazy load large JSON data
+const loadMasterProgramsData = () => import('../univision_master_programs.json');
+const loadUniversitiesData = () => import('../univision_universities.json');
 
 const SpecialtyDetailScreen: React.FC = () => {
   const { code } = useParams<{ code: string }>();
@@ -28,20 +31,54 @@ const SpecialtyDetailScreen: React.FC = () => {
   // Find specialty metadata
   const specialty = SPECIALTIES.find(s => s.code === code);
 
+  // State for lazy loaded data
+  const [masterProgramsData, setMasterProgramsData] = useState<any>(null);
+  const [universitiesData, setUniversitiesData] = useState<any>(null);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  // Load JSON data lazily
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [programs, universities] = await Promise.all([
+          loadMasterProgramsData(),
+          loadUniversitiesData()
+        ]);
+        setMasterProgramsData(programs.default || programs);
+        setUniversitiesData(universities.default || universities);
+      } catch (e) {
+        console.error('Error loading data:', e);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+    loadData();
+  }, []);
+
   // Initial cached data from JSON
-  const initialCached = (masterProgramsData.groups as any[]).find((g: any) => g.code === code) || {
-    code: code || '',
-    title: `${code} ${specialty?.name || ''}`,
-    url: null,
-    general_info: {
-      "Академиялық дәреже": "Магистратура",
-      "Білім беру саласы": "Анықталмаған",
-      "Дайындық бағыты": "Анықталмаған"
-    },
-    grants: [],
-    programs: [],
-    universities: []
-  };
+  const initialCached = masterProgramsData 
+    ? (masterProgramsData.groups as any[]).find((g: any) => g.code === code) || {
+        code: code || '',
+        title: `${code} ${specialty?.name || ''}`,
+        url: null,
+        general_info: {
+          "Академиялық дәреже": "Магистратура",
+          "Білім беру саласы": "Анықталмаған",
+          "Дайындық бағыты": "Анықталмаған"
+        },
+        grants: [],
+        programs: [],
+        universities: []
+      }
+    : {
+        code: code || '',
+        title: `${code} ${specialty?.name || ''}`,
+        url: null,
+        general_info: {},
+        grants: [],
+        programs: [],
+        universities: []
+      };
 
   // Reactive state for program data (starts instant with cached, updates with real-time)
   const [programData, setProgramData] = useState<LiveProgramData>(initialCached);
@@ -116,8 +153,22 @@ const SpecialtyDetailScreen: React.FC = () => {
     ? 'bg-slate-900/60 border-white/5 text-white placeholder-slate-600'
     : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 shadow-sm';
 
+  // Loading state for lazy data
+  if (isLoadingData) {
+    return (
+      <div className={`min-h-screen ${bg} flex items-center justify-center`}>
+        <div className={`text-lg font-medium ${textSecondary} animate-pulse`}>Жүктелуде...</div>
+      </div>
+    );
+  }
+
   return (
     <div className={`min-h-screen ${bg} transition-colors duration-300`}>
+      <SEO
+        title={specialty ? `${specialty.code} — ${specialty.name}` : 'Мамандық'}
+        description={specialty ? `${specialty.name} мамандығы бойынша магистратураға дайындық. Білім беру бағдарламалары және университеттер.` : 'Мамандық туралы ақпарат'}
+        canonical={`https://magis-core.vercel.app/specialties/${code}`}
+      />
       {/* Fixed Header */}
       <div className={`sticky top-0 z-30 backdrop-blur-xl border-b ${
         isDarkMode ? 'bg-[#07090d]/90 border-white/5' : 'bg-white/90 border-slate-200'

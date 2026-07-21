@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { SPECIALTIES } from './data/specialties';
@@ -9,20 +10,30 @@ import { calculateTestResult } from './services/scoringService';
 import { auth } from './firebase';
 import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 import AuthScreen from './components/AuthScreen';
-import WelcomeScreen from './components/WelcomeScreen';
-import TestScreen from './components/TestScreen';
-import ResultScreen from './components/ResultScreen';
-import SyllabusScreen from './components/SyllabusScreen';
-import HistoryScreen from './components/HistoryScreen';
-import PrepScreen from './components/PrepScreen';
-import SpecialtiesScreen from './components/SpecialtiesScreen';
-import SpecialtyDetailScreen from './components/SpecialtyDetailScreen';
-import TestSetupScreen from './components/TestSetupScreen';
-import ConsentGateScreen from './components/ConsentGateScreen';
-import AdminScreen from './components/AdminScreen';
 import ConfirmModal from './components/modals/ConfirmModal';
 import UpgradeModal from './components/modals/UpgradeModal';
 import InstallBanner from './components/InstallBanner';
+
+// Lazy loaded screens for code splitting
+const WelcomeScreen = lazy(() => import('./components/WelcomeScreen'));
+const TestScreen = lazy(() => import('./components/TestScreen'));
+const ResultScreen = lazy(() => import('./components/ResultScreen'));
+const SyllabusScreen = lazy(() => import('./components/SyllabusScreen'));
+const HistoryScreen = lazy(() => import('./components/HistoryScreen'));
+const PrepScreen = lazy(() => import('./components/PrepScreen'));
+const SpecialtiesScreen = lazy(() => import('./components/SpecialtiesScreen'));
+const SpecialtyDetailScreen = lazy(() => import('./components/SpecialtyDetailScreen'));
+const TestSetupScreen = lazy(() => import('./components/TestSetupScreen'));
+const ConsentGateScreen = lazy(() => import('./components/ConsentGateScreen'));
+const AdminScreen = lazy(() => import('./components/AdminScreen'));
+const BlogScreen = lazy(() => import('./components/BlogScreen'));
+const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
+
+const LoadingFallback = () => (
+  <div className="min-h-screen bg-[#07090d] flex items-center justify-center">
+    <div className="text-slate-500 font-bold animate-pulse">Жүктелуде...</div>
+  </div>
+);
 
 const RootApp: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(getSavedUser());
@@ -269,24 +280,40 @@ const RootApp: React.FC = () => {
     );
   }
 
-  // If not authenticated, allow public shared history viewing in guest mode!
+  // If not authenticated, allow public shared history viewing and blog in guest mode!
   if (!user) {
     const isPublicHistory = window.location.pathname.startsWith('/history');
+    const isPublicBlog = window.location.pathname.startsWith('/blog');
+    
+    if (isPublicBlog) {
+      return (
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/blog" element={<BlogScreen />} />
+            <Route path="/blog/:postId" element={<BlogPostScreen />} />
+            <Route path="*" element={<AuthScreen onAuthSuccess={handleAuthSuccess} />} />
+          </Routes>
+        </Suspense>
+      );
+    }
+    
     if (isPublicHistory) {
       return (
-        <Routes>
-          <Route 
-            path="/history/:historyId?" 
-            element={
-              <HistoryScreen 
-                onBack={() => navigate('/')} 
-                isGuest={true}
-                onAuthSuccess={handleAuthSuccess}
-              />
-            } 
-          />
-          <Route path="*" element={<AuthScreen onAuthSuccess={handleAuthSuccess} />} />
-        </Routes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route 
+              path="/history/:historyId?" 
+              element={
+                <HistoryScreen 
+                  onBack={() => navigate('/')} 
+                  isGuest={true}
+                  onAuthSuccess={handleAuthSuccess}
+                />
+              } 
+            />
+            <Route path="*" element={<AuthScreen onAuthSuccess={handleAuthSuccess} />} />
+          </Routes>
+        </Suspense>
       );
     }
     return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
@@ -308,6 +335,7 @@ const RootApp: React.FC = () => {
   // Authenticated: show main app
   return (
     <div className="font-sans">
+      <Suspense fallback={<LoadingFallback />}>
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route 
@@ -333,6 +361,8 @@ const RootApp: React.FC = () => {
             />
           } 
         />
+        <Route path="/blog" element={<BlogScreen onBack={() => navigate('/home')} />} />
+        <Route path="/blog/:postId" element={<BlogPostScreen onBack={() => navigate('/blog')} />} />
         <Route 
           path="/test-setup" 
           element={
@@ -429,6 +459,7 @@ const RootApp: React.FC = () => {
           } 
         />
       </Routes>
+      </Suspense>
       <ConfirmModal 
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
@@ -451,9 +482,11 @@ const RootApp: React.FC = () => {
 };
 
 const App: React.FC = () => (
-  <Router>
-    <RootApp />
-  </Router>
+  <HelmetProvider>
+    <Router>
+      <RootApp />
+    </Router>
+  </HelmetProvider>
 );
 
 export default App;

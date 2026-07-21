@@ -1,4 +1,13 @@
-import masterProgramsData from '../univision_master_programs.json';
+// Lazy load the large JSON data
+let masterProgramsData: any = null;
+
+const loadMasterProgramsData = async () => {
+  if (!masterProgramsData) {
+    const module = await import('../univision_master_programs.json');
+    masterProgramsData = module.default || module;
+  }
+  return masterProgramsData;
+};
 
 export interface LiveProgramData {
   code: string;
@@ -119,8 +128,9 @@ function parseGroupHtml(html: string, originalUrl: string, code: string): LivePr
  * Fetch real-time specialty detail from univision.kz
  */
 export async function fetchLiveSpecialtyDetail(code: string): Promise<LiveProgramData | null> {
-  // 1. Locate specialty in JSON to get official URL
-  const cachedGroup = (masterProgramsData.groups as any[]).find((g: any) => g.code === code);
+  // 1. Load data lazily and locate specialty in JSON to get official URL
+  const data = await loadMasterProgramsData();
+  const cachedGroup = (data.groups as any[]).find((g: any) => g.code === code);
   const targetUrl = cachedGroup?.url || `https://univision.kz/kk/edu-program/group/${code}.html`;
 
   // 2. Convert to proxy URL (/univision-api/...)

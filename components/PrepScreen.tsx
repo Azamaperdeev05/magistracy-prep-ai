@@ -7,6 +7,7 @@ import {
 import { getSavedUser, UserProfile } from '../services/authService';
 import { SPECIALTIES } from '../data/specialties';
 import { getSpecialtyIconByCode } from '../utils/specialtyIcons';
+import SEO from './SEO';
 
 interface PrepScreenProps {
   onBack: () => void;
@@ -98,6 +99,11 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
 
   return (
     <div className={`min-h-screen ${bg} ${textPrimary} transition-colors duration-300 relative overflow-x-hidden selection:bg-blue-500/30 select-text`}>
+      <SEO
+        title="Дайындық"
+        description="Кешенді тестілеуге дайындық жоспары. Пәндер бойынша бағдарлама, тақырыптар және оқу материалдары."
+        canonical="https://magis-core.vercel.app/prep"
+      />
       {/* Background decoration */}
       <div className="absolute overflow-hidden inset-0 pointer-events-none z-0">
         <div className={`blob w-[500px] h-[500px] top-[-100px] -left-[100px] ${isDarkMode ? 'bg-blue-600/5' : 'bg-blue-600/[0.03]'}`} />

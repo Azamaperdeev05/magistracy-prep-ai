@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { SUBJECTS } from '../constants';
 import { SubjectId } from '../types';
+import SEO from './SEO';
 
 interface WelcomeScreenProps {
   onStart: (name: string) => void;
@@ -105,7 +106,12 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
     <div className={`min-h-screen transition-colors duration-300 overflow-x-hidden w-full max-w-[100vw] relative ${
       isDarkMode ? 'bg-[#07090d] text-[#f8fafc]' : 'bg-slate-50/50 text-slate-900'
     }`}>
-      
+      <SEO
+        title="Басты бет"
+        description="Магистратураға түсуге дайындалыңыз! 7000+ тест сұрақтары, 4 мамандық бойынша кешенді дайындық. Тегін онлайн платформа."
+        canonical="https://magis-core.vercel.app/home"
+      />
+
       {/* Background blobs */}
       <div className="absolute overflow-hidden inset-0 pointer-events-none">
         <div className={`blob w-[500px] h-[500px] top-[-100px] -right-[100px] transition-opacity duration-300 ${

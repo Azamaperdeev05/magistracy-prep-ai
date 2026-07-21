@@ -20,6 +20,7 @@ import { getSpecialtyIconByCode } from '../utils/specialtyIcons';
 import { SPECIALTIES, Specialty } from '../data/specialties';
 import { getSavedUser, updateUserSpecialty, UserProfile } from '../services/authService';
 import ConfirmModal from './modals/ConfirmModal';
+import SEO from './SEO';
 
 interface SpecialtiesScreenProps {
   onBack: () => void;
@@ -85,6 +86,11 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
     <div className={`min-h-screen p-4 md:p-8 relative selection:bg-blue-500/30 overflow-x-hidden transition-colors duration-300 ${
       isDarkMode ? 'bg-[#07090d] text-[#f8fafc]' : 'bg-slate-50 text-slate-900'
     }`}>
+      <SEO
+        title="Мамандықтар"
+        description="153 мамандық бойынша магистратураға дайындық. M001, M002, M094, M095 — өз мамандығыңызды таңдап, кешенді тестілеуге дайындалыңыз."
+        canonical="https://magis-core.vercel.app/specialties"
+      />
       {/* Background blobs */}
       <div className="absolute overflow-hidden inset-0 pointer-events-none">
         <div className={`blob w-[500px] h-[500px] top-[-100px] -right-[100px] ${
