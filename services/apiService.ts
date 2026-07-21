@@ -2,7 +2,8 @@ import { Question, SubjectId } from "../types";
 import { loadQuestionsBySubject } from "../data/questions";
 import { SYLLABUS_CONTENT } from "../data/syllabus";
 
-const shuffle = <T,>(items: T[]): T[] => {
+const shuffle = <T,>(items: T[] = []): T[] => {
+  if (!Array.isArray(items)) return [];
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -13,11 +14,13 @@ const shuffle = <T,>(items: T[]): T[] => {
 
 const cloneQuestion = (question: Question): Question => ({
   ...question,
-  options: question.options ? shuffle(question.options) : [],
+  options: Array.isArray(question?.options) ? shuffle(question.options) : [],
 });
 
-const pickRandom = (questions: Question[], count: number): Question[] =>
-  shuffle(questions).slice(0, count).map(cloneQuestion);
+const pickRandom = (questions: Question[] = [], count: number): Question[] => {
+  if (!Array.isArray(questions) || questions.length === 0) return [];
+  return shuffle(questions).slice(0, count).map(cloneQuestion);
+};
 
 const generateEnglishQuestions = async (count: number): Promise<Question[]> => {
   const englishQuestions = await loadQuestionsBySubject('english');

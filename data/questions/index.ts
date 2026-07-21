@@ -95,6 +95,18 @@ const questionModules: Record<string, () => Promise<{ default: Question[] }>> = 
 // Cache loaded modules
 const moduleCache = new Map<string, Question[]>();
 
+function extractQuestions(mod: any): Question[] {
+  if (!mod) return [];
+  if (Array.isArray(mod)) return mod;
+  if (Array.isArray(mod.default)) return mod.default;
+  for (const key of Object.keys(mod)) {
+    if (Array.isArray(mod[key])) {
+      return mod[key];
+    }
+  }
+  return [];
+}
+
 /**
  * Load questions for a specific set of module keys.
  * Only loads the modules actually needed for the current test.
@@ -108,10 +120,15 @@ export async function loadQuestionsForModules(keys: string[]): Promise<Question[
         console.warn(`[Questions] No loader for key: ${key}`);
         return [];
       }
-      const mod = await loader();
-      const questions = (mod.default || mod) as Question[];
-      moduleCache.set(key, questions);
-      return questions;
+      try {
+        const mod = await loader();
+        const questions = extractQuestions(mod);
+        moduleCache.set(key, questions);
+        return questions;
+      } catch (err) {
+        console.error(`[Questions] Failed to load module ${key}:`, err);
+        return [];
+      }
     })
   );
   return results.flat();
