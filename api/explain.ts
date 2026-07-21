@@ -83,10 +83,14 @@ export default async function handler(request: Request) {
       }
     }
 
-    // 3. Process AI Explanation Call (Qwen API with DeepSeek API Fallback)
+    // 3. Process AI Explanation Call (OpenRouter API Primary, Qwen & DeepSeek Fallbacks)
     const { systemPrompt, userPrompt, history } = await request.json();
     
-    const qwenApiKey = process.env.QWEN_API_KEY || "sk-ws-H.HYLMII.uSEl.MEUCIQDyIG4MXUhrNX2qB87wzsfHPjnHAv4b9bqNHmzEmIAuSQIgBZcVpnQ6lvEhYBgHQLQfr57QfVct57_WWDSahG7Wl-8";
+    const openrouterApiKey = process.env.OPENROUTER_API_KEY || "";
+    const openrouterApiUrl = process.env.OPENROUTER_API_URL || "https://openrouter.ai/api/v1";
+    const openrouterModel = process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free";
+
+    const qwenApiKey = process.env.QWEN_API_KEY || "";
     const qwenApiUrl = process.env.QWEN_API_URL || "https://ws-0xupo36814pi68qv.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1";
     const qwenModel = process.env.QWEN_MODEL || "qwen-turbo";
 
@@ -101,8 +105,37 @@ export default async function handler(request: Request) {
 
     let result = "";
 
-    // Try Qwen API
-    if (qwenApiKey) {
+    // 1. Primary: Try OpenRouter API (Cohere North Mini Code / Free High Performance AI)
+    if (openrouterApiKey) {
+      try {
+        const orRes = await fetch(`${openrouterApiUrl.replace(/\/$/, '')}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openrouterApiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://magis-core.vercel.app',
+            'X-Title': 'MagisCore AI'
+          },
+          body: JSON.stringify({
+            model: openrouterModel,
+            messages,
+            temperature: 0.6
+          })
+        });
+
+        if (orRes.ok) {
+          const data = await orRes.json();
+          result = data.choices?.[0]?.message?.content || "";
+        } else {
+          console.warn("[AI API] OpenRouter API returned status:", orRes.status);
+        }
+      } catch (err) {
+        console.warn("[AI API] OpenRouter API fetch failed:", err);
+      }
+    }
+
+    // 2. Secondary: Try Qwen API if OpenRouter didn't yield a response
+    if (!result && qwenApiKey) {
       try {
         const qwenRes = await fetch(`${qwenApiUrl.replace(/\/$/, '')}/chat/completions`, {
           method: 'POST',
@@ -128,7 +161,7 @@ export default async function handler(request: Request) {
       }
     }
 
-    // Fallback to DeepSeek API if Qwen did not return a result
+    // 3. Fallback: Try DeepSeek API
     if (!result && deepseekApiKey) {
       try {
         const deepseekRes = await fetch(`${deepseekApiUrl.replace(/\/$/, '')}/chat/completions`, {
