@@ -1,6 +1,5 @@
-import { db } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
 import { getSavedUser } from './authService';
+import { getDb } from '../firebase';
 
 export function initGlobalLogger() {
   if (typeof window === 'undefined') return;
@@ -29,9 +28,9 @@ export function initGlobalLogger() {
         timestamp: new Date().toISOString(),
       };
 
-      if (db) {
-        await addDoc(collection(db, "client_errors"), errorData);
-      }
+      const db = await getDb();
+      const { collection, addDoc } = await import('firebase/firestore');
+      await addDoc(collection(db, "client_errors"), errorData);
     } catch (e) {
       // Fail silently to prevent infinite loops
     } finally {
@@ -58,9 +57,9 @@ export function initGlobalLogger() {
         timestamp: new Date().toISOString(),
       };
 
-      if (db) {
-        await addDoc(collection(db, "client_errors"), errorData);
-      }
+      const db = await getDb();
+      const { collection, addDoc } = await import('firebase/firestore');
+      await addDoc(collection(db, "client_errors"), errorData);
     } catch (e) {
       // Fail silently to prevent infinite loops
     } finally {
@@ -103,9 +102,10 @@ export function initGlobalLogger() {
         timestamp: new Date().toISOString(),
       };
 
-      if (db) {
+      getDb().then(async db => {
+        const { collection, addDoc } = await import('firebase/firestore');
         addDoc(collection(db, "client_errors"), errorData);
-      }
+      });
     } catch (e) {
       // Fail silently to prevent infinite loops
     } finally {

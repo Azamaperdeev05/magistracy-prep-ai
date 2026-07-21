@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import { 
   BookOpen, Brain, Clock, Database, Globe, ArrowRight, 
   Award, Zap, Target, GraduationCap, TrendingUp, Shield, 

@@ -1,10 +1,6 @@
-import { initializeApp, type FirebaseApp } from "firebase/app";
-import { 
-  getAuth, 
-  GoogleAuthProvider,
-  type Auth
-} from "firebase/auth";
-import { getFirestore, type Firestore } from "firebase/firestore";
+import type { FirebaseApp } from "firebase/app";
+import type { Auth } from "firebase/auth";
+import type { Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
@@ -15,44 +11,46 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
 };
 
-// Lazy-initialized Firebase singletons
 let _app: FirebaseApp | null = null;
 let _auth: Auth | null = null;
 let _db: Firestore | null = null;
-let _googleProvider: GoogleAuthProvider | null = null;
+let _googleProvider: any = null;
 
-function getApp(): FirebaseApp {
+async function getApp(): Promise<FirebaseApp> {
   if (!_app) {
+    const { initializeApp } = await import('firebase/app');
     _app = initializeApp(firebaseConfig);
   }
   return _app;
 }
 
-function getAuthInstance(): Auth {
+export async function getAuthInstance(): Promise<Auth> {
   if (!_auth) {
-    _auth = getAuth(getApp());
+    const { getAuth } = await import('firebase/auth');
+    const app = await getApp();
+    _auth = getAuth(app);
   }
   return _auth;
 }
 
-function getFirestoreInstance(): Firestore {
+export async function getDb(): Promise<Firestore> {
   if (!_db) {
-    _db = getFirestore(getApp());
+    const { getFirestore } = await import('firebase/firestore');
+    const app = await getApp();
+    _db = getFirestore(app);
   }
   return _db;
 }
 
-function getGoogleProviderInstance(): GoogleAuthProvider {
+export async function getGoogleProvider() {
   if (!_googleProvider) {
+    const { GoogleAuthProvider } = await import('firebase/auth');
     _googleProvider = new GoogleAuthProvider();
-    _googleProvider.setCustomParameters({
-      prompt: 'select_account'
-    });
+    _googleProvider.setCustomParameters({ prompt: 'select_account' });
   }
   return _googleProvider;
 }
 
-// Export lazy getters — Firebase is only initialized on first access
 export const auth = new Proxy({} as Auth, {
   get(_, prop) {
     return (getAuthInstance() as any)[prop];
@@ -61,12 +59,12 @@ export const auth = new Proxy({} as Auth, {
 
 export const db = new Proxy({} as Firestore, {
   get(_, prop) {
-    return (getFirestoreInstance() as any)[prop];
+    return (getDb() as any)[prop];
   }
 });
 
-export const googleProvider = new Proxy({} as GoogleAuthProvider, {
+export const googleProvider = new Proxy({} as any, {
   get(_, prop) {
-    return (getGoogleProviderInstance() as any)[prop];
+    return (getGoogleProvider() as any)[prop];
   }
 });

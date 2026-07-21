@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import {
   ArrowLeft, ExternalLink, Building2, Check, Info,
   GraduationCap, MapPin, Globe, Users, ChevronDown,

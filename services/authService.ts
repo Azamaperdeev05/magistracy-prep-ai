@@ -1,32 +1,9 @@
 /**
  * Auth Service using Firebase Authentication and Cloud Firestore.
  * Connects directly to Firebase Auth and saves test results securely in Firestore.
+ * Firebase SDK is loaded lazily via dynamic imports for optimal bundle size.
  */
 
-import { auth, googleProvider, db } from '../firebase';
-import { 
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
-  GoogleAuthProvider,
-  signOut,
-  sendPasswordResetEmail
-} from 'firebase/auth';
-import { 
-  collection, 
-  addDoc, 
-  getDocs, 
-  query, 
-  where, 
-  deleteDoc, 
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc
-} from 'firebase/firestore';
 import { TestResult } from "../types";
 
 const TOKEN_KEY = 'magistracy_access_token';
@@ -105,11 +82,49 @@ function getOrCreateNumericId(uid: string): number {
 }
 
 
+// Lazy firebase imports — only loaded when firebase functions are called
+let _auth: any = null;
+let _db: any = null;
+let _googleProvider: any = null;
+
+async function getFirebaseAuth() {
+  if (!_auth) {
+    const { getAuth } = await import('firebase/auth');
+    const { initializeApp } = await import('firebase/app');
+    const app = initializeApp({
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
+    });
+    _auth = getAuth(app);
+  }
+  return _auth;
+}
+
+async function getFirebaseDb() {
+  if (!_db) {
+    const { getFirestore } = await import('firebase/firestore');
+    const authInstance = await getFirebaseAuth();
+    _db = getFirestore(authInstance.app);
+  }
+  return _db;
+}
+
+async function getFirebaseGoogleProvider() {
+  if (!_googleProvider) {
+    const { GoogleAuthProvider } = await import('firebase/auth');
+    _googleProvider = new GoogleAuthProvider();
+    _googleProvider.setCustomParameters({ prompt: 'select_account' });
+  }
+  return _googleProvider;
+}
+
 // Check if Firebase is ready
 function ensureFirebaseReady() {
-  if (!auth) {
-    throw new Error('Firebase Auth жүйесі бапталмаған. .env файлындағы баптауларды тексеріңіз.');
-  }
+  // Will be lazy-loaded on first firebase call
 }
 
 export function getToken(): string | null {
@@ -146,7 +161,6 @@ export function authHeaders(): Record<string, string> {
 
 /** Email/Password Тіркелу */
 export async function register(email: string, full_name: string, password: string): Promise<AuthResponse> {
-  ensureFirebaseReady();
   const cleanEmail = email.toLowerCase().trim();
   const cleanName = full_name.trim();
 
@@ -154,7 +168,9 @@ export async function register(email: string, full_name: string, password: strin
   if (!cleanEmail || !cleanEmail.includes('@')) throw new Error('Жарамсыз email мекенжайы');
   if (!cleanName) throw new Error('Аты-жөніңізді жазыңыз');
 
-  const userCredential = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+  const authInstance = await getFirebaseAuth();
+  const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
+  const userCredential = await createUserWithEmailAndPassword(authInstance, cleanEmail, password);
   const fbUser = userCredential.user;
 
   await updateProfile(fbUser, { displayName: cleanName });
@@ -177,10 +193,11 @@ export async function register(email: string, full_name: string, password: strin
 
 /** Email/Password Кіру */
 export async function login(email: string, password: string): Promise<AuthResponse> {
-  ensureFirebaseReady();
   const cleanEmail = email.toLowerCase().trim();
 
-  const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
+  const authInstance = await getFirebaseAuth();
+  const { signInWithEmailAndPassword } = await import('firebase/auth');
+  const userCredential = await signInWithEmailAndPassword(authInstance, cleanEmail, password);
   const fbUser = userCredential.user;
 
   const numericId = getOrCreateNumericId(fbUser.uid);
@@ -193,20 +210,20 @@ export async function login(email: string, password: string): Promise<AuthRespon
   };
 
   // Load consent from Firestore so it persists across sessions
-  if (db) {
-    try {
-      const userDocRef = doc(db, "users", fbUser.uid);
-      const userSnap = await getDoc(userDocRef);
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        if (data.consent) {
-          profile.consent = data.consent as UserConsent;
-        }
-        profile.is_premium = !!data.is_premium;
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { doc, getDoc } = await import('firebase/firestore');
+    const userDocRef = doc(dbInstance, "users", fbUser.uid);
+    const userSnap = await getDoc(userDocRef);
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+      if (data.consent) {
+        profile.consent = data.consent as UserConsent;
       }
-    } catch (e) {
-      console.warn("Firestore consent fetch on login failed:", e);
+      profile.is_premium = !!data.is_premium;
     }
+  } catch (e) {
+    console.warn("Firestore consent fetch on login failed:", e);
   }
 
   const idToken = await fbUser.getIdToken();
@@ -218,16 +235,13 @@ export async function login(email: string, password: string): Promise<AuthRespon
 
 /** Google Sign-In — автоматты таңдау: popup немесе redirect */
 export async function loginWithGoogle(): Promise<AuthResponse | void> {
-  ensureFirebaseReady();
-  const provider = googleProvider || (() => {
-    const p = new GoogleAuthProvider();
-    p.setCustomParameters({ prompt: 'select_account' });
-    return p;
-  })();
+  const authInstance = await getFirebaseAuth();
+  const provider = await getFirebaseGoogleProvider();
+  const { signInWithPopup, signInWithRedirect } = await import('firebase/auth');
 
   try {
     // Popup-ты бірінші сынап көру (desktop жұмыс істейді)
-    const userCredential = await signInWithPopup(auth, provider);
+    const userCredential = await signInWithPopup(authInstance, provider);
     const fbUser = userCredential.user;
 
     const numericId = getOrCreateNumericId(fbUser.uid);
@@ -239,18 +253,18 @@ export async function loginWithGoogle(): Promise<AuthResponse | void> {
       is_active: true
     };
 
-    if (db) {
-      try {
-        const userDocRef = doc(db, "users", fbUser.uid);
-        const userSnap = await getDoc(userDocRef);
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          if (data.consent) profile.consent = data.consent as UserConsent;
-          profile.is_premium = !!data.is_premium;
-        }
-      } catch (e) {
-        console.warn("Firestore consent fetch on Google login failed:", e);
+    try {
+      const dbInstance = await getFirebaseDb();
+      const { doc, getDoc } = await import('firebase/firestore');
+      const userDocRef = doc(dbInstance, "users", fbUser.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.consent) profile.consent = data.consent as UserConsent;
+        profile.is_premium = !!data.is_premium;
       }
+    } catch (e) {
+      console.warn("Firestore consent fetch on Google login failed:", e);
     }
 
     const idToken = await fbUser.getIdToken();
@@ -268,21 +282,22 @@ export async function loginWithGoogle(): Promise<AuthResponse | void> {
       popupError.code === 'auth/cancelled-popup-request' ||
       popupError.code === 'auth/operation-not-allowed'
     ) {
-      await signInWithRedirect(auth, provider);
+      await signInWithRedirect(authInstance, provider);
       return;
     }
 
     // Басқа қателер — redirect-ке ауысу
-    await signInWithRedirect(auth, provider);
+    await signInWithRedirect(authInstance, provider);
     return;
   }
 }
 
 /** Redirect-тен кейінгі нәтижені өңдеу */
 export async function handleGoogleRedirectResult(): Promise<AuthResponse | null> {
-  ensureFirebaseReady();
   try {
-    const result = await getRedirectResult(auth);
+    const authInstance = await getFirebaseAuth();
+    const { getRedirectResult } = await import('firebase/auth');
+    const result = await getRedirectResult(authInstance);
     if (!result || !result.user) return null;
 
     const fbUser = result.user;
@@ -296,20 +311,20 @@ export async function handleGoogleRedirectResult(): Promise<AuthResponse | null>
     };
 
     // Load consent from Firestore
-    if (db) {
-      try {
-        const userDocRef = doc(db, "users", fbUser.uid);
-        const userSnap = await getDoc(userDocRef);
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          if (data.consent) {
-            profile.consent = data.consent as UserConsent;
-          }
-          profile.is_premium = !!data.is_premium;
+    try {
+      const dbInstance = await getFirebaseDb();
+      const { doc, getDoc } = await import('firebase/firestore');
+      const userDocRef = doc(dbInstance, "users", fbUser.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.consent) {
+          profile.consent = data.consent as UserConsent;
         }
-      } catch (e) {
-        console.warn("Firestore consent fetch on redirect login failed:", e);
+        profile.is_premium = !!data.is_premium;
       }
+    } catch (e) {
+      console.warn("Firestore consent fetch on redirect login failed:", e);
     }
 
     const idToken = await fbUser.getIdToken();
@@ -328,16 +343,20 @@ export async function handleGoogleRedirectResult(): Promise<AuthResponse | null>
 
 /** Шығу */
 export async function logout(): Promise<void> {
-  if (auth) {
-    await signOut(auth);
+  try {
+    const authInstance = await getFirebaseAuth();
+    const { signOut } = await import('firebase/auth');
+    await signOut(authInstance);
+  } catch (e) {
+    console.warn("Firebase signOut failed:", e);
   }
   removeToken();
 }
 
 /** Профиль алу */
 export async function getProfile(): Promise<UserProfile> {
-  ensureFirebaseReady();
-  const currentUser = auth.currentUser;
+  const authInstance = await getFirebaseAuth();
+  const currentUser = authInstance.currentUser;
   if (!currentUser) {
     removeToken();
     throw new Error('Сессия аяқталды');
@@ -354,35 +373,35 @@ export async function getProfile(): Promise<UserProfile> {
   let firestoreConsent: UserConsent | undefined = savedUser?.consent;
 
   // Synchronize with Firestore database if online/db is ready
-  if (db) {
-    try {
-      const userDocRef = doc(db, "users", currentUser.uid);
-      const userSnap = await getDoc(userDocRef);
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        isPremium = !!data.is_premium;
-        aiQueriesToday = data.ai_queries_today || 0;
-        aiQueriesDate = data.ai_queries_date || "";
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { doc, getDoc, setDoc } = await import('firebase/firestore');
+    const userDocRef = doc(dbInstance, "users", currentUser.uid);
+    const userSnap = await getDoc(userDocRef);
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+      isPremium = !!data.is_premium;
+      aiQueriesToday = data.ai_queries_today || 0;
+      aiQueriesDate = data.ai_queries_date || "";
 
-        // Read consent from Firestore (source of truth)
-        if (data.consent) {
-          firestoreConsent = data.consent as UserConsent;
-        }
-      } else {
-        // Create initial document
-        await setDoc(userDocRef, {
-          email: currentUser.email || "",
-          full_name: currentUser.displayName || savedUser?.full_name || 'Қолданушы',
-          is_premium: false,
-          created_at: new Date().toISOString()
-        });
+      // Read consent from Firestore (source of truth)
+      if (data.consent) {
+        firestoreConsent = data.consent as UserConsent;
       }
-    } catch (e) {
-      console.warn("Firestore user sync failed, falling back to local storage:", e);
-      isPremium = !!savedUser?.is_premium;
-      aiQueriesToday = savedUser?.ai_queries_today || 0;
-      aiQueriesDate = savedUser?.ai_queries_date || "";
+    } else {
+      // Create initial document
+      await setDoc(userDocRef, {
+        email: currentUser.email || "",
+        full_name: currentUser.displayName || savedUser?.full_name || 'Қолданушы',
+        is_premium: false,
+        created_at: new Date().toISOString()
+      });
     }
+  } catch (e) {
+    console.warn("Firestore user sync failed, falling back to local storage:", e);
+    isPremium = !!savedUser?.is_premium;
+    aiQueriesToday = savedUser?.ai_queries_today || 0;
+    aiQueriesDate = savedUser?.ai_queries_date || "";
   }
 
   const profile: UserProfile = {
@@ -410,9 +429,10 @@ export async function getProfile(): Promise<UserProfile> {
 
 /** Парольді ұмыту — Сілтеме жіберу */
 export async function forgotPassword(email: string): Promise<string> {
-  ensureFirebaseReady();
   const cleanEmail = email.toLowerCase().trim();
-  await sendPasswordResetEmail(auth, cleanEmail);
+  const authInstance = await getFirebaseAuth();
+  const { sendPasswordResetEmail } = await import('firebase/auth');
+  await sendPasswordResetEmail(authInstance, cleanEmail);
   return 'Құпия сөзді өзгерту сілтемесі email-ге жіберілді. Поштаңызды тексеріңіз.';
 }
 
@@ -423,57 +443,75 @@ export async function getHistory(): Promise<HistoryItem[]> {
   const user = getSavedUser();
   if (!user) throw new Error('Сессия аяқталды');
 
-  ensureFirebaseReady();
-  if (db) {
-    try {
-      const q = query(collection(db, "history"), where("user_uid", "==", user.uid));
-      const snap = await getDocs(q);
-      const list: HistoryItem[] = [];
-      
-      snap.forEach(docSnap => {
-        const data = docSnap.data();
-        list.push({
-          id: data.id,
-          total_score: data.total_score,
-          max_score: data.max_score,
-          subject_scores: data.subject_scores,
-          correct_count: data.correct_count,
-          total_questions: data.total_questions,
-          created_at: data.created_at,
-          questions_data: data.questions_data,
-          answers_data: data.answers_data
-        });
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, query, where, getDocs } = await import('firebase/firestore');
+    const q = query(collection(dbInstance, "history"), where("user_uid", "==", user.uid));
+    const snap = await getDocs(q);
+    const list: HistoryItem[] = [];
+    
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      list.push({
+        id: data.id,
+        total_score: data.total_score,
+        max_score: data.max_score,
+        subject_scores: data.subject_scores,
+        correct_count: data.correct_count,
+        total_questions: data.total_questions,
+        created_at: data.created_at,
+        questions_data: data.questions_data,
+        answers_data: data.answers_data
       });
-      
-      return list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    } catch (err) {
-      console.error("Firestore history fetch failed, falling back to empty:", err);
-    }
+    });
+    
+    return list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  } catch (err) {
+    console.error("Firestore history fetch failed, falling back to empty:", err);
   }
   return [];
 }
 
 export async function getHistoryItemById(id: string | number): Promise<HistoryItem | null> {
-  ensureFirebaseReady();
-  if (db) {
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, query, where, getDocs, doc, getDoc } = await import('firebase/firestore');
+    const numId = Number(id);
+    const targetId = isNaN(numId) ? id : numId;
+
+    // 1. Query by numeric or string id field
+    const q1 = query(collection(dbInstance, "history"), where("id", "==", targetId));
+    let snap = await getDocs(q1);
+
+    // 2. Query by string id field if numeric query returned empty
+    if (snap.empty && typeof targetId === 'number') {
+      const q2 = query(collection(dbInstance, "history"), where("id", "==", String(targetId)));
+      snap = await getDocs(q2);
+    }
+
+    if (!snap.empty) {
+      const data = snap.docs[0].data();
+      return {
+        id: data.id || snap.docs[0].id,
+        total_score: data.total_score,
+        max_score: data.max_score,
+        subject_scores: data.subject_scores,
+        correct_count: data.correct_count,
+        total_questions: data.total_questions,
+        created_at: data.created_at,
+        questions_data: data.questions_data,
+        answers_data: data.answers_data
+      };
+    }
+
+    // 3. Fallback: try fetching by Firestore doc ID directly
     try {
-      const numId = Number(id);
-      const targetId = isNaN(numId) ? id : numId;
-
-      // 1. Query by numeric or string id field
-      const q1 = query(collection(db, "history"), where("id", "==", targetId));
-      let snap = await getDocs(q1);
-
-      // 2. Query by string id field if numeric query returned empty
-      if (snap.empty && typeof targetId === 'number') {
-        const q2 = query(collection(db, "history"), where("id", "==", String(targetId)));
-        snap = await getDocs(q2);
-      }
-
-      if (!snap.empty) {
-        const data = snap.docs[0].data();
+      const docRef = doc(dbInstance, "history", String(id));
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
         return {
-          id: data.id || snap.docs[0].id,
+          id: data.id || docSnap.id,
           total_score: data.total_score,
           max_score: data.max_score,
           subject_scores: data.subject_scores,
@@ -484,29 +522,9 @@ export async function getHistoryItemById(id: string | number): Promise<HistoryIt
           answers_data: data.answers_data
         };
       }
-
-      // 3. Fallback: try fetching by Firestore doc ID directly
-      try {
-        const docRef = doc(db, "history", String(id));
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          return {
-            id: data.id || docSnap.id,
-            total_score: data.total_score,
-            max_score: data.max_score,
-            subject_scores: data.subject_scores,
-            correct_count: data.correct_count,
-            total_questions: data.total_questions,
-            created_at: data.created_at,
-            questions_data: data.questions_data,
-            answers_data: data.answers_data
-          };
-        }
-      } catch (e) {}
-    } catch (err) {
-      console.error("Fetch history by ID failed:", err);
-    }
+    } catch (e) {}
+  } catch (err) {
+    console.error("Fetch history by ID failed:", err);
   }
   return null;
 }
@@ -515,19 +533,22 @@ export async function deleteHistoryItem(id: number): Promise<void> {
   const user = getSavedUser();
   if (!user) throw new Error('Сессия аяқталды');
 
-  ensureFirebaseReady();
-  if (db) {
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, query, where, getDocs, doc, deleteDoc } = await import('firebase/firestore');
     const q = query(
-      collection(db, "history"), 
+      collection(dbInstance, "history"), 
       where("user_uid", "==", user.uid),
       where("id", "==", id)
     );
     const snap = await getDocs(q);
     const promises: Promise<void>[] = [];
     snap.forEach(docSnap => {
-      promises.push(deleteDoc(doc(db, "history", docSnap.id)));
+      promises.push(deleteDoc(doc(dbInstance, "history", docSnap.id)));
     });
     await Promise.all(promises);
+  } catch (err) {
+    console.error("Delete history item failed:", err);
   }
 }
 
@@ -539,7 +560,6 @@ export async function saveTestResult(
   const user = getSavedUser();
   if (!user) throw new Error('Сессия аяқталды');
 
-  ensureFirebaseReady();
   const subjectScores = JSON.stringify(result.subjectScores);
 
   const item: HistoryItem = {
@@ -554,12 +574,16 @@ export async function saveTestResult(
     answers_data: answers ? JSON.stringify(answers) : undefined
   };
 
-  if (db) {
-    await addDoc(collection(db, "history"), {
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, addDoc } = await import('firebase/firestore');
+    await addDoc(collection(dbInstance, "history"), {
       ...item,
       user_uid: user.uid,
       user_id: user.id
     });
+  } catch (err) {
+    console.warn("Failed to save test result to Firestore:", err);
   }
 
   return item;
@@ -573,9 +597,10 @@ export async function sendQuestionReport(
   const user = getSavedUser();
   if (!user) throw new Error('Сессия аяқталды');
 
-  ensureFirebaseReady();
-  if (db) {
-    await addDoc(collection(db, "reports"), {
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, addDoc } = await import('firebase/firestore');
+    await addDoc(collection(dbInstance, "reports"), {
       question_id: questionId,
       question_text: questionText,
       user_uid: user.uid,
@@ -584,7 +609,7 @@ export async function sendQuestionReport(
       comment: comment.trim(),
       created_at: new Date().toISOString()
     });
-  } else {
+  } catch (err) {
     throw new Error('Деректер базасымен байланысу мүмкін емес');
   }
 }
@@ -615,27 +640,33 @@ export function updateUserProfileFields(fields: Partial<UserProfile>): UserProfi
   saveUser(updatedProfile);
 
   // Sync to Firestore asynchronously
-  if (db && user.uid) {
-    const userDocRef = doc(db, "users", user.uid);
-    const firestoreUpdate: any = {};
-    if (fields.specialty_code !== undefined) firestoreUpdate.specialty_code = fields.specialty_code;
-    if (fields.specialty_name !== undefined) firestoreUpdate.specialty_name = fields.specialty_name;
-    if (fields.last_name !== undefined) firestoreUpdate.last_name = fields.last_name;
-    if (fields.first_name !== undefined) firestoreUpdate.first_name = fields.first_name;
-    if (fields.patronymic !== undefined) firestoreUpdate.patronymic = fields.patronymic;
-    if (fields.test_lang !== undefined) firestoreUpdate.test_lang = fields.test_lang;
-    if (fields.foreign_lang !== undefined) firestoreUpdate.foreign_lang = fields.foreign_lang;
-    if (fields.tgo_lang !== undefined) firestoreUpdate.tgo_lang = fields.tgo_lang;
-    if (fields.is_premium !== undefined) firestoreUpdate.is_premium = fields.is_premium;
-    if (fields.ai_queries_today !== undefined) firestoreUpdate.ai_queries_today = fields.ai_queries_today;
-    if (fields.ai_queries_date !== undefined) firestoreUpdate.ai_queries_date = fields.ai_queries_date;
-    if (fields.consent !== undefined) firestoreUpdate.consent = fields.consent;
+  if (user.uid) {
+    (async () => {
+      try {
+        const dbInstance = await getFirebaseDb();
+        const { doc, updateDoc } = await import('firebase/firestore');
+        const userDocRef = doc(dbInstance, "users", user.uid);
+        const firestoreUpdate: any = {};
+        if (fields.specialty_code !== undefined) firestoreUpdate.specialty_code = fields.specialty_code;
+        if (fields.specialty_name !== undefined) firestoreUpdate.specialty_name = fields.specialty_name;
+        if (fields.last_name !== undefined) firestoreUpdate.last_name = fields.last_name;
+        if (fields.first_name !== undefined) firestoreUpdate.first_name = fields.first_name;
+        if (fields.patronymic !== undefined) firestoreUpdate.patronymic = fields.patronymic;
+        if (fields.test_lang !== undefined) firestoreUpdate.test_lang = fields.test_lang;
+        if (fields.foreign_lang !== undefined) firestoreUpdate.foreign_lang = fields.foreign_lang;
+        if (fields.tgo_lang !== undefined) firestoreUpdate.tgo_lang = fields.tgo_lang;
+        if (fields.is_premium !== undefined) firestoreUpdate.is_premium = fields.is_premium;
+        if (fields.ai_queries_today !== undefined) firestoreUpdate.ai_queries_today = fields.ai_queries_today;
+        if (fields.ai_queries_date !== undefined) firestoreUpdate.ai_queries_date = fields.ai_queries_date;
+        if (fields.consent !== undefined) firestoreUpdate.consent = fields.consent;
 
-    if (Object.keys(firestoreUpdate).length > 0) {
-      updateDoc(userDocRef, firestoreUpdate).catch(err => {
+        if (Object.keys(firestoreUpdate).length > 0) {
+          await updateDoc(userDocRef, firestoreUpdate);
+        }
+      } catch (err) {
         console.warn("Async Firestore user update failed:", err);
-      });
-    }
+      }
+    })();
   }
 
   return updatedProfile;
@@ -657,38 +688,40 @@ export async function deleteUserAccountAndHistory(): Promise<void> {
   const user = getSavedUser();
   if (!user) throw new Error('Сессия аяқталды');
 
-  ensureFirebaseReady();
-  
-  // 1. Delete history from Firestore
-  if (db) {
-    const q = query(collection(db, "history"), where("user_uid", "==", user.uid));
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, query, where, getDocs, doc, deleteDoc } = await import('firebase/firestore');
+    
+    // 1. Delete history from Firestore
+    const q = query(collection(dbInstance, "history"), where("user_uid", "==", user.uid));
     const snap = await getDocs(q);
     const promises: Promise<void>[] = [];
     snap.forEach(docSnap => {
-      promises.push(deleteDoc(doc(db, "history", docSnap.id)));
+      promises.push(deleteDoc(doc(dbInstance, "history", docSnap.id)));
     });
     await Promise.all(promises);
-  }
 
-  // 2. Delete reports if any
-  if (db) {
-    const q = query(collection(db, "reports"), where("user_uid", "==", user.uid));
-    const snap = await getDocs(q);
-    const promises: Promise<void>[] = [];
-    snap.forEach(docSnap => {
-      promises.push(deleteDoc(doc(db, "reports", docSnap.id)));
+    // 2. Delete reports if any
+    const q2 = query(collection(dbInstance, "reports"), where("user_uid", "==", user.uid));
+    const snap2 = await getDocs(q2);
+    const promises2: Promise<void>[] = [];
+    snap2.forEach(docSnap => {
+      promises2.push(deleteDoc(doc(dbInstance, "reports", docSnap.id)));
     });
-    await Promise.all(promises);
+    await Promise.all(promises2);
+  } catch (err) {
+    console.warn("Firestore delete failed:", err);
   }
 
   // 3. Delete auth account in Firebase
-  const currentUser = auth.currentUser;
-  if (currentUser) {
-    try {
+  try {
+    const authInstance = await getFirebaseAuth();
+    const currentUser = authInstance.currentUser;
+    if (currentUser) {
       await currentUser.delete();
-    } catch (e) {
-      console.warn("Could not delete auth user directly (might need reauth):", e);
     }
+  } catch (e) {
+    console.warn("Could not delete auth user directly (might need reauth):", e);
   }
 
   // 4. Log out and clear localStorage

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import { 
   Search, ArrowLeft, Check, Info, Sparkles, GraduationCap,
   Zap, ShieldCheck, Brain, TrendingUp, Scale, FlaskConical,

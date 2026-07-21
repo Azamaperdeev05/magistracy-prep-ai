@@ -4,8 +4,6 @@ import { Question, SubjectId, UserAnswers } from '../types';
 import { SUBJECTS } from '../constants';
 import { ChevronDown, ChevronUp, CheckCircle, XCircle, Trophy, Home, RotateCcw, BookOpen, TrendingUp, Target, BarChart3, BrainCircuit, AlertTriangle, Star, MessageSquare } from 'lucide-react';
 import { saveTestResult, checkAndIncrementAiLimit, getSavedUser, getHistoryItemById } from '../services/authService';
-import { db } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
 import { calculateTestResult, scoreQuestion } from '../services/scoringService';
 import { getAiExplanation, AiQuestionContext } from '../services/apiService';
 import MarkdownRenderer from './MarkdownRenderer';

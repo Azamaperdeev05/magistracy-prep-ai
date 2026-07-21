@@ -1,7 +1,6 @@
 import { Question, SubjectId } from "../types";
 import { loadQuestionsBySubject } from "../data/questions";
 import { SYLLABUS_CONTENT } from "../data/syllabus";
-import { auth } from "../firebase";
 
 const shuffle = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -310,7 +309,16 @@ function buildQuestionContextForAi(ctx: AiQuestionContext): string {
 }
 
 async function callAiCompletions(systemPrompt: string, userPrompt: string, history: ChatMessage[] = []): Promise<string> {
-  const token = auth && auth.currentUser ? await auth.currentUser.getIdToken() : null;
+  let token: string | null = null;
+  try {
+    const { getAuth } = await import('firebase/auth');
+    const authInstance = getAuth();
+    if (authInstance.currentUser) {
+      token = await authInstance.currentUser.getIdToken();
+    }
+  } catch (e) {
+    // Firebase not initialized, continue without token
+  }
   const response = await fetch('/api/explain', {
     method: "POST",
     headers: {

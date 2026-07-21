@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import { AlertCircle } from 'lucide-react';
 import { loginWithGoogle } from '../services/authService';
-import { auth } from '../firebase';
 
 interface AuthScreenProps {
   onAuthSuccess: (user: { id: number; email: string; full_name: string }) => void;

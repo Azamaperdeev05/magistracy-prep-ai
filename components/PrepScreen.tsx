@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import { 
   ArrowLeft, GraduationCap, Globe, Brain, Database, Zap, BookOpen, 
   Award, Info, FileCheck, ExternalLink, Layers, ShieldCheck, Sparkles

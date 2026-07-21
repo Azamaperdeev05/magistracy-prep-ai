@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import { 
   Shield, Users, History, AlertTriangle, Award, Search, 
   Loader2, CheckCircle2, Calendar, ChevronRight, ArrowLeft, 

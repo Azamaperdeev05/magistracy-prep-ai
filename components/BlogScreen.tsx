@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion } from './Motion';
 import { 
   ArrowLeft, Calendar, BookOpen, Lightbulb, Clock,
   GraduationCap, Target, TrendingUp, ChevronRight

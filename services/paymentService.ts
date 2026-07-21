@@ -1,17 +1,5 @@
-import { db } from '../firebase';
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  doc,
-  updateDoc,
-  getDoc,
-  Timestamp
-} from 'firebase/firestore';
 import { getSavedUser } from './authService';
+import { getDb } from '../firebase';
 
 export interface PaymentOrder {
   id?: string;
@@ -41,41 +29,63 @@ export async function createPaymentOrder(userEmail: string, userUid: string, use
     createdAt: new Date().toISOString(),
   };
 
-  if (db) {
+  try {
+    const db = await getDb();
+    const { collection, addDoc } = await import('firebase/firestore');
     await addDoc(collection(db, "payments"), order);
+  } catch (err) {
+    console.warn("Failed to create payment order in Firestore:", err);
   }
 
   return order;
 }
 
 export async function getMyPayments(userUid: string): Promise<PaymentOrder[]> {
-  if (!db) return [];
-  const q = query(
-    collection(db, "payments"),
-    where("userUid", "==", userUid),
-    orderBy("createdAt", "desc")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as PaymentOrder));
+  try {
+    const db = await getDb();
+    const { collection, query, where, orderBy, getDocs } = await import('firebase/firestore');
+    const q = query(
+      collection(db, "payments"),
+      where("userUid", "==", userUid),
+      orderBy("createdAt", "desc")
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as PaymentOrder));
+  } catch (err) {
+    console.warn("Failed to get payments from Firestore:", err);
+    return [];
+  }
 }
 
 export async function getPendingPayments(): Promise<PaymentOrder[]> {
-  if (!db) return [];
-  const q = query(
-    collection(db, "payments"),
-    where("status", "==", "pending"),
-    orderBy("createdAt", "desc")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as PaymentOrder));
+  try {
+    const db = await getDb();
+    const { collection, query, where, orderBy, getDocs } = await import('firebase/firestore');
+    const q = query(
+      collection(db, "payments"),
+      where("status", "==", "pending"),
+      orderBy("createdAt", "desc")
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as PaymentOrder));
+  } catch (err) {
+    console.warn("Failed to get pending payments from Firestore:", err);
+    return [];
+  }
 }
 
 export async function getAllPayments(): Promise<PaymentOrder[]> {
-  if (!db) return [];
-  const q = query(
-    collection(db, "payments"),
-    orderBy("createdAt", "desc")
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as PaymentOrder));
+  try {
+    const db = await getDb();
+    const { collection, query, orderBy, getDocs } = await import('firebase/firestore');
+    const q = query(
+      collection(db, "payments"),
+      orderBy("createdAt", "desc")
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as PaymentOrder));
+  } catch (err) {
+    console.warn("Failed to get all payments from Firestore:", err);
+    return [];
+  }
 }

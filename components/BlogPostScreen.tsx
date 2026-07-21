@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion } from './Motion';
 import { 
   ArrowLeft, Calendar, BookOpen, Lightbulb, Clock,
   GraduationCap, Target, TrendingUp, Share2, BookmarkPlus

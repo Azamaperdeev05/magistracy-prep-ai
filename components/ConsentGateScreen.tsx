@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from './Motion';
 import { Shield, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
 import { UserConsent } from '../services/authService';
 

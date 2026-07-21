@@ -89,9 +89,7 @@ export default defineConfig(({ mode }) => {
           output: {
             manualChunks: {
               'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
-              'recharts': ['recharts'],
               'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-              'framer': ['framer-motion'],
             }
           }
         }
