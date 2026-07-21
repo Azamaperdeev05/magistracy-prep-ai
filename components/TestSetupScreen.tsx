@@ -154,12 +154,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
       return;
     }
 
-    if (!lastName.trim() || !firstName.trim()) {
-      showAlert('Тегі мен Аты өрістерін толтыру қажет');
-      return;
-    }
-
-    const updatedFullName = `${lastName} ${firstName} ${patronymic}`.trim();
+    const updatedFullName = `${lastName} ${firstName} ${patronymic}`.trim() || currentUser?.full_name || 'Қолданушы';
     const saveAndStart = async () => {
       try {
         updateUserProfileFields({
@@ -208,7 +203,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-x-8 gap-y-5 max-w-3xl mx-auto mb-10 text-sm font-bold text-slate-700">
-          <div className="flex items-center">Тегі</div>
+          <div className="flex items-center">Тегі <span className="text-xs text-slate-400 font-normal ml-1">(міндетті емес)</span></div>
           <div>
             <input 
               type="text" 
@@ -219,7 +214,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             />
           </div>
 
-          <div className="flex items-center">Аты</div>
+          <div className="flex items-center">Аты <span className="text-xs text-slate-400 font-normal ml-1">(міндетті емес)</span></div>
           <div>
             <input 
               type="text" 
@@ -241,7 +236,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             />
           </div>
 
-          <div className="flex items-center">Электрондық пошта</div>
+          <div className="flex items-center">Электрондық пошта <span className="text-xs text-slate-400 font-normal ml-1">(міндетті емес)</span></div>
           <div>
             <input 
               type="email" 
