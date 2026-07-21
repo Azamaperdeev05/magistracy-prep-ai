@@ -12,6 +12,7 @@ import { useYandexMetrica } from './hooks/useYandexMetrica';
 
 // Lazy loaded screens for code splitting
 const AuthScreen = lazy(() => import('./components/AuthScreen'));
+const LandingScreen = lazy(() => import('./components/LandingScreen'));
 const WelcomeScreen = lazy(() => import('./components/WelcomeScreen'));
 const TestScreen = lazy(() => import('./components/TestScreen'));
 const ResultScreen = lazy(() => import('./components/ResultScreen'));
@@ -310,11 +311,13 @@ const RootApp: React.FC = () => {
     );
   }
 
-  // If not authenticated, allow public shared history viewing and blog in guest mode!
+  // If not authenticated, allow public pages + show landing for /home
   if (!user) {
-    const isPublicHistory = window.location.pathname.startsWith('/history');
-    const isPublicBlog = window.location.pathname.startsWith('/blog');
-    
+    const path = window.location.pathname;
+    const isPublicHistory = path.startsWith('/history');
+    const isPublicBlog = path.startsWith('/blog');
+    const isLanding = path === '/' || path === '/home';
+
     if (isPublicBlog) {
       return (
         <Suspense fallback={<LoadingFallback />}>
@@ -326,26 +329,38 @@ const RootApp: React.FC = () => {
         </Suspense>
       );
     }
-    
+
     if (isPublicHistory) {
       return (
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            <Route 
-              path="/history/:historyId?" 
+            <Route
+              path="/history/:historyId?"
               element={
-                <HistoryScreen 
-                  onBack={() => navigate('/')} 
+                <HistoryScreen
+                  onBack={() => navigate('/')}
                   isGuest={true}
                   onAuthSuccess={handleAuthSuccess}
                 />
-              } 
+              }
             />
             <Route path="*" element={<AuthScreen onAuthSuccess={handleAuthSuccess} />} />
           </Routes>
         </Suspense>
       );
     }
+
+    if (isLanding) {
+      return (
+        <Suspense fallback={<LoadingFallback />}>
+          <LandingScreen
+            onLogin={() => navigate('/auth')}
+            onRegister={() => navigate('/auth')}
+          />
+        </Suspense>
+      );
+    }
+
     return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
   }
 
