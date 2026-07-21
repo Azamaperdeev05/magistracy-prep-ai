@@ -443,19 +443,18 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                   <div className="flex items-center justify-between gap-4 mb-3">
                     <div className="flex items-center gap-3 flex-1">
                       <div className="text-left">
-                        <h3 className="text-sm font-black text-slate-850">{result.subject.name}</h3>
-                        <p className="text-[11px] text-slate-400 font-bold mt-0.5">{recommendation.text}</p>
+                        <h3 className="text-base font-extrabold text-slate-900">{result.subject.name}</h3>
+                        <p className="text-[11px] text-slate-500 font-medium mt-0.5">{recommendation.text}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
                       {/* Score pill */}
                       <div className="text-right">
-                        <div className={`text-lg font-black leading-none ${pct >= 70 ? 'text-green-600' : pct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
+                        <div className={`text-xl font-black leading-none ${pct >= 70 ? 'text-green-600' : pct >= 40 ? 'text-orange-500' : 'text-red-500'}`}>
                           {result.score}
                           <span className="text-xs font-bold text-slate-400">/{result.maxScore}</span>
                         </div>
-                        <div className="text-[10px] text-slate-400 font-bold">{Math.round(pct)}%</div>
                       </div>
                       <span className={`hidden sm:inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${recommendation.badgeClass}`}>
                         {recommendation.badge}
