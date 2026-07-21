@@ -59,7 +59,7 @@ const pillColor: Record<string, string> = {
 };
 
 const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) => {
-  const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') !== 'light');
+  const [isDark, setIsDark] = useState(false);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
