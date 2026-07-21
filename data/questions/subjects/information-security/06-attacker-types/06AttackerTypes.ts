@@ -322,7 +322,7 @@ export const isAttackerTypesQuestions = [
       { id: "is-t06-b02-op7", text: "SQL Injection" },
       { id: "is-t06-b02-op8", text: "XSS" }
     ],
-    correctOptionIds: ["is-t06-b02-op1", "is-t06-b02-op2", "is-t06-b02-op3", "is-t06-b02-op4", "is-t06-b02-op5"],
+    correctOptionIds: ["is-t06-b02-op1", "is-t06-b02-op2", "is-t06-b02-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Зиянкестердің түрлері",
     difficulty: Difficulty.MEDIUM,
@@ -685,7 +685,7 @@ export const isAttackerTypesQuestions = [
       { id: "is-t06-c01-op7", text: "Actions on Objectives" },
       { id: "is-t06-c01-op8", text: "Cleanup" }
     ],
-    correctOptionIds: ["is-t06-c01-op1", "is-t06-c01-op2", "is-t06-c01-op3", "is-t06-c01-op4", "is-t06-c01-op5", "is-t06-c01-op6", "is-t06-c01-op7"],
+    correctOptionIds: ["is-t06-c01-op1", "is-t06-c01-op2", "is-t06-c01-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Зиянкестердің түрлері",
     difficulty: Difficulty.HARD,
@@ -856,7 +856,7 @@ export const isAttackerTypesQuestions = [
       { id: "is-t06-c10-op7", text: "VPN setup" },
       { id: "is-t06-c10-op8", text: "Antivirus installation" }
     ],
-    correctOptionIds: ["is-t06-c10-op1", "is-t06-c10-op2", "is-t06-c10-op3", "is-t06-c10-op4"],
+    correctOptionIds: ["is-t06-c10-op1", "is-t06-c10-op2", "is-t06-c10-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Зиянкестердің түрлері",
     difficulty: Difficulty.HARD,
@@ -894,7 +894,7 @@ export const isAttackerTypesQuestions = [
       { id: "is-t06-c12-op7", text: "Firewall intelligence" },
       { id: "is-t06-c12-op8", text: "VPN intelligence" }
     ],
-    correctOptionIds: ["is-t06-c12-op1", "is-t06-c12-op2", "is-t06-c12-op3", "is-t06-c12-op4"],
+    correctOptionIds: ["is-t06-c12-op1", "is-t06-c12-op2", "is-t06-c12-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Зиянкестердің түрлері",
     difficulty: Difficulty.HARD,

@@ -350,7 +350,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
           return { ...prev, [currentQuestionId]: currentSelection.filter(id => id !== optionId) };
         }
 
-        const maxSelections = [SubjectId.DB, SubjectId.M002_SPEECH_DEV].includes(currentQuestion.subjectId) ? 3 : Number.POSITIVE_INFINITY;
+        const maxSelections = [SubjectId.DB, SubjectId.M002_SPEECH_DEV, SubjectId.M095_INFOSEC].includes(currentQuestion.subjectId) ? 3 : Number.POSITIVE_INFINITY;
         if (currentSelection.length >= maxSelections) {
           return prev;
         }
@@ -640,7 +640,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                              </button>
                            </div>
 
-                          {[SubjectId.DB, SubjectId.M002_SPEECH_DEV].includes(currentQuestion.subjectId) && currentQuestion.type === QuestionType.MULTIPLE && (
+                           {[SubjectId.DB, SubjectId.M002_SPEECH_DEV, SubjectId.M095_INFOSEC].includes(currentQuestion.subjectId) && currentQuestion.type === QuestionType.MULTIPLE && (
                             <div className="mb-5 inline-flex rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-800">
                               1-3 жауапты белгілеңіз. Толық дұрыс жауап - 2 балл, бір қате - 1 балл.
                             </div>

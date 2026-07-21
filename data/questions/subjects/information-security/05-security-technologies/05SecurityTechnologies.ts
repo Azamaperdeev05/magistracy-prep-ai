@@ -91,7 +91,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a05-op7", text: "Деректерді қолмен енгізу" },
       { id: "is-t05-a05-op8", text: "Құжаттарды басып шығару" }
     ],
-    correctOptionIds: ["is-t05-a05-op1", "is-t05-a05-op2", "is-t05-a05-op4", "is-t05-a05-op5"],
+    correctOptionIds: ["is-t05-a05-op1", "is-t05-a05-op2", "is-t05-a05-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -129,7 +129,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a07-op7", text: "Желілік кабельдерді ауыстыру" },
       { id: "is-t05-a07-op8", text: "Мониторларды калибрлеу" }
     ],
-    correctOptionIds: ["is-t05-a07-op1", "is-t05-a07-op2", "is-t05-a07-op4", "is-t05-a07-op5"],
+    correctOptionIds: ["is-t05-a07-op1", "is-t05-a07-op2", "is-t05-a07-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -148,7 +148,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a08-op7", text: "Компьютерлерді сатып алу" },
       { id: "is-t05-a08-op8", text: "Жарнамалық науқандарды өткізу" }
     ],
-    correctOptionIds: ["is-t05-a08-op1", "is-t05-a08-op2", "is-t05-a08-op4", "is-t05-a08-op5"],
+    correctOptionIds: ["is-t05-a08-op1", "is-t05-a08-op2", "is-t05-a08-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -167,7 +167,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a09-op7", text: "Кешіктіру" },
       { id: "is-t05-a09-op8", text: "Өшіру" }
     ],
-    correctOptionIds: ["is-t05-a09-op1", "is-t05-a09-op2", "is-t05-a09-op4", "is-t05-a09-op5"],
+    correctOptionIds: ["is-t05-a09-op1", "is-t05-a09-op2", "is-t05-a09-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -186,7 +186,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a10-op7", text: "Криптографиялық қорғаныс құралы" },
       { id: "is-t05-a10-op8", text: "Деректерді резервтік көшіру жүйесі" }
     ],
-    correctOptionIds: ["is-t05-a10-op1", "is-t05-a10-op2", "is-t05-a10-op4", "is-t05-a10-op5"],
+    correctOptionIds: ["is-t05-a10-op1", "is-t05-a10-op2", "is-t05-a10-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -205,7 +205,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a11-op7", text: "Парольдерді басқарады" },
       { id: "is-t05-a11-op8", text: "Файлдарды резервтік көшіреді" }
     ],
-    correctOptionIds: ["is-t05-a11-op1", "is-t05-a11-op2", "is-t05-a11-op4", "is-t05-a11-op5"],
+    correctOptionIds: ["is-t05-a11-op1", "is-t05-a11-op2", "is-t05-a11-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -262,7 +262,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a14-op7", text: "Компьютерлерді жинау" },
       { id: "is-t05-a14-op8", text: "Желілік кабельдерді тарту" }
     ],
-    correctOptionIds: ["is-t05-a14-op1", "is-t05-a14-op2", "is-t05-a14-op4", "is-t05-a14-op5"],
+    correctOptionIds: ["is-t05-a14-op1", "is-t05-a14-op2", "is-t05-a14-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -281,7 +281,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-a15-op7", text: "Желілік трафикті басқарады" },
       { id: "is-t05-a15-op8", text: "Деректерді шифрлайды" }
     ],
-    correctOptionIds: ["is-t05-a15-op1", "is-t05-a15-op2", "is-t05-a15-op4", "is-t05-a15-op5"],
+    correctOptionIds: ["is-t05-a15-op1", "is-t05-a15-op2", "is-t05-a15-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.EASY,
@@ -300,7 +300,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b01-op7", text: "Деректерді шифрлау" },
       { id: "is-t05-b01-op8", text: "Желілік кабельдерді тестілеу" }
     ],
-    correctOptionIds: ["is-t05-b01-op1", "is-t05-b01-op2", "is-t05-b01-op4", "is-t05-b01-op5"],
+    correctOptionIds: ["is-t05-b01-op1", "is-t05-b01-op2", "is-t05-b01-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -319,7 +319,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b02-op7", text: "Мониторларды калибрлеу" },
       { id: "is-t05-b02-op8", text: "Клавиатураларды тазалау" }
     ],
-    correctOptionIds: ["is-t05-b02-op1", "is-t05-b02-op2", "is-t05-b02-op4", "is-t05-b02-op5"],
+    correctOptionIds: ["is-t05-b02-op1", "is-t05-b02-op2", "is-t05-b02-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -338,7 +338,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b03-op7", text: "Жаңалықтар мазмұнын" },
       { id: "is-t05-b03-op8", text: "Жарнамалық материалдарды" }
     ],
-    correctOptionIds: ["is-t05-b03-op1", "is-t05-b03-op2", "is-t05-b03-op4", "is-t05-b03-op5"],
+    correctOptionIds: ["is-t05-b03-op1", "is-t05-b03-op2", "is-t05-b03-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -357,7 +357,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b04-op7", text: "Процессор температурасын өлшеу" },
       { id: "is-t05-b04-op8", text: "Желдеткіш жылдамдығын бақылау" }
     ],
-    correctOptionIds: ["is-t05-b04-op1", "is-t05-b04-op2", "is-t05-b04-op4", "is-t05-b04-op5"],
+    correctOptionIds: ["is-t05-b04-op1", "is-t05-b04-op2", "is-t05-b04-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -376,7 +376,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b05-op7", text: "Заңгер" },
       { id: "is-t05-b05-op8", text: "Маркетолог" }
     ],
-    correctOptionIds: ["is-t05-b05-op1", "is-t05-b05-op2", "is-t05-b05-op4", "is-t05-b05-op5"],
+    correctOptionIds: ["is-t05-b05-op1", "is-t05-b05-op2", "is-t05-b05-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -395,7 +395,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b06-op7", text: "Желілік шуды арттырады" },
       { id: "is-t05-b06-op8", text: "Құжат айналымын баяулатады" }
     ],
-    correctOptionIds: ["is-t05-b06-op1", "is-t05-b06-op2", "is-t05-b06-op4", "is-t05-b06-op5"],
+    correctOptionIds: ["is-t05-b06-op1", "is-t05-b06-op2", "is-t05-b06-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -414,7 +414,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b07-op7", text: "Кадрлық аудит" },
       { id: "is-t05-b07-op8", text: "Экологиялық аудит" }
     ],
-    correctOptionIds: ["is-t05-b07-op1", "is-t05-b07-op2", "is-t05-b07-op4", "is-t05-b07-op5"],
+    correctOptionIds: ["is-t05-b07-op1", "is-t05-b07-op2", "is-t05-b07-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -433,7 +433,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b08-op7", text: "Мониторды ауыстыру" },
       { id: "is-t05-b08-op8", text: "Клавиатураны тазалау" }
     ],
-    correctOptionIds: ["is-t05-b08-op1", "is-t05-b08-op2", "is-t05-b08-op4", "is-t05-b08-op5"],
+    correctOptionIds: ["is-t05-b08-op1", "is-t05-b08-op2", "is-t05-b08-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -452,7 +452,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b09-op7", text: "Кадрлар бөлімін құру" },
       { id: "is-t05-b09-op8", text: "Өндірістік жоспарлау" }
     ],
-    correctOptionIds: ["is-t05-b09-op1", "is-t05-b09-op2", "is-t05-b09-op4", "is-t05-b09-op5"],
+    correctOptionIds: ["is-t05-b09-op1", "is-t05-b09-op2", "is-t05-b09-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -471,7 +471,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b10-op7", text: "Тәуекелді насихаттау" },
       { id: "is-t05-b10-op8", text: "Тәуекелді сатып алу" }
     ],
-    correctOptionIds: ["is-t05-b10-op1", "is-t05-b10-op2", "is-t05-b10-op4", "is-t05-b10-op5"],
+    correctOptionIds: ["is-t05-b10-op1", "is-t05-b10-op2", "is-t05-b10-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -490,7 +490,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b11-op7", text: "Барлық порттарды ашу" },
       { id: "is-t05-b11-op8", text: "Сыртқы қосылымдарды шектемеу" }
     ],
-    correctOptionIds: ["is-t05-b11-op1", "is-t05-b11-op2", "is-t05-b11-op4", "is-t05-b11-op5"],
+    correctOptionIds: ["is-t05-b11-op1", "is-t05-b11-op2", "is-t05-b11-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -509,7 +509,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b12-op7", text: "Электр қуатын тұтынуды өлшеу" },
       { id: "is-t05-b12-op8", text: "Мониторлардың жарықтығын тексеру" }
     ],
-    correctOptionIds: ["is-t05-b12-op1", "is-t05-b12-op2", "is-t05-b12-op4", "is-t05-b12-op5"],
+    correctOptionIds: ["is-t05-b12-op1", "is-t05-b12-op2", "is-t05-b12-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -528,7 +528,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b13-op7", text: "Принтерлерді өшіру" },
       { id: "is-t05-b13-op8", text: "Файлдарды жою" }
     ],
-    correctOptionIds: ["is-t05-b13-op1", "is-t05-b13-op2", "is-t05-b13-op3", "is-t05-b13-op5"],
+    correctOptionIds: ["is-t05-b13-op1", "is-t05-b13-op2", "is-t05-b13-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -547,7 +547,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b14-op7", text: "Ауа райы станциялары" },
       { id: "is-t05-b14-op8", text: "Спорттық жаңалықтар" }
     ],
-    correctOptionIds: ["is-t05-b14-op1", "is-t05-b14-op2", "is-t05-b14-op4", "is-t05-b14-op5"],
+    correctOptionIds: ["is-t05-b14-op1", "is-t05-b14-op2", "is-t05-b14-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -566,7 +566,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b15-op7", text: "Мониторды ауыстыру" },
       { id: "is-t05-b15-op8", text: "Клавиатураны қосу" }
     ],
-    correctOptionIds: ["is-t05-b15-op1", "is-t05-b15-op2", "is-t05-b15-op4", "is-t05-b15-op5"],
+    correctOptionIds: ["is-t05-b15-op1", "is-t05-b15-op2", "is-t05-b15-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -585,7 +585,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b16-op7", text: "Бөлме температурасы" },
       { id: "is-t05-b16-op8", text: "Монитордың жарықтығы" }
     ],
-    correctOptionIds: ["is-t05-b16-op1", "is-t05-b16-op2", "is-t05-b16-op4", "is-t05-b16-op5"],
+    correctOptionIds: ["is-t05-b16-op1", "is-t05-b16-op2", "is-t05-b16-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -604,7 +604,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b17-op7", text: "Мониторлардың өлшемі" },
       { id: "is-t05-b17-op8", text: "Кеңсе жиһазының тізімі" }
     ],
-    correctOptionIds: ["is-t05-b17-op1", "is-t05-b17-op2", "is-t05-b17-op4", "is-t05-b17-op5"],
+    correctOptionIds: ["is-t05-b17-op1", "is-t05-b17-op2", "is-t05-b17-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -623,7 +623,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b18-op7", text: "Кэшті тазарту" },
       { id: "is-t05-b18-op8", text: "Жүйелік журналдарды жою" }
     ],
-    correctOptionIds: ["is-t05-b18-op1", "is-t05-b18-op2", "is-t05-b18-op3", "is-t05-b18-op5"],
+    correctOptionIds: ["is-t05-b18-op1", "is-t05-b18-op2", "is-t05-b18-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -642,7 +642,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b19-op7", text: "Физикалық серверлерді орнату" },
       { id: "is-t05-b19-op8", text: "Желілік кабельдерді тарту" }
     ],
-    correctOptionIds: ["is-t05-b19-op1", "is-t05-b19-op2", "is-t05-b19-op4", "is-t05-b19-op5"],
+    correctOptionIds: ["is-t05-b19-op1", "is-t05-b19-op2", "is-t05-b19-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -661,7 +661,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-b20-op7", text: "Файлдарды дефрагментациялау" },
       { id: "is-t05-b20-op8", text: "Жүйелік жаңартуларды орнату" }
     ],
-    correctOptionIds: ["is-t05-b20-op1", "is-t05-b20-op2", "is-t05-b20-op4", "is-t05-b20-op5"],
+    correctOptionIds: ["is-t05-b20-op1", "is-t05-b20-op2", "is-t05-b20-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.MEDIUM,
@@ -699,7 +699,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c02-op7", text: "Барлық оқиғаларды өшіру" },
       { id: "is-t05-c02-op8", text: "Жүйені өшіру" }
     ],
-    correctOptionIds: ["is-t05-c02-op1", "is-t05-c02-op2", "is-t05-c02-op4", "is-t05-c02-op5"],
+    correctOptionIds: ["is-t05-c02-op1", "is-t05-c02-op2", "is-t05-c02-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -718,7 +718,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c03-op7", text: "Кадрлық құжаттар" },
       { id: "is-t05-c03-op8", text: "Маркетингтік жоспарлар" }
     ],
-    correctOptionIds: ["is-t05-c03-op1", "is-t05-c03-op2", "is-t05-c03-op4", "is-t05-c03-op5"],
+    correctOptionIds: ["is-t05-c03-op1", "is-t05-c03-op2", "is-t05-c03-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -737,7 +737,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c04-op7", text: "Интернетке толық тыйым салу" },
       { id: "is-t05-c04-op8", text: "Компьютерлерді өшіру" }
     ],
-    correctOptionIds: ["is-t05-c04-op1", "is-t05-c04-op2", "is-t05-c04-op3", "is-t05-c04-op4"],
+    correctOptionIds: ["is-t05-c04-op1", "is-t05-c04-op2", "is-t05-c04-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -756,7 +756,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c05-op7", text: "Бұлттық SOC" },
       { id: "is-t05-c05-op8", text: "Гибридті SOC" }
     ],
-    correctOptionIds: ["is-t05-c05-op1", "is-t05-c05-op3", "is-t05-c05-op5", "is-t05-c05-op8"],
+    correctOptionIds: ["is-t05-c05-op1", "is-t05-c05-op3", "is-t05-c05-op5"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -775,7 +775,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c06-op7", text: "Деректерді ешкімге көрсетпеу" },
       { id: "is-t05-c06-op8", text: "Барлық жазбаларды жою" }
     ],
-    correctOptionIds: ["is-t05-c06-op1", "is-t05-c06-op2", "is-t05-c06-op3", "is-t05-c06-op5"],
+    correctOptionIds: ["is-t05-c06-op1", "is-t05-c06-op2", "is-t05-c06-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -794,7 +794,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c07-op7", text: "Компьютерлерді тестілеу" },
       { id: "is-t05-c07-op8", text: "Электр қуатын тұтынуды есептеу" }
     ],
-    correctOptionIds: ["is-t05-c07-op1", "is-t05-c07-op2", "is-t05-c07-op3", "is-t05-c07-op5"],
+    correctOptionIds: ["is-t05-c07-op1", "is-t05-c07-op2", "is-t05-c07-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -813,7 +813,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c08-op7", text: "Қызметкерлерді жұмыстан шығару" },
       { id: "is-t05-c08-op8", text: "Кеңсені жабу" }
     ],
-    correctOptionIds: ["is-t05-c08-op1", "is-t05-c08-op2", "is-t05-c08-op4", "is-t05-c08-op5"],
+    correctOptionIds: ["is-t05-c08-op1", "is-t05-c08-op2", "is-t05-c08-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -832,7 +832,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c09-op7", text: "Жүйені қайта орнату" },
       { id: "is-t05-c09-op8", text: "Дискіні пішімдеу" }
     ],
-    correctOptionIds: ["is-t05-c09-op1", "is-t05-c09-op2", "is-t05-c09-op4", "is-t05-c09-op5"],
+    correctOptionIds: ["is-t05-c09-op1", "is-t05-c09-op2", "is-t05-c09-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -851,7 +851,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c10-op7", text: "Осалдықтарды сату" },
       { id: "is-t05-c10-op8", text: "Осалдықтарды жасыру" }
     ],
-    correctOptionIds: ["is-t05-c10-op1", "is-t05-c10-op2", "is-t05-c10-op4", "is-t05-c10-op5"],
+    correctOptionIds: ["is-t05-c10-op1", "is-t05-c10-op2", "is-t05-c10-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -870,7 +870,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c11-op7", text: "Жүйені қайта орнату" },
       { id: "is-t05-c11-op8", text: "Журналдарды жою" }
     ],
-    correctOptionIds: ["is-t05-c11-op1", "is-t05-c11-op2", "is-t05-c11-op4", "is-t05-c11-op5"],
+    correctOptionIds: ["is-t05-c11-op1", "is-t05-c11-op2", "is-t05-c11-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -889,7 +889,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c12-op7", text: "Барлық қауіпсіздік шараларын өшіру" },
       { id: "is-t05-c12-op8", text: "Брандмауэрді айналып өту" }
     ],
-    correctOptionIds: ["is-t05-c12-op1", "is-t05-c12-op2", "is-t05-c12-op4", "is-t05-c12-op5"],
+    correctOptionIds: ["is-t05-c12-op1", "is-t05-c12-op2", "is-t05-c12-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -908,7 +908,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c13-op7", text: "Қолмен кодты тексеру" },
       { id: "is-t05-c13-op8", text: "Қауіпсіздікті елемеу" }
     ],
-    correctOptionIds: ["is-t05-c13-op1", "is-t05-c13-op2", "is-t05-c13-op4", "is-t05-c13-op5"],
+    correctOptionIds: ["is-t05-c13-op1", "is-t05-c13-op2", "is-t05-c13-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,
@@ -946,7 +946,7 @@ export const is05SecurityTechnologiesQuestions = [
       { id: "is-t05-c15-op7", text: "Файлдарды резервтік көшіру" },
       { id: "is-t05-c15-op8", text: "Деректерді шифрлау" }
     ],
-    correctOptionIds: ["is-t05-c15-op1", "is-t05-c15-op2", "is-t05-c15-op4", "is-t05-c15-op5"],
+    correctOptionIds: ["is-t05-c15-op1", "is-t05-c15-op2", "is-t05-c15-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Ақпараттық қауіпсіздік технологиялары",
     difficulty: Difficulty.HARD,

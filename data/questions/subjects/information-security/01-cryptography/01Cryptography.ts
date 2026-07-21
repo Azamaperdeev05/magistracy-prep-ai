@@ -357,7 +357,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b04-op7", text: "Кілттерді ауыстыру" },
       { id: "is-t01-b04-op8", text: "Кілттерді көшіру" }
     ],
-    correctOptionIds: ["is-t01-b04-op1", "is-t01-b04-op2", "is-t01-b04-op4", "is-t01-b04-op6"],
+    correctOptionIds: ["is-t01-b04-op1", "is-t01-b04-op2", "is-t01-b04-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -395,7 +395,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b06-op7", text: "SQL-инъекция" },
       { id: "is-t01-b06-op8", text: "XSS атакасы" }
     ],
-    correctOptionIds: ["is-t01-b06-op1", "is-t01-b06-op2", "is-t01-b06-op3", "is-t01-b06-op4"],
+    correctOptionIds: ["is-t01-b06-op1", "is-t01-b06-op2", "is-t01-b06-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -414,7 +414,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b07-op7", text: "SHA режимі" },
       { id: "is-t01-b07-op8", text: "HMAC режимі" }
     ],
-    correctOptionIds: ["is-t01-b07-op1", "is-t01-b07-op2", "is-t01-b07-op3", "is-t01-b07-op4"],
+    correctOptionIds: ["is-t01-b07-op1", "is-t01-b07-op2", "is-t01-b07-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -490,7 +490,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b11-op7", text: "Тиімділік (efficiency)" },
       { id: "is-t01-b11-op8", text: "Коллизия (collision)" }
     ],
-    correctOptionIds: ["is-t01-b11-op1", "is-t01-b11-op2", "is-t01-b11-op4", "is-t01-b11-op5"],
+    correctOptionIds: ["is-t01-b11-op1", "is-t01-b11-op2", "is-t01-b11-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -585,7 +585,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b16-op7", text: "DSA" },
       { id: "is-t01-b16-op8", text: "RC4" }
     ],
-    correctOptionIds: ["is-t01-b16-op1", "is-t01-b16-op2", "is-t01-b16-op4", "is-t01-b16-op6"],
+    correctOptionIds: ["is-t01-b16-op1", "is-t01-b16-op2", "is-t01-b16-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -604,7 +604,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b17-op7", text: "Хэш ұзындығы 256 бит" },
       { id: "is-t01-b17-op8", text: "Асимметриялық шифрлау әдісі" }
     ],
-    correctOptionIds: ["is-t01-b17-op1", "is-t01-b17-op3", "is-t01-b17-op4", "is-t01-b17-op6"],
+    correctOptionIds: ["is-t01-b17-op1", "is-t01-b17-op3", "is-t01-b17-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -642,7 +642,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-b19-op7", text: "Шифрлау алгоритмдері" },
       { id: "is-t01-b19-op8", text: "VPN сервері" }
     ],
-    correctOptionIds: ["is-t01-b19-op1", "is-t01-b19-op2", "is-t01-b19-op3", "is-t01-b19-op6"],
+    correctOptionIds: ["is-t01-b19-op1", "is-t01-b19-op2", "is-t01-b19-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.MEDIUM,
@@ -680,7 +680,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c01-op7", text: "Рұқсатсыз кіруге қарсы тұрады" },
       { id: "is-t01-c01-op8", text: "Коллизияны болдырмайды" }
     ],
-    correctOptionIds: ["is-t01-c01-op1", "is-t01-c01-op2", "is-t01-c01-op4", "is-t01-c01-op6"],
+    correctOptionIds: ["is-t01-c01-op1", "is-t01-c01-op2", "is-t01-c01-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -699,7 +699,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c02-op7", text: "Хэш функциясын қолданбау" },
       { id: "is-t01-c02-op8", text: "Қысқа кілттерді пайдалану" }
     ],
-    correctOptionIds: ["is-t01-c02-op1", "is-t01-c02-op2", "is-t01-c02-op3", "is-t01-c02-op4"],
+    correctOptionIds: ["is-t01-c02-op1", "is-t01-c02-op2", "is-t01-c02-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -718,7 +718,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c03-op7", text: "Алмастыру тек асимметриялық шифрлауда" },
       { id: "is-t01-c03-op8", text: "Алмастыру коллизияны тудырады" }
     ],
-    correctOptionIds: ["is-t01-c03-op1", "is-t01-c03-op2", "is-t01-c03-op3", "is-t01-c03-op6"],
+    correctOptionIds: ["is-t01-c03-op1", "is-t01-c03-op2", "is-t01-c03-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -756,7 +756,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c05-op7", text: "Симметриялық кілт" },
       { id: "is-t01-c05-op8", text: "Мекен-жай" }
     ],
-    correctOptionIds: ["is-t01-c05-op1", "is-t01-c05-op2", "is-t01-c05-op3", "is-t01-c05-op4"],
+    correctOptionIds: ["is-t01-c05-op1", "is-t01-c05-op2", "is-t01-c05-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -775,7 +775,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c06-op7", text: "Хэш функциясы кілт ретінде қолданылады" },
       { id: "is-t01-c06-op8", text: "Коллизияға негізделген" }
     ],
-    correctOptionIds: ["is-t01-c06-op1", "is-t01-c06-op2", "is-t01-c06-op3", "is-t01-c06-op5"],
+    correctOptionIds: ["is-t01-c06-op1", "is-t01-c06-op2", "is-t01-c06-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -832,7 +832,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c09-op7", text: "DES-ті қайта енгізу" },
       { id: "is-t01-c09-op8", text: "ECB режимін күшейту" }
     ],
-    correctOptionIds: ["is-t01-c09-op1", "is-t01-c09-op2", "is-t01-c09-op3", "is-t01-c09-op6"],
+    correctOptionIds: ["is-t01-c09-op1", "is-t01-c09-op2", "is-t01-c09-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -927,7 +927,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c14-op7", text: "RC4 — ағымдық шифрдың мысалы" },
       { id: "is-t01-c14-op8", text: "Ағымдық шифрлар әрқашан қауіпсіз" }
     ],
-    correctOptionIds: ["is-t01-c14-op1", "is-t01-c14-op2", "is-t01-c14-op4", "is-t01-c14-op7"],
+    correctOptionIds: ["is-t01-c14-op1", "is-t01-c14-op2", "is-t01-c14-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,
@@ -946,7 +946,7 @@ export const is01CryptographyQuestions: Question[] = [
       { id: "is-t01-c15-op7", text: "Коллизияларды генерациялау" },
       { id: "is-t01-c15-op8", text: "Кілттерді қалпына келтіру" }
     ],
-    correctOptionIds: ["is-t01-c15-op1", "is-t01-c15-op2", "is-t01-c15-op3", "is-t01-c15-op6"],
+    correctOptionIds: ["is-t01-c15-op1", "is-t01-c15-op2", "is-t01-c15-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Криптография",
     difficulty: Difficulty.HARD,

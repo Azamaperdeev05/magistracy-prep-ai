@@ -72,7 +72,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a04-op7", text: "Кілттерді басқаруды қажет етпейді" },
       { id: "is-t02-a04-op8", text: "Ешқашан ұрлануы мүмкін емес" }
     ],
-    correctOptionIds: ["is-t02-a04-op1", "is-t02-a04-op2", "is-t02-a04-op4", "is-t02-a04-op6"],
+    correctOptionIds: ["is-t02-a04-op1", "is-t02-a04-op2", "is-t02-a04-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -91,7 +91,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a05-op7", text: "Token генерациясы" },
       { id: "is-t02-a05-op8", text: "Қолтаңбаны тану" }
     ],
-    correctOptionIds: ["is-t02-a05-op1", "is-t02-a05-op2", "is-t02-a05-op4", "is-t02-a05-op5"],
+    correctOptionIds: ["is-t02-a05-op1", "is-t02-a05-op2", "is-t02-a05-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -129,7 +129,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a07-op7", text: "Токендер арқылы рұқсат беру" },
       { id: "is-t02-a07-op8", text: "Брандмауэр конфигурациясы" }
     ],
-    correctOptionIds: ["is-t02-a07-op1", "is-t02-a07-op2", "is-t02-a07-op3", "is-t02-a07-op7"],
+    correctOptionIds: ["is-t02-a07-op1", "is-t02-a07-op2", "is-t02-a07-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -167,7 +167,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a09-op7", text: "Рөлдер иерархиялық болуы мүмкін" },
       { id: "is-t02-a09-op8", text: "Тек әскери жүйелерде қолданылады" }
     ],
-    correctOptionIds: ["is-t02-a09-op1", "is-t02-a09-op2", "is-t02-a09-op4", "is-t02-a09-op7"],
+    correctOptionIds: ["is-t02-a09-op1", "is-t02-a09-op2", "is-t02-a09-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -186,7 +186,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a10-op7", text: "Құпия сөзді ешқашан өзгертпеу" },
       { id: "is-t02-a10-op8", text: "Құпия сөзді блокнотта сақтау" }
     ],
-    correctOptionIds: ["is-t02-a10-op1", "is-t02-a10-op2", "is-t02-a10-op3", "is-t02-a10-op6"],
+    correctOptionIds: ["is-t02-a10-op1", "is-t02-a10-op2", "is-t02-a10-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -205,7 +205,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a11-op7", text: "VPN сервері" },
       { id: "is-t02-a11-op8", text: "Брандмауэр" }
     ],
-    correctOptionIds: ["is-t02-a11-op1", "is-t02-a11-op2", "is-t02-a11-op3", "is-t02-a11-op6"],
+    correctOptionIds: ["is-t02-a11-op1", "is-t02-a11-op2", "is-t02-a11-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -262,7 +262,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-a14-op7", text: "MAC — бұл хэш функциясы" },
       { id: "is-t02-a14-op8", text: "MAC — бұл шифрлау түрі" }
     ],
-    correctOptionIds: ["is-t02-a14-op1", "is-t02-a14-op2", "is-t02-a14-op3", "is-t02-a14-op6"],
+    correctOptionIds: ["is-t02-a14-op1", "is-t02-a14-op2", "is-t02-a14-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.EASY,
@@ -319,7 +319,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b02-op7", text: "Брандмауэр" },
       { id: "is-t02-b02-op8", text: "VPN сервері" }
     ],
-    correctOptionIds: ["is-t02-b02-op1", "is-t02-b02-op2", "is-t02-b02-op3", "is-t02-b02-op4"],
+    correctOptionIds: ["is-t02-b02-op1", "is-t02-b02-op2", "is-t02-b02-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -338,7 +338,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b03-op7", text: "LDAP ағыны" },
       { id: "is-t02-b03-op8", text: "X.509 ағыны" }
     ],
-    correctOptionIds: ["is-t02-b03-op1", "is-t02-b03-op2", "is-t02-b03-op3", "is-t02-b03-op4"],
+    correctOptionIds: ["is-t02-b03-op1", "is-t02-b03-op2", "is-t02-b03-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -395,7 +395,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b06-op7", text: "Каталогтық қызметтер" },
       { id: "is-t02-b06-op8", text: "VPN қосылымы" }
     ],
-    correctOptionIds: ["is-t02-b06-op1", "is-t02-b06-op2", "is-t02-b06-op3", "is-t02-b06-op7"],
+    correctOptionIds: ["is-t02-b06-op1", "is-t02-b06-op2", "is-t02-b06-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -414,7 +414,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b07-op7", text: "Құпия сөзді кезеңді түрде өзгерту" },
       { id: "is-t02-b07-op8", text: "Коллизияны тексеру" }
     ],
-    correctOptionIds: ["is-t02-b07-op1", "is-t02-b07-op2", "is-t02-b07-op4", "is-t02-b07-op6"],
+    correctOptionIds: ["is-t02-b07-op1", "is-t02-b07-op2", "is-t02-b07-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -433,7 +433,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b08-op7", text: "Қысқа құпия сөздерді пайдалану" },
       { id: "is-t02-b08-op8", text: "Құпия сөзді жиі өзгертпеу" }
     ],
-    correctOptionIds: ["is-t02-b08-op1", "is-t02-b08-op2", "is-t02-b08-op3", "is-t02-b08-op4"],
+    correctOptionIds: ["is-t02-b08-op1", "is-t02-b08-op2", "is-t02-b08-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -452,7 +452,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b09-op7", text: "Шифрлау алгоритмдерін таңдау" },
       { id: "is-t02-b09-op8", text: "Коллизияны шешу" }
     ],
-    correctOptionIds: ["is-t02-b09-op1", "is-t02-b09-op2", "is-t02-b09-op3", "is-t02-b09-op4"],
+    correctOptionIds: ["is-t02-b09-op1", "is-t02-b09-op2", "is-t02-b09-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -471,7 +471,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b10-op7", text: "Тек HTTPS-пен ғана жұмыс істейді" },
       { id: "is-t02-b10-op8", text: "Токендер коллизияға толы" }
     ],
-    correctOptionIds: ["is-t02-b10-op1", "is-t02-b10-op2", "is-t02-b10-op3", "is-t02-b10-op6"],
+    correctOptionIds: ["is-t02-b10-op1", "is-t02-b10-op2", "is-t02-b10-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -490,7 +490,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b11-op7", text: "Сеанстар коллизияға ұшырайды" },
       { id: "is-t02-b11-op8", text: "Сеанс — хэш функциясының түрі" }
     ],
-    correctOptionIds: ["is-t02-b11-op1", "is-t02-b11-op2", "is-t02-b11-op3", "is-t02-b11-op4"],
+    correctOptionIds: ["is-t02-b11-op1", "is-t02-b11-op2", "is-t02-b11-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -509,7 +509,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b12-op7", text: "Коллизияға толы" },
       { id: "is-t02-b12-op8", text: "Орнату оңай" }
     ],
-    correctOptionIds: ["is-t02-b12-op1", "is-t02-b12-op2", "is-t02-b12-op3", "is-t02-b12-op5"],
+    correctOptionIds: ["is-t02-b12-op1", "is-t02-b12-op2", "is-t02-b12-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -528,7 +528,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b13-op7", text: "Тек симметриялық шифрлауды қолдану" },
       { id: "is-t02-b13-op8", text: "Ашық кілттерді жасыру" }
     ],
-    correctOptionIds: ["is-t02-b13-op1", "is-t02-b13-op2", "is-t02-b13-op3", "is-t02-b13-op4"],
+    correctOptionIds: ["is-t02-b13-op1", "is-t02-b13-op2", "is-t02-b13-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -547,7 +547,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b14-op7", text: "EBAC (Encryption-Based Access Control)" },
       { id: "is-t02-b14-op8", text: "TBAC (Token-Based Access Control)" }
     ],
-    correctOptionIds: ["is-t02-b14-op1", "is-t02-b14-op2", "is-t02-b14-op3", "is-t02-b14-op4"],
+    correctOptionIds: ["is-t02-b14-op1", "is-t02-b14-op2", "is-t02-b14-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -566,7 +566,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b15-op7", text: "Шифрлауды қажет етеді" },
       { id: "is-t02-b15-op8", text: "Хэш функцияларын пайдаланады" }
     ],
-    correctOptionIds: ["is-t02-b15-op1", "is-t02-b15-op2", "is-t02-b15-op3", "is-t02-b15-op5"],
+    correctOptionIds: ["is-t02-b15-op1", "is-t02-b15-op2", "is-t02-b15-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -585,7 +585,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b16-op7", text: "Хэш функциясын қолданбау" },
       { id: "is-t02-b16-op8", text: "Шифрлаусыз байланыс" }
     ],
-    correctOptionIds: ["is-t02-b16-op1", "is-t02-b16-op2", "is-t02-b16-op3", "is-t02-b16-op6"],
+    correctOptionIds: ["is-t02-b16-op1", "is-t02-b16-op2", "is-t02-b16-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -604,7 +604,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b17-op7", text: "Коллизияны тексеру" },
       { id: "is-t02-b17-op8", text: "Хэш кестесін пайдалану" }
     ],
-    correctOptionIds: ["is-t02-b17-op1", "is-t02-b17-op2", "is-t02-b17-op3", "is-t02-b17-op5", "is-t02-b17-op6"],
+    correctOptionIds: ["is-t02-b17-op1", "is-t02-b17-op2", "is-t02-b17-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -623,7 +623,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b18-op7", text: "Коллизияға негізделген" },
       { id: "is-t02-b18-op8", text: "Тек Microsoft жүйелерінде жұмыс істейді" }
     ],
-    correctOptionIds: ["is-t02-b18-op1", "is-t02-b18-op2", "is-t02-b18-op3", "is-t02-b18-op6"],
+    correctOptionIds: ["is-t02-b18-op1", "is-t02-b18-op2", "is-t02-b18-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -642,7 +642,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b19-op7", text: "Коллизияны шешеді" },
       { id: "is-t02-b19-op8", text: "Токендерді басқарады" }
     ],
-    correctOptionIds: ["is-t02-b19-op1", "is-t02-b19-op2", "is-t02-b19-op3", "is-t02-b19-op5"],
+    correctOptionIds: ["is-t02-b19-op1", "is-t02-b19-op2", "is-t02-b19-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -661,7 +661,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-b20-op7", text: "Хэш функциясын қолданбау" },
       { id: "is-t02-b20-op8", text: "Деректерді үшінші тараппен бөлісу" }
     ],
-    correctOptionIds: ["is-t02-b20-op1", "is-t02-b20-op2", "is-t02-b20-op3", "is-t02-b20-op5"],
+    correctOptionIds: ["is-t02-b20-op1", "is-t02-b20-op2", "is-t02-b20-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.MEDIUM,
@@ -680,7 +680,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c01-op7", text: "Коллизияны тексереді" },
       { id: "is-t02-c01-op8", text: "Қайта ойнату атакасынан қорғайды" }
     ],
-    correctOptionIds: ["is-t02-c01-op1", "is-t02-c01-op2", "is-t02-c01-op4", "is-t02-c01-op5", "is-t02-c01-op6", "is-t02-c01-op8"],
+    correctOptionIds: ["is-t02-c01-op1", "is-t02-c01-op2", "is-t02-c01-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -699,7 +699,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c02-op7", text: "Қоллизияны талап етеді" },
       { id: "is-t02-c02-op8", text: "Хэш функцияларын міндеттейді" }
     ],
-    correctOptionIds: ["is-t02-c02-op1", "is-t02-c02-op2", "is-t02-c02-op4", "is-t02-c02-op5"],
+    correctOptionIds: ["is-t02-c02-op1", "is-t02-c02-op2", "is-t02-c02-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -718,7 +718,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c03-op7", text: "Коллизияны тексеру" },
       { id: "is-t02-c03-op8", text: "Хэш функцияларын қолдану" }
     ],
-    correctOptionIds: ["is-t02-c03-op1", "is-t02-c03-op2", "is-t02-c03-op3", "is-t02-c03-op4"],
+    correctOptionIds: ["is-t02-c03-op1", "is-t02-c03-op2", "is-t02-c03-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -737,7 +737,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c04-op7", text: "Сеанс ID-ін ашық түрде сақтау" },
       { id: "is-t02-c04-op8", text: "Тек HTTP протоколын пайдалану" }
     ],
-    correctOptionIds: ["is-t02-c04-op1", "is-t02-c04-op2", "is-t02-c04-op3", "is-t02-c04-op4"],
+    correctOptionIds: ["is-t02-c04-op1", "is-t02-c04-op2", "is-t02-c04-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -756,7 +756,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c05-op7", text: "Telnet протоколы" },
       { id: "is-t02-c05-op8", text: "POP3 протоколы" }
     ],
-    correctOptionIds: ["is-t02-c05-op1", "is-t02-c05-op2", "is-t02-c05-op3", "is-t02-c05-op4"],
+    correctOptionIds: ["is-t02-c05-op1", "is-t02-c05-op2", "is-t02-c05-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -775,7 +775,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c06-op7", text: "Антивирус қолданбау" },
       { id: "is-t02-c06-op8", text: "Коллизияны тексеру" }
     ],
-    correctOptionIds: ["is-t02-c06-op1", "is-t02-c06-op2", "is-t02-c06-op3", "is-t02-c06-op4"],
+    correctOptionIds: ["is-t02-c06-op1", "is-t02-c06-op2", "is-t02-c06-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -794,7 +794,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c07-op7", text: "Сөздік атакасы коллизияға негізделген" },
       { id: "is-t02-c07-op8", text: "Brute-force хэш функциясын қажет етеді" }
     ],
-    correctOptionIds: ["is-t02-c07-op1", "is-t02-c07-op2", "is-t02-c07-op3", "is-t02-c07-op5", "is-t02-c07-op6"],
+    correctOptionIds: ["is-t02-c07-op1", "is-t02-c07-op2", "is-t02-c07-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -813,7 +813,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c08-op7", text: "Коллизияны тексеру" },
       { id: "is-t02-c08-op8", text: "Хэш функциясын таңдау еркін" }
     ],
-    correctOptionIds: ["is-t02-c08-op1", "is-t02-c08-op2", "is-t02-c08-op3", "is-t02-c08-op4", "is-t02-c08-op6"],
+    correctOptionIds: ["is-t02-c08-op1", "is-t02-c08-op2", "is-t02-c08-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -832,7 +832,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c09-op7", text: "Хэш функциясын қажет етпейді" },
       { id: "is-t02-c09-op8", text: "Шифрлау алгоритміне негізделген" }
     ],
-    correctOptionIds: ["is-t02-c09-op1", "is-t02-c09-op2", "is-t02-c09-op3", "is-t02-c09-op5"],
+    correctOptionIds: ["is-t02-c09-op1", "is-t02-c09-op2", "is-t02-c09-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -851,7 +851,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c10-op7", text: "Шифрлауды қажет етпейді" },
       { id: "is-t02-c10-op8", text: "Тек әлеуметтік желілерде қолданылады" }
     ],
-    correctOptionIds: ["is-t02-c10-op1", "is-t02-c10-op2", "is-t02-c10-op3", "is-t02-c10-op5"],
+    correctOptionIds: ["is-t02-c10-op1", "is-t02-c10-op2", "is-t02-c10-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -870,7 +870,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c11-op7", text: "Шифрлау алгоритмдерін таңдау" },
       { id: "is-t02-c11-op8", text: "Хэш функцияларын жаңарту" }
     ],
-    correctOptionIds: ["is-t02-c11-op1", "is-t02-c11-op2", "is-t02-c11-op3", "is-t02-c11-op6"],
+    correctOptionIds: ["is-t02-c11-op1", "is-t02-c11-op2", "is-t02-c11-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -889,7 +889,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c12-op7", text: "Антивирус қорғанысын күшейту" },
       { id: "is-t02-c12-op8", text: "Хэш функциясын жаңарту" }
     ],
-    correctOptionIds: ["is-t02-c12-op1", "is-t02-c12-op2", "is-t02-c12-op3", "is-t02-c12-op5"],
+    correctOptionIds: ["is-t02-c12-op1", "is-t02-c12-op2", "is-t02-c12-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -908,7 +908,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c13-op7", text: "Хэш функциясын ғана пайдалану" },
       { id: "is-t02-c13-op8", text: "Барлық пайдаланушыларға бірдей талап" }
     ],
-    correctOptionIds: ["is-t02-c13-op1", "is-t02-c13-op2", "is-t02-c13-op3", "is-t02-c13-op4"],
+    correctOptionIds: ["is-t02-c13-op1", "is-t02-c13-op2", "is-t02-c13-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -927,7 +927,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c14-op7", text: "Жалған оң хэш функциясына байланысты" },
       { id: "is-t02-c14-op8", text: "Екеуі де криптографиялық кілттерге байланысты" }
     ],
-    correctOptionIds: ["is-t02-c14-op1", "is-t02-c14-op2", "is-t02-c14-op4", "is-t02-c14-op6"],
+    correctOptionIds: ["is-t02-c14-op1", "is-t02-c14-op2", "is-t02-c14-op4"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
@@ -946,7 +946,7 @@ export const is02IdentificationAuthQuestions: Question[] = [
       { id: "is-t02-c15-op7", text: "Коллизияны тексеру" },
       { id: "is-t02-c15-op8", text: "Қалпына келтіру сілтемесін ашық түрде жіберу" }
     ],
-    correctOptionIds: ["is-t02-c15-op1", "is-t02-c15-op2", "is-t02-c15-op3", "is-t02-c15-op5"],
+    correctOptionIds: ["is-t02-c15-op1", "is-t02-c15-op2", "is-t02-c15-op3"],
     type: QuestionType.MULTIPLE,
     topic: "Идентификация, Аутентификация, Авторизация",
     difficulty: Difficulty.HARD,
