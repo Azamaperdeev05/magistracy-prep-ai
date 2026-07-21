@@ -364,7 +364,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
     return f.user_name.toLowerCase().includes(term) || f.user_email.toLowerCase().includes(term) || f.comment.toLowerCase().includes(term);
   });
 
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
+  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
   // Theme styles
   const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';

@@ -14,7 +14,7 @@ interface SyllabusScreenProps {
 }
 
 const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
+  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
   const { subjectId } = useParams<{ subjectId: string }>();
   const navigate = useNavigate();
   const currentSubject = subjectId || 'english';

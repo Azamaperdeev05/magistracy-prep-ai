@@ -55,7 +55,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   const { historyId } = useParams<{ historyId?: string }>();
   const navigate = useNavigate();
 
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
+  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');

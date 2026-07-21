@@ -20,7 +20,7 @@ const SpecialtyDetailScreen: React.FC = () => {
 
   const [isDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved !== 'light';
+    return saved === 'dark';
   });
 
   const [activeTab, setActiveTab] = useState<'info' | 'universities' | 'programs'>('info');

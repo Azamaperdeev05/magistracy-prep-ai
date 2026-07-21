@@ -36,7 +36,7 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
   // Theme State: reads from localStorage
   const [isDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved !== 'light';
+    return saved === 'dark';
   });
 
   // Modal State

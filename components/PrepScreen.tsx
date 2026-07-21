@@ -14,7 +14,7 @@ interface PrepScreenProps {
 }
 
 const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
+  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
   const [activeTab, setActiveTab] = useState<'structure' | 'topics' | 'certifications'>('structure');
   
   // User profile & specialty selection

@@ -64,7 +64,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   // Theme State: defaults to dark mode
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved !== 'light';
+    return saved === 'dark';
   });
 
   useEffect(() => {
