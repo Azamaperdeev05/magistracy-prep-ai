@@ -218,12 +218,15 @@ export async function login(email: string, password: string): Promise<AuthRespon
 /** Google Sign-In — redirect арқылы */
 export async function loginWithGoogle(): Promise<void> {
   ensureFirebaseReady();
+  console.log('[AUTH-SERVICE] loginWithGoogle called, auth:', auth?.currentUser?.email || 'no user');
   const provider = googleProvider || (() => {
     const p = new GoogleAuthProvider();
     p.setCustomParameters({ prompt: 'select_account' });
     return p;
   })();
+  console.log('[AUTH-SERVICE] Calling signInWithRedirect...');
   await signInWithRedirect(auth, provider);
+  console.log('[AUTH-SERVICE] signInWithRedirect returned (page should redirect)');
 }
 
 /** Redirect-тен кейінгі нәтижені өңдеу */

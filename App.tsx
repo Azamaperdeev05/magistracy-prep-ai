@@ -4,7 +4,7 @@ import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { SPECIALTIES } from './data/specialties';
 import { generateQuestionsForSubject } from './services/apiService';
-import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult, handleGoogleRedirectResult } from './services/authService';
+import { isAuthenticated, getSavedUser, logout, getProfile, UserProfile, updateUserProfileFields, saveTestResult } from './services/authService';
 import { calculateTestResult } from './services/scoringService';
 import { auth } from './firebase';
 import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
@@ -95,34 +95,44 @@ const RootApp: React.FC = () => {
   // Handle Google redirect result + listen to auth state
   useEffect(() => {
     if (!auth) {
+      console.error('[AUTH] Firebase auth is null');
       setIsCheckingAuth(false);
       return;
     }
 
-    // Must call getRedirectResult on EVERY page load to complete redirect sign-in
-    // This is a no-op if there's no pending redirect
-    getRedirectResult(auth).catch(() => {}).finally(() => {
-      const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
-        if (fbUser) {
-          try {
-            const profile = await getProfile();
-            setUser(profile);
-          } catch (error) {
-            console.error("Error setting user profile:", error);
-            setUser(null);
-          }
-        } else {
+    console.log('[AUTH] Starting auth flow, auth.currentUser:', auth.currentUser?.email);
+
+    // CRITICAL: Set up onAuthStateChanged IMMEDIATELY — don't wait for getRedirectResult
+    // Firebase fires onAuthStateChanged during init with persisted auth state
+    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+      console.log('[AUTH] onAuthStateChanged fired, user:', fbUser?.email || 'null');
+      if (fbUser) {
+        try {
+          const profile = await getProfile();
+          console.log('[AUTH] Profile loaded:', profile.email);
+          setUser(profile);
+        } catch (error: any) {
+          console.error('[AUTH] getProfile error:', error.message);
           setUser(null);
         }
-        setIsCheckingAuth(false);
-      });
-
-      cleanupRef.current = unsubscribe;
+      } else {
+        setUser(null);
+      }
+      setIsCheckingAuth(false);
     });
 
-    return () => {
-      if (cleanupRef.current) cleanupRef.current();
-    };
+    // Also call getRedirectResult to consume pending redirect (runs in parallel)
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log('[AUTH] Redirect consumed:', result.user.email);
+        }
+      })
+      .catch((error) => {
+        console.error('[AUTH] getRedirectResult error:', error.code, error.message);
+      });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
