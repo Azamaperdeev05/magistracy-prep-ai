@@ -83,19 +83,12 @@ export default async function handler(request: Request) {
       }
     }
 
-    // 3. Process AI Explanation Call (OpenRouter API Primary, Qwen & DeepSeek Fallbacks)
+    // 3. Process AI Explanation Call (OpenRouter Ultra-Fast AI Engine)
     const { systemPrompt, userPrompt, history } = await request.json();
     
     const openrouterApiKey = process.env.OPENROUTER_API_KEY || "";
     const openrouterApiUrl = process.env.OPENROUTER_API_URL || "https://openrouter.ai/api/v1";
     const openrouterModel = process.env.OPENROUTER_MODEL || "nvidia/nemotron-3-nano-30b-a3b:free";
-
-    const qwenApiKey = process.env.QWEN_API_KEY || "";
-    const qwenApiUrl = process.env.QWEN_API_URL || "https://ws-0xupo36814pi68qv.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1";
-    const qwenModel = process.env.QWEN_MODEL || "qwen-turbo";
-
-    const deepseekApiKey = process.env.DEEPSEEK_API_KEY || "";
-    const deepseekApiUrl = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/v1";
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -105,7 +98,7 @@ export default async function handler(request: Request) {
 
     let result = "";
 
-    // 1. Primary: Try OpenRouter API (Ultra-fast response within 6s timeout)
+    // OpenRouter API (Ultra-fast response within 6s timeout)
     if (openrouterApiKey) {
       try {
         const controller = new AbortController();
@@ -141,60 +134,8 @@ export default async function handler(request: Request) {
       }
     }
 
-    // 2. Secondary: Try Qwen API if OpenRouter didn't yield a response
-    if (!result && qwenApiKey) {
-      try {
-        const qwenRes = await fetch(`${qwenApiUrl.replace(/\/$/, '')}/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${qwenApiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: qwenModel,
-            messages,
-            temperature: 0.6
-          })
-        });
-
-        if (qwenRes.ok) {
-          const data = await qwenRes.json();
-          result = data.choices?.[0]?.message?.content || "";
-        } else {
-          console.warn("[AI API] Qwen API returned status:", qwenRes.status);
-        }
-      } catch (err) {
-        console.warn("[AI API] Qwen API fetch failed:", err);
-      }
-    }
-
-    // 3. Fallback: Try DeepSeek API
-    if (!result && deepseekApiKey) {
-      try {
-        const deepseekRes = await fetch(`${deepseekApiUrl.replace(/\/$/, '')}/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${deepseekApiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'deepseek-chat',
-            messages,
-            temperature: 0.6
-          })
-        });
-
-        if (deepseekRes.ok) {
-          const data = await deepseekRes.json();
-          result = data.choices?.[0]?.message?.content || "";
-        }
-      } catch (err) {
-        console.warn("[AI API] DeepSeek API fetch failed:", err);
-      }
-    }
-
     if (!result) {
-      console.warn("[AI API] Both Qwen and DeepSeek endpoints failed/unreachable. Returning structured fallback explanation.");
+      console.warn("[AI API] OpenRouter endpoint unreachable or timed out. Returning structured fallback explanation.");
       // Extract prompt text lines to construct a clear educational response
       const promptLines = (userPrompt || '').split('\n').filter(Boolean);
       const mainQuestion = promptLines.find((l: string) => l.includes('Сұрақ:')) || promptLines[0] || '';
