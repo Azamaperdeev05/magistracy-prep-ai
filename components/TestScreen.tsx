@@ -592,39 +592,22 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
                       {/* Question Content */}
                       <div className="flex-1">
-                          {/* English Listening (temporary transcript until TTS/audio is enabled) */}
+                          {/* English Listening Section - Audio Only */}
                           {isEnglishListening && (
                               <div className="mb-6 space-y-3">
-                                  <div className="text-sm font-semibold text-slate-600">
-                                      <span className="mr-2 inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-700 border border-blue-100">
-                                          Тыңдалым
+                                  <div className="text-sm font-semibold text-slate-600 flex items-center justify-between">
+                                      <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 border border-blue-100">
+                                          🎧 Listening Section (Тыңдалым)
                                       </span>
-                                      {currentQuestion.audioUrl && !audioFailed ? (
-                                          <span>{currentQuestion.context || 'Аудионы тыңдап, сұраққа жауап беріңіз.'}</span>
-                                      ) : (
-                                          <span>Мәтінді оқып, сұраққа жауап беріңіз.</span>
-                                      )}
-                                      {(!currentQuestion.audioUrl || audioFailed) && currentQuestion.context && (
-                                          <div className="mt-1 text-xs font-medium text-slate-500">
-                                              {currentQuestion.context.replace(/^Listen\b/i, 'Read')}
-                                          </div>
-                                      )}
+                                      <span className="text-xs text-slate-500 font-normal">
+                                          Аудионы мұқият тыңдап, төмендегі сұраққа жауап беріңіз.
+                                      </span>
                                   </div>
 
-                                  {currentQuestion.audioUrl && (
-                                      <AudioPlayer 
-                                        src={currentQuestion.audioUrl} 
-                                        onErrorStateChange={(failed) => setAudioFailed(failed)} 
-                                      />
-                                  )}
-
-                                  {(!currentQuestion.audioUrl || audioFailed || showListeningTranscript) && currentQuestion.codeSnippet && (
-                                      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 shadow-sm">
-                                          <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed">
-                                              <p className="whitespace-pre-line">{currentQuestion.codeSnippet}</p>
-                                          </div>
-                                      </div>
-                                  )}
+                                  <AudioPlayer 
+                                    src={currentQuestion.audioUrl} 
+                                    transcriptText={currentQuestion.codeSnippet || currentQuestion.readingPassage || currentQuestion.context}
+                                  />
                               </div>
                           )}
 
