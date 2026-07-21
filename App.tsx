@@ -22,6 +22,7 @@ import ConsentGateScreen from './components/ConsentGateScreen';
 import AdminScreen from './components/AdminScreen';
 import ConfirmModal from './components/modals/ConfirmModal';
 import UpgradeModal from './components/modals/UpgradeModal';
+import InstallBanner from './components/InstallBanner';
 
 const RootApp: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(getSavedUser());
@@ -425,6 +426,7 @@ const RootApp: React.FC = () => {
         onClose={() => setShowGlobalUpgradeModal(false)}
         userEmail={user?.email || ''}
       />
+      <InstallBanner />
     </div>
   );
 };

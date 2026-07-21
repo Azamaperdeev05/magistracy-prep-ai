@@ -25,17 +25,21 @@ export default defineConfig(({ mode }) => {
             maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
           },
           manifest: {
-            name: 'MagisCore',
+            name: 'MagisCore — Магистратураға Дайындық',
             short_name: 'MagisCore',
-            description: 'Магистратураға дайындық',
+            description: 'КТ-ге дайындық: 7000+ сұрақ, 4 мамандық',
             theme_color: '#07090d',
             background_color: '#07090d',
             display: 'standalone',
+            orientation: 'portrait',
+            start_url: '/',
+            scope: '/',
             icons: [
               {
                 src: 'logo no bg, white.svg',
                 sizes: '512x512',
-                type: 'image/svg+xml'
+                type: 'image/svg+xml',
+                purpose: 'any maskable'
               }
             ]
           }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Volume2 } from 'lucide-react';
+import { Play, Pause, RotateCcw, Volume2, AlertCircle } from 'lucide-react';
 
 interface AudioPlayerProps {
   src: string;
@@ -11,12 +11,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    // Reset state when source changes
     setIsPlaying(false);
     setProgress(0);
     setCurrentTime(0);
+    setLoadError(false);
     if (audioRef.current) {
       audioRef.current.load();
     }
@@ -85,43 +86,48 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onError={() => setLoadError(true)}
       />
 
-      <div className="flex items-center gap-3">
-        {/* Play/Pause Button */}
-        <button
-          onClick={togglePlay}
-          className="w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 shadow-lg active:scale-95 transition-all"
-        >
-          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-        </button>
-
-        {/* Progress Bar */}
-        <div className="flex-1">
-          <div 
-            className="h-2.5 bg-blue-200 rounded-full overflow-hidden cursor-pointer hover:bg-blue-300 transition-colors"
-            onClick={handleSeek}
-          >
-            <div 
-              className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-100 ease-linear rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="flex justify-between mt-1.5 text-xs text-blue-600 font-medium">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
-          </div>
+      {loadError ? (
+        <div className="flex items-center gap-2 text-red-500 text-sm">
+          <AlertCircle className="w-4 h-4" />
+          <span>Аудио жүктелмеді. Формат қолдау таппады.</span>
         </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <button
+            onClick={togglePlay}
+            className="w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 shadow-lg active:scale-95 transition-all"
+          >
+            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+          </button>
 
-        {/* Restart Button */}
-        <button
-          onClick={handleRestart}
-          className="w-9 h-9 rounded-full flex items-center justify-center bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 active:scale-95 transition-all"
-          title="Қайта тыңдау"
-        >
-          <RotateCcw className="w-4 h-4" />
-        </button>
-      </div>
+          <div className="flex-1">
+            <div 
+              className="h-2.5 bg-blue-200 rounded-full overflow-hidden cursor-pointer hover:bg-blue-300 transition-colors"
+              onClick={handleSeek}
+            >
+              <div 
+                className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-100 ease-linear rounded-full"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-1.5 text-xs text-blue-600 font-medium">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleRestart}
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 active:scale-95 transition-all"
+            title="Қайта тыңдау"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
