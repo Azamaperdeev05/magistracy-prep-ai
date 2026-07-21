@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
         VitePWA({
           registerType: 'autoUpdate',
           workbox: {
-            maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+            maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
           },
           manifest: {
             name: 'MagisCore',
