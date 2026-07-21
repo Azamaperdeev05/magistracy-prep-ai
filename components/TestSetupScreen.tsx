@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SPECIALTIES, Specialty } from '../data/specialties';
 import { getSavedUser, getProfile, getHistory, updateUserProfileFields, UserProfile, HistoryItem } from '../services/authService';
-import { ArrowLeft, Info, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Info, ChevronDown, Loader2 } from 'lucide-react';
 import ConfirmModal from './modals/ConfirmModal';
 import UpgradeModal from './modals/UpgradeModal';
 
@@ -11,11 +11,17 @@ interface TestSetupScreenProps {
   isLoading: boolean;
 }
 
+const formatNameInput = (val: string): string => {
+  if (!val) return '';
+  return val.charAt(0).toUpperCase() + val.slice(1);
+};
+
 const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading }) => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(getSavedUser());
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Load the latest profile on mount to get current premium status
   useEffect(() => {
@@ -91,6 +97,8 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
 
   const allowedGopCodes = ['M001', 'M002', 'M094', 'M095'];
   const [selectedGopCode, setSelectedGopCode] = useState(() => {
+    const urlGop = searchParams.get('gop')?.toUpperCase();
+    if (urlGop && allowedGopCodes.includes(urlGop)) return urlGop;
     const code = currentUser?.specialty_code;
     return code && allowedGopCodes.includes(code) ? code : 'M094';
   });
@@ -121,14 +129,17 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
       if (currentUser.foreign_lang) setForeignLang(currentUser.foreign_lang);
       if (currentUser.tgo_lang) setTgoLang(currentUser.tgo_lang);
       
-      if (currentUser.specialty_code) {
+      const urlGop = searchParams.get('gop')?.toUpperCase();
+      if (urlGop && allowedGopCodes.includes(urlGop)) {
+        setSelectedGopCode(urlGop);
+      } else if (currentUser.specialty_code) {
         const code = currentUser.specialty_code;
         setSelectedGopCode(allowedGopCodes.includes(code) ? code : 'M094');
       } else {
         setSelectedGopCode('M094');
       }
     }
-  }, [currentUser]);
+  }, [currentUser, searchParams]);
 
   const selectedGop = SPECIALTIES.find(s => s.code === selectedGopCode) || SPECIALTIES.find(s => s.code === 'M094')!;
 
@@ -209,6 +220,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               type="text" 
               value={lastName} 
               onChange={(e) => setLastName(e.target.value)} 
+              onBlur={() => setLastName(formatNameInput(lastName))}
               placeholder="Тегіңізді енгізіңіз"
               className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
@@ -220,6 +232,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               type="text" 
               value={firstName} 
               onChange={(e) => setFirstName(e.target.value)} 
+              onBlur={() => setFirstName(formatNameInput(firstName))}
               placeholder="Атыңызды енгізіңіз"
               className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
@@ -231,6 +244,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
               type="text" 
               value={patronymic} 
               onChange={(e) => setPatronymic(e.target.value)} 
+              onBlur={() => setPatronymic(formatNameInput(patronymic))}
               placeholder="Әкесінің атын енгізіңіз (міндетті емес)"
               className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
             />
@@ -378,9 +392,16 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
           <button
             onClick={handleContinue}
             disabled={isLoading}
-            className="w-full py-4 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-extrabold rounded-md transition-all active:scale-[0.99] flex items-center justify-center gap-3 disabled:opacity-50 text-base shadow-lg hover:shadow-blue-500/10"
+            className="w-full py-4 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-extrabold rounded-md transition-all active:scale-[0.99] flex items-center justify-center gap-3 disabled:opacity-75 text-base shadow-lg hover:shadow-blue-500/10"
           >
-            {isLoading ? 'Жүктелуде...' : 'Жалғастыру'}
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Сұрақтар жүктелуде... Түсінуіңізді сұраймыз</span>
+              </>
+            ) : (
+              'Жалғастыру'
+            )}
           </button>
         </div>
 

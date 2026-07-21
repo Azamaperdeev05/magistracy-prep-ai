@@ -372,7 +372,7 @@ const RootApp: React.FC = () => {
           path="/home" 
           element={
             <WelcomeScreen 
-              onStart={() => navigate('/test-setup')} 
+              onStart={(gopCode?: string) => navigate(gopCode ? `/test-setup?gop=${gopCode}` : '/test-setup')} 
               isLoading={isLoading} 
               onViewProgram={(subId) => navigate(subId ? `/program/${subId}` : '/program')}
               onViewHistory={() => navigate('/history')}

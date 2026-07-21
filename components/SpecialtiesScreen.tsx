@@ -275,20 +275,44 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
                     </button>
 
                     {isSelected ? (
-                      <span className="flex-1 py-2 bg-blue-500/15 border border-blue-500/30 text-blue-500 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5">
-                        <Check className="w-4 h-4" /> Белсенді
-                      </span>
+                      <div className="flex-1 flex gap-2">
+                        <span className="flex-1 py-2 bg-blue-500/15 border border-blue-500/30 text-blue-500 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5">
+                          <Check className="w-4 h-4" /> Белсенді
+                        </span>
+                        {isReady && (
+                          <button
+                            onClick={() => navigate(`/test-setup?gop=${spec.code}`)}
+                            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1"
+                          >
+                            Тест <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
+                          </button>
+                        )}
+                      </div>
                     ) : (
-                      <button
-                        onClick={() => handleSelectSpecialty(spec)}
-                        className={`flex-1 py-2 border text-xs font-black uppercase tracking-wider rounded-xl transition-all active:scale-95 ${
-                          isDarkMode 
-                            ? 'bg-slate-800 hover:bg-blue-600 hover:text-white border-slate-700/60 text-slate-300' 
-                            : 'bg-blue-600 hover:bg-blue-750 border-blue-600 text-white shadow-sm'
-                        }`}
-                      >
-                        Таңдау
-                      </button>
+                      <div className="flex-1 flex gap-2">
+                        <button
+                          onClick={() => handleSelectSpecialty(spec)}
+                          className={`flex-1 py-2 border text-xs font-black uppercase tracking-wider rounded-xl transition-all active:scale-95 ${
+                            isDarkMode 
+                              ? 'bg-slate-800 hover:bg-blue-600 hover:text-white border-slate-700/60 text-slate-300' 
+                              : 'bg-blue-600 hover:bg-blue-750 border-blue-600 text-white shadow-sm'
+                          }`}
+                        >
+                          Таңдау
+                        </button>
+                        {isReady && (
+                          <button
+                            onClick={() => {
+                              handleSelectSpecialty(spec);
+                              navigate(`/test-setup?gop=${spec.code}`);
+                            }}
+                            className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1"
+                            title="Тестті бастау"
+                          >
+                            Тест <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 </motion.div>

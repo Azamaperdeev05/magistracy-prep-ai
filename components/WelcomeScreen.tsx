@@ -12,7 +12,7 @@ import { SubjectId } from '../types';
 import SEO from './SEO';
 
 interface WelcomeScreenProps {
-  onStart: (name: string) => void;
+  onStart: (gopCode?: string) => void;
   isLoading: boolean;
   onViewProgram: (subjectId?: string) => void;
   onViewHistory: () => void;
@@ -87,7 +87,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   }, []);
 
   const handleStartExam = () => {
-    onStart(userName || 'Студент');
+    onStart(specialtyCode || 'M094');
   };
 
   const fadeInUp = {
@@ -518,7 +518,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* M094 - IT */}
             <motion.div
               whileHover={{ y: -4 }}
-              onClick={() => onViewSpecialties()}
+              onClick={() => onStart('M094')}
               className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-blue-500/50 hover:shadow-xl ${cardBg}`}
             >
               <div>
@@ -542,7 +542,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-blue-500">
-                <span>Мамандық профилі</span>
+                <span>Мамандықпен бастау</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </motion.div>
@@ -550,7 +550,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* M095 - Cyber Security */}
             <motion.div
               whileHover={{ y: -4 }}
-              onClick={() => onViewSpecialties()}
+              onClick={() => onStart('M095')}
               className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl ${cardBg}`}
             >
               <div>
@@ -574,7 +574,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-purple-500">
-                <span>Мамандық профилі</span>
+                <span>Мамандықпен бастау</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </motion.div>
@@ -582,7 +582,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             {/* M001 - Pedagogy */}
             <motion.div
               whileHover={{ y: -4 }}
-              onClick={() => onViewSpecialties()}
+              onClick={() => onStart('M001')}
               className={`p-6 rounded-3xl border cursor-pointer flex flex-col justify-between transition-all duration-300 hover:border-emerald-500/50 hover:shadow-xl ${cardBg}`}
             >
               <div>
@@ -606,7 +606,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-800/10 dark:border-white/5 flex items-center justify-between text-xs font-bold text-emerald-500">
-                <span>Мамандық профилі</span>
+                <span>Мамандықпен бастау</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </motion.div>
