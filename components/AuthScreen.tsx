@@ -57,7 +57,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
 
         {/* Card */}
         <div className="glass-dark rounded-3xl p-8 border border-white/5 shadow-2xl">
-          {!auth ? (
+          {!isFirebaseConfigured ? (
             <div className="text-center py-4">
               <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4 animate-pulse" />
               <h3 className="text-lg font-black text-white mb-2">Firebase бапталмаған</h3>
