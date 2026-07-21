@@ -30,10 +30,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#07090d] text-[#f8fafc] flex items-center justify-center px-4 py-8 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center px-4 py-8 relative overflow-hidden">
       {/* Background Glows */}
-      <div className="absolute w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] top-[-100px] right-[-100px]" />
-      <div className="absolute w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] bottom-[-50px] left-[-50px]" />
+      <div className="absolute w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] top-[-100px] right-[-100px]" />
+      <div className="absolute w-[300px] h-[300px] bg-indigo-500/10 rounded-full blur-[80px] bottom-[-50px] left-[-50px]" />
       
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -44,27 +44,27 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="w-24 h-24 flex items-center justify-center mx-auto mb-4 relative">
-             <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full" />
-             <img src="/logo no bg, white.svg" alt="MagisCore Logo" className="w-full h-full object-contain relative z-10" />
+             <div className="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full" />
+             <img src="/logo no bg, blue.svg" alt="MagisCore Logo" className="w-full h-full object-contain relative z-10" />
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight uppercase">
-            Magis<span className="text-blue-500">Core</span>
+          <h1 className="text-4xl font-extrabold tracking-tight uppercase text-slate-900">
+            Magis<span className="text-blue-600">Core</span>
           </h1>
-          <p className="text-slate-400 text-sm mt-2 font-medium">
+          <p className="text-slate-500 text-sm mt-2 font-medium">
             {!isFirebaseConfigured ? 'Жүйе баптаулары қажет' : 'Платформаға кіру'}
           </p>
         </div>
 
         {/* Card */}
-        <div className="glass-dark rounded-3xl p-8 border border-white/5 shadow-2xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
           {!isFirebaseConfigured ? (
             <div className="text-center py-4">
               <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4 animate-pulse" />
-              <h3 className="text-lg font-black text-white mb-2">Firebase бапталмаған</h3>
-              <p className="text-slate-400 text-xs leading-relaxed mb-6">
+              <h3 className="text-lg font-black text-slate-900 mb-2">Firebase бапталмаған</h3>
+              <p className="text-slate-600 text-xs leading-relaxed mb-6">
                 Қосымша дұрыс жұмыс істеуі үшін Firebase кілттері қажет. <code>.env</code> немесе Vercel орталық айнымалыларында келесі айнымалыларды орнатыңыз:
               </p>
-              <div className="bg-black/50 text-left font-mono text-[10px] p-4 rounded-xl text-indigo-300 border border-white/5 space-y-1 mb-4 overflow-x-auto">
+              <div className="bg-slate-900 text-left font-mono text-[10px] p-4 rounded-xl text-indigo-300 border border-slate-800 space-y-1 mb-4 overflow-x-auto">
                 <div>VITE_FIREBASE_API_KEY</div>
                 <div>VITE_FIREBASE_AUTH_DOMAIN</div>
                 <div>VITE_FIREBASE_PROJECT_ID</div>
@@ -72,7 +72,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
                 <div>VITE_FIREBASE_MESSAGING_SENDER_ID</div>
                 <div>VITE_FIREBASE_APP_ID</div>
               </div>
-              <p className="text-slate-400 text-[10px]">
+              <p className="text-slate-500 text-[10px]">
                 Жергілікті тестілеу үшін жоба түбіріндегі <code>.env</code> файлында осы кілттерді толтырып шығыңыз.
               </p>
             </div>
@@ -80,7 +80,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
             <div className="space-y-6">
               {/* Description */}
               <div className="text-center">
-                <p className="text-slate-400 text-sm font-medium">
+                <p className="text-slate-600 text-sm font-medium">
                   Дайындықты бастау және нәтижелерді сақтау үшін Google аккаунтыңызбен кіріңіз
                 </p>
               </div>
@@ -92,7 +92,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
                     initial={{ opacity: 0, height: 0 }} 
                     animate={{ opacity: 1, height: 'auto' }} 
                     exit={{ opacity: 0, height: 0 }}
-                    className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm font-bold"
+                    className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-600 text-sm font-bold"
                   >
                     <AlertCircle className="w-4 h-4 shrink-0" /> {error}
                   </motion.div>
@@ -104,10 +104,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
                 type="button" 
                 onClick={handleGoogleSignIn} 
                 disabled={isLoading}
-                className="w-full py-4 bg-white hover:bg-slate-100 text-slate-900 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all active:scale-[0.98] disabled:opacity-50"
+                className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-50"
               >
                 {isLoading ? (
-                  <span className="text-slate-400">Жүктелуде...</span>
+                  <span className="text-slate-300">Жүктелуде...</span>
                 ) : (
                   <>
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -122,9 +122,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
               </button>
               
               {/* Registration Disclaimer */}
-              <div className="pt-6 border-t border-white/5 text-[11px] text-slate-400 font-semibold leading-relaxed space-y-2.5">
+              <div className="pt-6 border-t border-slate-100 text-[11px] text-slate-500 font-semibold leading-relaxed space-y-2.5">
                 <p>
-                  <span className="text-slate-300 font-bold">MagisCore</span> — магистратура КТ емтиханына дайындалуға арналған тәуелсіз онлайн симулятор. Бұл Ұлттық тестілеу орталығының ресми сайты емес.
+                  <span className="text-slate-800 font-bold">MagisCore</span> — магистратура КТ емтиханына дайындалуға арналған тәуелсіз онлайн симулятор. Бұл Ұлттық тестілеу орталығының ресми сайты емес.
                 </p>
                 <p>
                   Платформа ЖСН (ИИН), жеке куәлік деректері және телефон нөмірін жинамайды.
@@ -138,7 +138,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-[10px] text-slate-700 mt-10 font-bold tracking-[0.2em] uppercase">
+        <p className="text-center text-[10px] text-slate-400 mt-10 font-bold tracking-[0.2em] uppercase">
           © 2026 MagisCore. Secure Auth.
         </p>
       </motion.div>

@@ -151,43 +151,14 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
           </div>
         </div>
 
-        {/* Hero Preview Card */}
-        <div className="flex-1 w-full max-w-md lg:max-w-lg">
-          <div className={`rounded-3xl border p-5 ${cardBg} shadow-2xl`}>
-            <div className={`flex items-center justify-between mb-4 pb-3 border-b ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
-              <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-red-500" /><div className="w-2 h-2 rounded-full bg-amber-500" /><div className="w-2 h-2 rounded-full bg-emerald-500" />
-              </div>
-              <span className={`text-[10px] font-black uppercase tracking-widest ${muted}`}>Дайындық Хабы</span>
-              <div className="w-12" />
-            </div>
-
-            <div className="grid grid-cols-4 gap-2 mb-4">
-              {STATS.map(({ value, label }) => (
-                <div key={label} className={`p-2.5 rounded-xl border text-center ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-                  <p className={`text-sm font-black ${text}`}>{value}</p>
-                  <p className={`text-[9px] font-bold leading-tight mt-0.5 ${muted}`}>{label}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              {SPECIALTIES_PREVIEW.slice(0,4).map(({ code, label, color, icon }) => (
-                <div key={code} className={`flex items-center gap-3 p-3 rounded-xl border ${isDark ? 'border-slate-800/80 bg-slate-900/30' : 'border-slate-200 bg-slate-50/50'}`}>
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${iconBg[color]}`}>{icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-[11px] font-black truncate ${text}`}>{label}</p>
-                  </div>
-                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full border ${pillColor[color]}`}>{code}</span>
-                </div>
-              ))}
-            </div>
-
-            <button onClick={onRegister}
-              className="w-full mt-4 py-3 rounded-2xl bg-blue-600 text-white text-xs font-black uppercase tracking-wider hover:bg-blue-500 transition-all flex items-center justify-center gap-2">
-              Симуляторды бастау <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
+        {/* Hero Smartphone Mockup */}
+        <div className="flex-1 w-full max-w-md lg:max-w-xl flex items-center justify-center relative">
+          <div className="absolute w-72 h-72 bg-blue-500/20 rounded-full blur-3xl -z-10 animate-pulse" />
+          <img
+            src="/smartphone-mockup.png"
+            alt="MagisCore Smartphone App Mockup"
+            className="w-full h-auto max-h-[520px] object-contain drop-shadow-[0_20px_50px_rgba(37,99,235,0.25)] hover:scale-[1.02] transition-transform duration-500"
+          />
         </div>
       </section>
 
