@@ -3,6 +3,7 @@ import { Question } from '../../../../types';
 export const englishListeningTexts11to20Questions = [
   {
     "id": "l11_001",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What is the name of the restaurant?",
     "options": [
@@ -18,6 +19,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_002",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What does the customer order to drink first?",
     "options": [
@@ -33,6 +35,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_003",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What starter does the customer order?",
     "options": [
@@ -48,6 +51,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_004",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What main course does the customer order?",
     "options": [
@@ -63,6 +67,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_005",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What side dish does the customer choose?",
     "options": [
@@ -78,6 +83,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_006",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "How does the customer want the salmon cooked?",
     "options": [
@@ -93,6 +99,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_007",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What does the customer ask for while waiting for the food?",
     "options": [
@@ -108,6 +115,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l11_008",
+    "audioUrl": "/english/audio/01_shopping_for_clothes.mp3",
     "subjectId": "english",
     "text": "What is the server's name?",
     "options": [
@@ -123,6 +131,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_001",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "How long until the final exams?",
     "options": [
@@ -138,6 +147,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_002",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "Which subject is the second speaker most worried about?",
     "options": [
@@ -153,6 +163,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_003",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "Which subject is the first speaker most worried about?",
     "options": [
@@ -168,6 +179,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_004",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "What does the second speaker suggest they do together?",
     "options": [
@@ -183,6 +195,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_005",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "Where do they agree to meet?",
     "options": [
@@ -198,6 +211,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_006",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "What is the name of the app that turns notes into quizzes?",
     "options": [
@@ -213,6 +227,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_007",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "What subject will they start studying together?",
     "options": [
@@ -228,6 +243,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l12_008",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "subjectId": "english",
     "text": "How do the speakers feel at the end of the conversation?",
     "options": [
@@ -243,6 +259,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_001",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "What is David Park's position at NovaTech?",
     "options": [
@@ -258,6 +275,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_002",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "What was the applicant's role at Elevate Brands?",
     "options": [
@@ -273,6 +291,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_003",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "How much did online engagement increase during the rebranding project?",
     "options": [
@@ -288,6 +307,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_004",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "What does the applicant say is key when marketing to Gen Z?",
     "options": [
@@ -303,6 +323,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_005",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "What annual marketing budget did the applicant manage previously?",
     "options": [
@@ -318,6 +339,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_006",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "Where does the applicant see herself in five years?",
     "options": [
@@ -333,6 +355,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_007",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "What question does the applicant ask at the end?",
     "options": [
@@ -348,6 +371,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l13_008",
+    "audioUrl": "/english/audio/03_job_interview.mp3",
     "subjectId": "english",
     "text": "When will NovaTech be in touch with the applicant?",
     "options": [
@@ -363,6 +387,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_001",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "How long has the patient had stomach pain?",
     "options": [
@@ -378,6 +403,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_002",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "How does the patient describe the pain?",
     "options": [
@@ -393,6 +419,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_003",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "When does the pain get worse?",
     "options": [
@@ -408,6 +435,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_004",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "What other symptoms has the patient experienced?",
     "options": [
@@ -423,6 +451,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_005",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "What lifestyle change happened a month ago?",
     "options": [
@@ -438,6 +467,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_006",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "How much coffee does the patient drink per day now?",
     "options": [
@@ -453,6 +483,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_007",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "What does the doctor diagnose?",
     "options": [
@@ -468,6 +499,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l14_008",
+    "audioUrl": "/english/audio/04_at_the_doctors.mp3",
     "subjectId": "english",
     "text": "What does the doctor recommend regarding meals?",
     "options": [
@@ -483,6 +515,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_001",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "How old is the customer's current phone?",
     "options": [
@@ -498,6 +531,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_002",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "Which mobile system does the customer prefer?",
     "options": [
@@ -513,6 +547,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_003",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "Which two phone models does the salesperson show?",
     "options": [
@@ -528,6 +563,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_004",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "Which phone has a more versatile camera system?",
     "options": [
@@ -543,6 +579,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_005",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "Which phone has better battery life?",
     "options": [
@@ -558,6 +595,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_006",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "What is the base storage capacity of both phones?",
     "options": [
@@ -573,6 +611,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_007",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "How much does the Pixel 10 Pro cost?",
     "options": [
@@ -588,6 +627,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l15_008",
+    "audioUrl": "/english/audio/05_smartphone_problem.mp3",
     "subjectId": "english",
     "text": "How much can the customer save by trading in their old phone?",
     "options": [
@@ -603,6 +643,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_001",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "Which beach is covered in plastic waste?",
     "options": [
@@ -618,6 +659,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_002",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "When do they plan to hold the beach cleanup?",
     "options": [
@@ -633,6 +675,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_003",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "What supplies will the city council provide?",
     "options": [
@@ -648,6 +691,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_004",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "How many members does the environmental science club have?",
     "options": [
@@ -663,6 +707,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_005",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "What does the first speaker offer to create?",
     "options": [
@@ -678,6 +723,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_006",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "What does the first speaker suggest coordinating with the local coffee shop?",
     "options": [
@@ -693,6 +739,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_007",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "What idea does the first speaker suggest to make the event more fun?",
     "options": [
@@ -708,6 +755,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l16_008",
+    "audioUrl": "/english/audio/06_checking_in.mp3",
     "subjectId": "english",
     "text": "How many volunteers are they aiming for?",
     "options": [
@@ -723,6 +771,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_001",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "What is the passenger's flight number?",
     "options": [
@@ -738,6 +787,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_002",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "Which airport is the passenger flying to?",
     "options": [
@@ -753,6 +803,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_003",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "What type of seat does the passenger prefer?",
     "options": [
@@ -768,6 +819,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_004",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "What seat number is assigned to the passenger?",
     "options": [
@@ -783,6 +835,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_005",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "What is the weight of the checked suitcase?",
     "options": [
@@ -798,6 +851,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_006",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "What is the luggage allowance for the flight?",
     "options": [
@@ -813,6 +867,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_007",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "What is the gate number for the flight?",
     "options": [
@@ -828,6 +883,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l17_008",
+    "audioUrl": "/english/audio/07_recycling_habits.mp3",
     "subjectId": "english",
     "text": "When does boarding start?",
     "options": [
@@ -843,6 +899,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_001",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "What band did the second speaker discover?",
     "options": [
@@ -858,6 +915,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_002",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "What genre has the first speaker been listening to lately?",
     "options": [
@@ -873,6 +931,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_003",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "What song does the first speaker recommend?",
     "options": [
@@ -888,6 +947,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_004",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "How long is the recommended track?",
     "options": [
@@ -903,6 +963,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_005",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "What concert does the second speaker have tickets for?",
     "options": [
@@ -918,6 +979,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_006",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "What kind of venue did the first speaker visit last week?",
     "options": [
@@ -933,6 +995,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_007",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "How many people were at the jazz show?",
     "options": [
@@ -948,6 +1011,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l18_008",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "subjectId": "english",
     "text": "What does the first speaker offer to make for the second speaker?",
     "options": [
@@ -963,6 +1027,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_001",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "What was the speaker's weight at their heaviest?",
     "options": [
@@ -978,6 +1043,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_002",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "What was the turning point that made the speaker decide to change?",
     "options": [
@@ -993,6 +1059,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_003",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "What did the speaker start doing first?",
     "options": [
@@ -1008,6 +1075,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_004",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "What was the hardest part of the speaker's transformation?",
     "options": [
@@ -1023,6 +1091,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_005",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "What did the speaker replace processed snacks with?",
     "options": [
@@ -1038,6 +1107,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_006",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "How much weight did the speaker lose in the first three months?",
     "options": [
@@ -1053,6 +1123,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_007",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "When did the speaker join a gym?",
     "options": [
@@ -1068,6 +1139,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l19_008",
+    "audioUrl": "/english/audio/09_my_fitness_routine.mp3",
     "subjectId": "english",
     "text": "How much total weight has the speaker lost so far?",
     "options": [
@@ -1083,6 +1155,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_001",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "What is the person looking for?",
     "options": [
@@ -1098,6 +1171,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_002",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "Why is the person lost?",
     "options": [
@@ -1113,6 +1187,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_003",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "How far is the museum from their current location?",
     "options": [
@@ -1128,6 +1203,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_004",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "What is the first landmark mentioned in the directions?",
     "options": [
@@ -1143,6 +1219,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_005",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "What street should they turn left onto?",
     "options": [
@@ -1158,6 +1235,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_006",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "What will they pass on the right-hand side?",
     "options": [
@@ -1173,6 +1251,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_007",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "Where is the museum located?",
     "options": [
@@ -1188,6 +1267,7 @@ export const englishListeningTexts11to20Questions = [
   },
   {
     "id": "l20_008",
+    "audioUrl": "/english/audio/10_climate_change.mp3",
     "subjectId": "english",
     "text": "On what day is the museum closed?",
     "options": [
