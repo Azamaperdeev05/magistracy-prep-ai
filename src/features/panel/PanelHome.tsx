@@ -271,18 +271,18 @@ const PanelHome: React.FC<PanelHomeProps> = ({
                                 </span>
                               )}
                             </div>
-                            <p className={`text-[9px] ${textMuted}`}>
-                              {entry.bestScore}/{entry.maxScore} ұпай · {entry.percentage}%
-                            </p>
                           </div>
 
-                          <span className={`text-[9px] font-black shrink-0 ${
-                            entry.percentage >= 75 ? 'text-emerald-500' :
-                            entry.percentage >= 50 ? 'text-blue-500' :
-                            'text-slate-400'
-                          }`}>
-                            {entry.totalTests} тест
-                          </span>
+                          <div className="text-right shrink-0">
+                            <span className={`text-[11px] font-extrabold ${
+                              idx === 0 ? 'text-amber-500' :
+                              idx === 1 ? 'text-slate-400' :
+                              idx === 2 ? 'text-orange-500' :
+                              'text-[var(--brand-primary)]'
+                            }`}>
+                              {entry.bestScore} балл
+                            </span>
+                          </div>
                         </div>
                       );
                     })}

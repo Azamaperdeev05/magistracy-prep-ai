@@ -779,7 +779,7 @@ export async function getLeaderboard(limit: number = 10): Promise<LeaderboardEnt
     });
 
     const sortedEntries = Array.from(userBest.values())
-      .sort((a, b) => b.percentage - a.percentage || b.bestScore - a.bestScore)
+      .sort((a, b) => b.bestScore - a.bestScore)
       .slice(0, limit);
 
     // Fetch user full name from "users" collection if name is generic or missing
