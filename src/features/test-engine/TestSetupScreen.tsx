@@ -105,26 +105,45 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
     return code && allowedGopCodes.includes(code) ? code : 'M094';
   });
 
+  const isLikelySurname = (str: string): boolean => {
+    if (!str) return false;
+    return /(ев|ева|ов|ова|ин|ина|ша|лы|қызы|ғызы)$/i.test(str.trim());
+  };
+
   // Split name on load or whenever currentUser changes
   useEffect(() => {
     if (currentUser) {
-      if (currentUser.last_name || currentUser.first_name) {
-        setLastName(currentUser.last_name || '');
-        setFirstName(currentUser.first_name || '');
-        setPatronymic(currentUser.patronymic || '');
-      } else {
+      let fn = currentUser.first_name || '';
+      let ln = currentUser.last_name || '';
+
+      if (!fn && !ln) {
         const nameVal = currentUser.full_name || '';
         if (nameVal.trim()) {
           const parts = nameVal.trim().split(/\s+/);
-          setLastName(parts[0] || '');
-          setFirstName(parts[1] || '');
-          setPatronymic(parts.slice(2).join(' ') || '');
-        } else {
-          setLastName('');
-          setFirstName('');
-          setPatronymic('');
+          if (parts.length >= 2) {
+            if (isLikelySurname(parts[0]) && !isLikelySurname(parts[1])) {
+              ln = parts[0];
+              fn = parts[1];
+            } else {
+              fn = parts[0];
+              ln = parts[1];
+            }
+          } else {
+            fn = parts[0] || '';
+          }
+        }
+      } else {
+        // If stored backwards previously (fn = Perdeev, ln = Azamat), fix order
+        if (isLikelySurname(fn) && !isLikelySurname(ln) && ln.length > 0) {
+          const temp = fn;
+          fn = ln;
+          ln = temp;
         }
       }
+
+      setFirstName(fn);
+      setLastName(ln);
+      setPatronymic(currentUser.patronymic || '');
       
       setEmail(currentUser.email || '');
       if (currentUser.test_lang) setTestLang(currentUser.test_lang);
@@ -176,7 +195,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
       return;
     }
 
-    const updatedFullName = `${lastName} ${firstName}`.trim() || currentUser?.full_name || 'Қолданушы';
+    const updatedFullName = `${firstName} ${lastName}`.trim() || currentUser?.full_name || 'Қолданушы';
     const saveAndStart = async () => {
       try {
         updateUserProfileFields({
@@ -225,18 +244,6 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-x-8 gap-y-5 max-w-3xl mx-auto mb-10 text-sm font-bold text-slate-700">
-          <div className="flex items-center">Тегі</div>
-          <div>
-            <input 
-              type="text" 
-              value={lastName} 
-              onChange={(e) => setLastName(e.target.value)} 
-              onBlur={() => setLastName(formatNameInput(lastName))}
-              placeholder="Тегіңізді енгізіңіз"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
-            />
-          </div>
-
           <div className="flex items-center">
             Аты <span className="text-red-500 font-extrabold ml-1">*</span>
           </div>
@@ -262,6 +269,18 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
                 ⚠️ Атыңызды енгізу міндетті!
               </p>
             )}
+          </div>
+
+          <div className="flex items-center">Тегі</div>
+          <div>
+            <input 
+              type="text" 
+              value={lastName} 
+              onChange={(e) => setLastName(e.target.value)} 
+              onBlur={() => setLastName(formatNameInput(lastName))}
+              placeholder="Тегіңізді енгізіңіз"
+              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
+            />
           </div>
         </div>
 
