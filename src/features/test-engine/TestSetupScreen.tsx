@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { motion } from '../../components/ui/Motion';
 import { SPECIALTIES, Specialty } from '../../../data/specialties';
 import { getSavedUser, getProfile, getHistory, updateUserProfileFields, UserProfile, HistoryItem } from '../../services/authService';
-import { ArrowLeft, Info, ChevronDown, Loader2 } from 'lucide-react';
+import { ArrowLeft, Info, ChevronDown, Loader2, Sparkles, ArrowRight, Zap, CheckCircle2, ShieldCheck, Timer } from 'lucide-react';
 import ConfirmModal from './modals/ConfirmModal';
 import UpgradeModal from './modals/UpgradeModal';
 
@@ -180,6 +181,9 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
     setSelectedGopCode(code);
   };
 
+  const [isLaunching, setIsLaunching] = useState(false);
+  const [launchStep, setLaunchStep] = useState(1);
+
   const handleContinue = async () => {
     if (!firstName.trim()) {
       setFirstNameError(true);
@@ -196,6 +200,14 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
     }
 
     const updatedFullName = `${firstName} ${lastName}`.trim() || currentUser?.full_name || 'Қолданушы';
+    
+    // Start animated fullscreen launch overlay sequence
+    setIsLaunching(true);
+    setLaunchStep(1);
+
+    setTimeout(() => setLaunchStep(2), 500);
+    setTimeout(() => setLaunchStep(3), 1100);
+
     const saveAndStart = async () => {
       try {
         updateUserProfileFields({
@@ -211,14 +223,15 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
           specialty_name: selectedGop.name
         });
 
-        // Start the test using updated user full name
+        // Small delay for step 3 animation before entering test
+        await new Promise((res) => setTimeout(res, 700));
         await onStart(updatedFullName);
       } catch (err: any) {
+        setIsLaunching(false);
         showAlert(err.message || 'Қате орын алды', 'Қате орын алды');
       }
     };
 
-    // All specialties with questions are ready
     await saveAndStart();
   };
 
@@ -397,23 +410,115 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
           </div>
         </div>
 
-        {/* Start Button */}
+        {/* Start Button - Premium Animated Experience */}
         <div className="max-w-3xl mx-auto">
-          <button
-            onClick={handleContinue}
-            disabled={isLoading}
-            className="w-full py-4 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-extrabold rounded-md transition-all active:scale-[0.99] flex items-center justify-center gap-3 disabled:opacity-75 text-base shadow-lg hover:shadow-blue-500/10"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Сұрақтар жүктелуде... Түсінуіңізді сұраймыз</span>
-              </>
-            ) : (
-              'Жалғастыру'
-            )}
-          </button>
+          <div className="relative group">
+            {/* Ambient Glowing Neon Aura Ring */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 rounded-2xl blur-md opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-glow" />
+
+            <button
+              onClick={handleContinue}
+              disabled={isLoading || isLaunching}
+              className="relative w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-[length:200%_auto] text-white font-extrabold rounded-xl py-4.5 px-8 shadow-xl flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] group overflow-hidden border border-blue-400/30"
+            >
+              {/* Shimmer Light Beam Effect */}
+              <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer pointer-events-none" />
+
+              {isLoading || isLaunching ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
+                  <span className="text-base tracking-wide uppercase">Тест иске қосылуда...</span>
+                </>
+              ) : (
+                <>
+                  <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                  </div>
+                  <span className="text-base sm:text-lg tracking-wider uppercase font-black">
+                    КТ Тестілеуін Бастау
+                  </span>
+                  <ArrowRight className="w-5 h-5 text-blue-200 group-hover:translate-x-2 transition-transform duration-300" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Fullscreen Test Launch Animation Overlay */}
+        {(isLaunching || isLoading) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-4 selection:bg-blue-500/20"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/20 via-indigo-900/10 to-transparent pointer-events-none" />
+
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="relative max-w-md w-full bg-[#0f172a]/95 border border-blue-500/30 rounded-3xl p-8 shadow-[0_0_60px_rgba(59,130,246,0.35)] text-center text-white overflow-hidden space-y-6"
+            >
+              {/* Glowing border top accent */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full shadow-[0_0_15px_#3b82f6]" />
+
+              {/* Animated Pulsing Ring & Icon */}
+              <div className="relative w-24 h-24 mx-auto flex items-center justify-center my-2">
+                <div className="absolute inset-0 rounded-full border-4 border-blue-500/20 animate-ping" />
+                <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 border-r-indigo-500 border-b-transparent border-l-transparent animate-spin" />
+                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/40">
+                  {launchStep === 3 ? (
+                    <CheckCircle2 className="w-8 h-8 text-emerald-300 animate-bounce" />
+                  ) : (
+                    <Zap className="w-8 h-8 text-amber-300 animate-pulse" />
+                  )}
+                </div>
+              </div>
+
+              {/* Main Heading & Dynamic Status Step */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-extrabold uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">
+                  Тест Симуляторы Жүктелуде
+                </h3>
+                <p className="text-sm font-semibold text-slate-300 transition-all duration-300">
+                  {launchStep === 1 && '1/3 · Сұрақтар қорымен байланыс орнатылуда...'}
+                  {launchStep === 2 && '2/3 · Таймер және жеке пәндер реттелуде...'}
+                  {launchStep === 3 && '3/3 · Сәттілік! Тест бөлмесі ашылуда...'}
+                </p>
+              </div>
+
+              {/* Live Progress Bar */}
+              <div className="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden border border-slate-700/50">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400 rounded-full transition-all duration-500"
+                  style={{
+                    width: launchStep === 1 ? '45%' : launchStep === 2 ? '80%' : '100%'
+                  }}
+                />
+              </div>
+
+              {/* Key Test Stats Badges */}
+              <div className="grid grid-cols-3 gap-2 pt-2 text-[11px] font-extrabold text-slate-300">
+                <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col items-center gap-1">
+                  <Timer className="w-4 h-4 text-blue-400" />
+                  <span>235 минут</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col items-center gap-1">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>150 сұрақ</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col items-center gap-1">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span className="truncate max-w-full">{selectedGop.code}</span>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-slate-400 italic pt-1">
+                🚀 Кешенді тестілеуде жоғары нәтиже көрсетуіңізге тілектеспіз!
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
 
         {modalConfig && (
           <ConfirmModal
