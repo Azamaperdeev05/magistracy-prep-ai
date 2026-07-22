@@ -566,10 +566,13 @@ export async function saveTestResult(
   try {
     const dbInstance = await getFirebaseDb();
     const { collection, addDoc } = await import('firebase/firestore');
+    const userName = user.full_name || (user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : '') || (user.email ? user.email.split('@')[0] : 'Қолданушы');
     await addDoc(collection(dbInstance, "history"), {
       ...item,
       user_uid: user.uid,
-      user_id: user.id
+      user_id: user.id,
+      user_name: userName,
+      user_email: user.email || ''
     });
   } catch (err) {
     console.warn("Failed to save test result to Firestore:", err);
@@ -715,6 +718,95 @@ export async function deleteUserAccountAndHistory(): Promise<void> {
 
   // 4. Log out and clear localStorage
   removeToken();
+}
+
+export interface LeaderboardEntry {
+  userId: string;
+  userName: string;
+  bestScore: number;
+  maxScore: number;
+  percentage: number;
+  totalTests: number;
+}
+
+export async function getLeaderboard(limit: number = 10): Promise<LeaderboardEntry[]> {
+  try {
+    const dbInstance = await getFirebaseDb();
+    const { collection, query, orderBy, getDocs, doc, getDoc, limit: firestoreLimit } = await import('firebase/firestore');
+    const currentUser = getSavedUser();
+
+    // Get all test results, ordered by score descending
+    const q = query(
+      collection(dbInstance, "history"),
+      orderBy("total_score", "desc"),
+      firestoreLimit(100)
+    );
+    const snap = await getDocs(q);
+
+    // Aggregate by user: keep best score per user
+    const userBest = new Map<string, LeaderboardEntry>();
+
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const uid = data.user_uid || data.userId || data.user_id;
+      if (!uid) return;
+
+      const score = Number(data.total_score || data.totalScore || 0);
+      const maxScore = Number(data.max_score || data.maxScore || 150);
+      const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+
+      let nameCandidate = data.user_name || data.userName || data.full_name || '';
+      if (!nameCandidate && data.user_email) {
+        nameCandidate = data.user_email.split('@')[0];
+      }
+      if (currentUser && currentUser.uid === uid && currentUser.full_name) {
+        nameCandidate = currentUser.full_name;
+      }
+
+      const existing = userBest.get(uid);
+      if (!existing || score > existing.bestScore) {
+        userBest.set(uid, {
+          userId: uid,
+          userName: nameCandidate || existing?.userName || 'Қолданушы',
+          bestScore: score,
+          maxScore,
+          percentage,
+          totalTests: (existing?.totalTests || 0) + 1,
+        });
+      } else {
+        existing.totalTests += 1;
+      }
+    });
+
+    const sortedEntries = Array.from(userBest.values())
+      .sort((a, b) => b.percentage - a.percentage || b.bestScore - a.bestScore)
+      .slice(0, limit);
+
+    // Fetch user full name from "users" collection if name is generic or missing
+    await Promise.all(
+      sortedEntries.map(async (entry) => {
+        if (!entry.userName || entry.userName === 'Қолданушы' || entry.userName === 'Google Пайдаланушысы') {
+          try {
+            const userDocSnap = await getDoc(doc(dbInstance, "users", entry.userId));
+            if (userDocSnap.exists()) {
+              const uData = userDocSnap.data();
+              const realName = uData.full_name || uData.displayName || (uData.first_name ? `${uData.first_name} ${uData.last_name || ''}`.trim() : '') || (uData.email ? uData.email.split('@')[0] : '');
+              if (realName) {
+                entry.userName = realName;
+              }
+            }
+          } catch (e) {
+            // Silence permission errors for anonymous lookups
+          }
+        }
+      })
+    );
+
+    return sortedEntries;
+  } catch (err) {
+    console.error("Leaderboard fetch failed:", err);
+    return [];
+  }
 }
 
 
