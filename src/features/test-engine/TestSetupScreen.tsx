@@ -47,7 +47,8 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
           setCurrentUser(profile);
         }
       } catch (err) {
-        console.error("Error fetching latest profile on mount:", err);
+        const saved = getSavedUser();
+        if (saved) setCurrentUser(saved);
       }
     };
     fetchLatestProfile();
@@ -57,7 +58,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         const list = await getHistory();
         setHistory(list);
       } catch (err) {
-        console.error("Failed to load history on setup mount:", err);
+        // Silently fallback if unauthenticated
       }
     };
     fetchHistory();

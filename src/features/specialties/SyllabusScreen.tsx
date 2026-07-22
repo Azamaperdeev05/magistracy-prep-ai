@@ -72,7 +72,11 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
           }
         }
       } catch (err) {
-        console.error("Error fetching user profile:", err);
+        const saved = getSavedUser();
+        if (saved) {
+          setCurrentUser(saved);
+          if (saved.specialty_code) setSelectedCode(saved.specialty_code);
+        }
       }
     };
     fetchLatestProfile();
