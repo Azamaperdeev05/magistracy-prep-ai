@@ -130,7 +130,11 @@ export function removeToken(): void {
 }
 
 export function getSavedUser(): UserProfile | null {
-  return readJson<UserProfile | null>(USER_KEY, null);
+  const user = readJson<UserProfile | null>(USER_KEY, null);
+  if (user && user.is_premium === undefined) {
+    user.is_premium = true;
+  }
+  return user;
 }
 
 export function saveUser(user: UserProfile): void {
@@ -170,7 +174,8 @@ export async function register(email: string, full_name: string, password: strin
     uid: fbUser.uid,
     email: cleanEmail,
     full_name: cleanName,
-    is_active: true
+    is_active: true,
+    is_premium: true
   };
 
   const idToken = await fbUser.getIdToken();
@@ -195,7 +200,8 @@ export async function login(email: string, password: string): Promise<AuthRespon
     uid: fbUser.uid,
     email: fbUser.email || cleanEmail,
     full_name: fbUser.displayName || 'Қолданушы',
-    is_active: true
+    is_active: true,
+    is_premium: true
   };
 
   // Load consent from Firestore so it persists across sessions
@@ -209,7 +215,7 @@ export async function login(email: string, password: string): Promise<AuthRespon
       if (data.consent) {
         profile.consent = data.consent as UserConsent;
       }
-      profile.is_premium = !!data.is_premium;
+      profile.is_premium = data.is_premium !== undefined ? !!data.is_premium : true;
     }
   } catch (e) {
     console.warn("Firestore consent fetch on login failed:", e);
@@ -239,7 +245,8 @@ export async function loginWithGoogle(): Promise<AuthResponse | void> {
       uid: fbUser.uid,
       email: fbUser.email || "",
       full_name: fbUser.displayName || 'Google Пайдаланушысы',
-      is_active: true
+      is_active: true,
+      is_premium: true
     };
 
     try {
@@ -250,7 +257,7 @@ export async function loginWithGoogle(): Promise<AuthResponse | void> {
       if (userSnap.exists()) {
         const data = userSnap.data();
         if (data.consent) profile.consent = data.consent as UserConsent;
-        profile.is_premium = !!data.is_premium;
+        profile.is_premium = data.is_premium !== undefined ? !!data.is_premium : true;
       }
     } catch (e) {
       console.warn("Firestore consent fetch on Google login failed:", e);
@@ -296,7 +303,8 @@ export async function handleGoogleRedirectResult(): Promise<AuthResponse | null>
       uid: fbUser.uid,
       email: fbUser.email || "",
       full_name: fbUser.displayName || 'Google Пайдаланушысы',
-      is_active: true
+      is_active: true,
+      is_premium: true
     };
 
     // Load consent from Firestore
@@ -310,7 +318,7 @@ export async function handleGoogleRedirectResult(): Promise<AuthResponse | null>
         if (data.consent) {
           profile.consent = data.consent as UserConsent;
         }
-        profile.is_premium = !!data.is_premium;
+        profile.is_premium = data.is_premium !== undefined ? !!data.is_premium : true;
       }
     } catch (e) {
       console.warn("Firestore consent fetch on redirect login failed:", e);
@@ -354,7 +362,7 @@ export async function getProfile(): Promise<UserProfile> {
   const numericId = getOrCreateNumericId(currentUser.uid);
   const savedUser = getSavedUser();
 
-  let isPremium = false;
+  let isPremium = true;
   let aiQueriesToday = 0;
   let aiQueriesDate = "";
 
@@ -369,7 +377,7 @@ export async function getProfile(): Promise<UserProfile> {
     const userSnap = await getDoc(userDocRef);
     if (userSnap.exists()) {
       const data = userSnap.data();
-      isPremium = !!data.is_premium;
+      isPremium = data.is_premium !== undefined ? !!data.is_premium : true;
       aiQueriesToday = data.ai_queries_today || 0;
       aiQueriesDate = data.ai_queries_date || "";
 
@@ -378,17 +386,18 @@ export async function getProfile(): Promise<UserProfile> {
         firestoreConsent = data.consent as UserConsent;
       }
     } else {
-      // Create initial document
+      // Create initial document with default PRO status
       await setDoc(userDocRef, {
         email: currentUser.email || "",
         full_name: currentUser.displayName || savedUser?.full_name || 'Қолданушы',
-        is_premium: false,
+        is_premium: true,
         created_at: new Date().toISOString()
       });
+      isPremium = true;
     }
   } catch (e) {
     console.warn("Firestore user sync failed, falling back to local storage:", e);
-    isPremium = !!savedUser?.is_premium;
+    isPremium = savedUser?.is_premium !== undefined ? !!savedUser.is_premium : true;
     aiQueriesToday = savedUser?.ai_queries_today || 0;
     aiQueriesDate = savedUser?.ai_queries_date || "";
   }
