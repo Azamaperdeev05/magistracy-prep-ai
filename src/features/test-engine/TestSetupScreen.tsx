@@ -21,6 +21,20 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [countdownCount, setCountdownCount] = useState<number | null>(null);
+
+  // Personal details state variables (fully editable inputs)
+  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [firstNameError, setFirstNameError] = useState(false);
+  const firstNameRef = React.useRef<HTMLInputElement>(null);
+  const [patronymic, setPatronymic] = useState('');
+  const [email, setEmail] = useState('');
+
+  // Testing parameters state variables
+  const [testLang, setTestLang] = useState(currentUser?.test_lang || 'қазақша');
+  const [foreignLang, setForeignLang] = useState(currentUser?.foreign_lang || 'ағылшын');
+  const [tgoLang, setTgoLang] = useState(currentUser?.tgo_lang || 'қазақша');
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -102,19 +116,6 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
     });
     setModalOpen(true);
   };
-
-  // Personal details state variables (fully editable inputs)
-  const [lastName, setLastName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [firstNameError, setFirstNameError] = useState(false);
-  const firstNameRef = React.useRef<HTMLInputElement>(null);
-  const [patronymic, setPatronymic] = useState('');
-  const [email, setEmail] = useState('');
-
-  // Testing parameters state variables
-  const [testLang, setTestLang] = useState(currentUser?.test_lang || 'қазақша');
-  const [foreignLang, setForeignLang] = useState(currentUser?.foreign_lang || 'ағылшын');
-  const [tgoLang, setTgoLang] = useState(currentUser?.tgo_lang || 'қазақша');
 
   const allowedGopCodes = ['M001', 'M002', 'M094', 'M095'];
   const [selectedGopCode, setSelectedGopCode] = useState(() => {
