@@ -17,52 +17,49 @@ interface PrepScreenProps {
 const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
   const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState<'structure' | 'topics' | 'certifications'>('structure');
-  
+
   // User profile & specialty selection
   const currentUser: UserProfile | null = getSavedUser();
   const selectedSpec = SPECIALTIES.find(s => s.code === currentUser?.specialty_code);
   const specialtyCode = selectedSpec?.code || 'M094';
-  
+
   const profile1Name = selectedSpec?.profile1 || '1-бейіндік пән';
   const profile2Name = selectedSpec?.profile2 || '2-бейіндік пән';
 
   // Subject structure with unified specialty icons
   const subjectsInfo = [
-    { 
-      id: 'english', 
-      renderIcon: (className = 'w-5 h-5') => <Globe className={className} />, 
-      name: 'Шет тілі (Ағылшын тілі)', 
-      questions: 50, 
-      score: 50, 
-      scoringRule: '1 сұрақ = 1 балл',
-      desc: 'Тыңдалым (16), Лексика-Грамматика (18), Оқылым (16)' 
+    {
+      id: 'english',
+      renderIcon: (className = 'w-5 h-5') => <Globe className={className} />,
+      name: 'Шет тілі (Ағылшын тілі)',
+      questions: 50,
+      score: 50,
+      desc: 'Тыңдалым (16), Лексика-Грамматика (18), Оқылым (16)'
     },
-    { 
-      id: 'tgo', 
-      renderIcon: (className = 'w-5 h-5') => <Brain className={className} />, 
-      name: 'Оқуға дайындығын анықтау тесті (ТГО)', 
-      questions: 30, 
-      score: 30, 
-      scoringRule: '1 сұрақ = 1 балл',
-      desc: 'Сыни ойлау (15) және Аналитикалық ойлау (15)' 
+    {
+      id: 'tgo',
+      renderIcon: (className = 'w-5 h-5') => <Brain className={className} />,
+      name: 'Оқуға дайындығын анықтау тесті (ТГО)',
+      questions: 30,
+      score: 30,
+      desc: 'Сыни ойлау (15) және Аналитикалық ойлау (15)'
     },
-    { 
-      id: 'profile1', 
-      renderIcon: (className = 'w-5 h-5') => getSpecialtyIconByCode(specialtyCode, className), 
-      name: `1-бейіндік пән: ${profile1Name}`, 
-      questions: 30, 
-      score: 30, 
-      scoringRule: '1 сұрақ = 1 балл',
-      desc: 'Ішкі бөлімдерге бөлінбейді' 
+    {
+      id: 'profile1',
+      renderIcon: (className = 'w-5 h-5') => getSpecialtyIconByCode(specialtyCode, className),
+      name: `1-бейіндік пән: ${profile1Name}`,
+      questions: 30,
+      score: 30,
+      desc: 'Ішкі бөлімдерге бөлінбейді'
     },
-    { 
-      id: 'profile2', 
-      renderIcon: (className = 'w-5 h-5') => getSpecialtyIconByCode(specialtyCode, className), 
-      name: `2-бейіндік пән: ${profile2Name}`, 
-      questions: 20, 
-      score: 40, 
+    {
+      id: 'profile2',
+      renderIcon: (className = 'w-5 h-5') => getSpecialtyIconByCode(specialtyCode, className),
+      name: `2-бейіндік пән: ${profile2Name}`,
+      questions: 20,
+      score: 40,
       scoringRule: '1 сұрақ = 2 балл',
-      desc: 'Ішкі бөлімдерге бөлінбейді' 
+      desc: 'Ішкі бөлімдерге бөлінбейді'
     }
   ];
 
@@ -106,7 +103,7 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
 
       {/* Main Content */}
       <div className="max-w-5xl relative z-10">
-        
+
         {/* Hero Header */}
         <div className="text-center max-w-2xl mx-auto mb-8">
           <h1 className={`text-2xl sm:text-3xl font-black uppercase tracking-tight italic ${textPrimary}`}>
@@ -125,9 +122,8 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-1.5 pb-3 text-xs font-black uppercase tracking-wider transition relative ${
-                  activeTab === tab.id ? 'text-blue-500' : `${textMuted} hover:${textSecondary}`
-                }`}
+                className={`flex items-center gap-1.5 pb-3 text-xs font-black uppercase tracking-wider transition relative ${activeTab === tab.id ? 'text-blue-500' : `${textMuted} hover:${textSecondary}`
+                  }`}
               >
                 <tab.icon className="w-3.5 h-3.5" />
                 {tab.label}
@@ -155,7 +151,7 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
               {/* Stats Grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                  { label: "Барлық сұрақ", val: "130 сұрақ", desc: "Шет тілі (50), ТГО (30), 1-Бейіндік (30), 2-Бейіндік (20)", bg: isDarkMode ? "bg-blue-500/5 border-blue-500/20" : "bg-blue-50/60 border-blue-200" },
+                  { label: "Барлық сұрақ", val: "130 сұрақ", bg: isDarkMode ? "bg-blue-500/5 border-blue-500/20" : "bg-blue-50/60 border-blue-200" },
                   { label: "Макс. балл", val: "150 балл", desc: "2-бейіндік пән сұрақтары 2 баллдан", bg: isDarkMode ? "bg-purple-500/5 border-purple-500/20" : "bg-purple-50/60 border-purple-200" },
                   { label: "Тест уақыты", val: "235 минут", desc: "3 сағат 55 минут", bg: isDarkMode ? "bg-emerald-500/5 border-emerald-500/20" : "bg-emerald-50/60 border-emerald-200" },
                   { label: "Грант шегі", val: "≥ 75 балл", desc: "Шет тілі ≥ 25 балл, өзге пәндер ≥ 7 балл", bg: isDarkMode ? "bg-amber-500/5 border-amber-500/20" : "bg-amber-50/60 border-amber-200" }
@@ -177,9 +173,8 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
                   {subjectsInfo.map((subj, idx) => (
                     <div key={idx} className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${subCardBg}`}>
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${
-                          isDarkMode ? 'bg-blue-500/10 border-blue-500/25 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
-                        }`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${isDarkMode ? 'bg-blue-500/10 border-blue-500/25 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
+                          }`}>
                           {subj.renderIcon('w-5 h-5')}
                         </div>
                         <div>
@@ -257,11 +252,10 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
                               {subj.id === 'profile1' ? '30 сұрақ • 30 балл' : '20 сұрақ • 40 балл'}
                             </p>
                           </div>
-                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 ${
-                            subj.id === 'profile1' 
-                              ? 'bg-blue-500/10 border border-blue-500/25 text-blue-500' 
-                              : 'bg-purple-500/10 border border-purple-500/25 text-purple-500'
-                          }`}>
+                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 ${subj.id === 'profile1'
+                            ? 'bg-blue-500/10 border border-blue-500/25 text-blue-500'
+                            : 'bg-purple-500/10 border border-purple-500/25 text-purple-500'
+                            }`}>
                             {subj.scoringRule}
                           </span>
                         </div>
@@ -297,9 +291,8 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
               className="space-y-6"
             >
               {/* Exemption Header Banner */}
-              <div className={`p-5 rounded-3xl border flex items-start gap-3.5 ${
-                isDarkMode ? 'bg-emerald-950/30 border-emerald-500/30' : 'bg-emerald-50 border-emerald-200'
-              }`}>
+              <div className={`p-5 rounded-3xl border flex items-start gap-3.5 ${isDarkMode ? 'bg-emerald-950/30 border-emerald-500/30' : 'bg-emerald-50 border-emerald-200'
+                }`}>
                 <FileCheck className="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <h3 className={`text-base font-black uppercase ${textPrimary}`}>

@@ -79,7 +79,7 @@ const Gauge: React.FC<{ score: number; max: number; isDarkMode?: boolean }> = ({
       if (!startTimestamp) startTimestamp = timestamp;
       const elapsed = timestamp - startTimestamp;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       const easeOut = 1 - Math.pow(1 - progress, 3);
       const currentVal = Math.round(easeOut * score);
 
@@ -268,10 +268,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           const savedQ = localStorage.getItem('active_test_questions');
           const savedA = localStorage.getItem('active_test_answers');
           if (savedQ) {
-            try { setQuestions(JSON.parse(savedQ)); } catch (e) {}
+            try { setQuestions(JSON.parse(savedQ)); } catch (e) { }
           }
           if (savedA) {
-            try { setAnswers(JSON.parse(savedA)); } catch (e) {}
+            try { setAnswers(JSON.parse(savedA)); } catch (e) { }
           }
         }
       }
@@ -339,13 +339,13 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
   const handleRequestExplanation = async (
     question: Question,
-    opts: string[], 
-    correctOpts: string[], 
+    opts: string[],
+    correctOpts: string[],
     userAns: string[]
   ) => {
     const qId = question.id;
     if (aiExplanations[qId] && !aiExplanations[qId].startsWith('Қателік')) return;
-    
+
     // Check limit
     const check = checkAndIncrementAiLimit(10);
     if (!check.allowed) {
@@ -374,27 +374,27 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
   const subjectResults = Object.values(SUBJECTS)
     .filter(subject => questions.some(q => q.subjectId === subject.id))
     .map(subject => {
-    const subjectQuestions = questions.filter(q => q.subjectId === subject.id);
-    let correctCount = 0;
-    let score = 0;
-    let maxScore = 0;
-    const topicStats: Record<string, { correct: number; total: number }> = {};
-    
-    subjectQuestions.forEach(q => {
-      const scored = scoreQuestion(q, answers[q.id] || []);
-      const isCorrect = scored.correct;
-      
-      if (isCorrect) correctCount++;
-      score += scored.score;
-      maxScore += scored.max;
-      
-      if (!topicStats[q.topic]) topicStats[q.topic] = { correct: 0, total: 0 };
-      topicStats[q.topic].total++;
-      if (isCorrect) topicStats[q.topic].correct++;
-    });
+      const subjectQuestions = questions.filter(q => q.subjectId === subject.id);
+      let correctCount = 0;
+      let score = 0;
+      let maxScore = 0;
+      const topicStats: Record<string, { correct: number; total: number }> = {};
 
-    return { subject, total: subjectQuestions.length, correct: correctCount, score, maxScore, questions: subjectQuestions, topicStats };
-  });
+      subjectQuestions.forEach(q => {
+        const scored = scoreQuestion(q, answers[q.id] || []);
+        const isCorrect = scored.correct;
+
+        if (isCorrect) correctCount++;
+        score += scored.score;
+        maxScore += scored.max;
+
+        if (!topicStats[q.topic]) topicStats[q.topic] = { correct: 0, total: 0 };
+        topicStats[q.topic].total++;
+        if (isCorrect) topicStats[q.topic].correct++;
+      });
+
+      return { subject, total: subjectQuestions.length, correct: correctCount, score, maxScore, questions: subjectQuestions, topicStats };
+    });
 
   const totalScore = testResult.totalScore;
   const maxScore = testResult.maxScore;
@@ -451,16 +451,6 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {wrongQuestions.length > 0 && onPracticeWrong && (
-              <button
-                onClick={() => onPracticeWrong(wrongQuestions)}
-                className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition cursor-pointer"
-              >
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
-                <span>Қатемен жұмыс</span> ({wrongQuestions.length})
-              </button>
-            )}
-
             <button
               onClick={() => {
                 if (onRestart) onRestart();
@@ -487,12 +477,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
             {/* Right: Core Metrics & Status */}
             <div className="md:col-span-7 space-y-4 text-left">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
-                    КТ Кімдік Симуляциясы
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">{userName}</h2>
-                </div>
+
                 <div className={`px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${grantChance.bg} ${grantChance.color}`}>
                   {grantChance.text}
                 </div>
@@ -528,11 +513,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
         <div className="flex items-center gap-2 border-b border-slate-200 mb-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${
-              activeTab === 'overview'
+            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'overview'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
+              }`}
           >
             <BarChart3 className="w-4 h-4" />
             <span>Жалпы Шолу</span>
@@ -540,11 +524,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
           <button
             onClick={() => setActiveTab('topics')}
-            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${
-              activeTab === 'topics'
+            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'topics'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
+              }`}
           >
             <Target className="w-4 h-4" />
             <span>Пәндер & Тақырыптар</span>
@@ -552,11 +535,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
           <button
             onClick={() => setActiveTab('review')}
-            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${
-              activeTab === 'review'
+            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'review'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
+              }`}
           >
             <BookOpen className="w-4 h-4" />
             <span>Сұрақтар Талдауы ({questions.length})</span>
@@ -860,31 +842,22 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
         {/* Footer Actions */}
         <div className="mt-12 flex flex-wrap justify-center gap-4">
-           <button 
-             onClick={() => {
-               if (onRestart) onRestart();
-               else navigate('/test-setup');
-             }} 
-             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
-           >
-             <RotateCcw className="w-5 h-5" /> Қайта тапсыру
-           </button>
+          <button
+            onClick={() => {
+              if (onRestart) onRestart();
+              else navigate('/test-setup');
+            }}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
+          >
+            <RotateCcw className="w-5 h-5" /> Қайта тапсыру
+          </button>
 
-           {wrongQuestions.length > 0 && onPracticeWrong && (
-             <button 
-               onClick={() => onPracticeWrong(wrongQuestions)} 
-               className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
-             >
-               <AlertTriangle className="w-5 h-5" /> Қателермен жұмыс ({wrongQuestions.length})
-             </button>
-           )}
-
-           <button 
-             onClick={() => navigate('/panel')} 
-             className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
-           >
-             <Home className="w-5 h-5" /> Басты бетке өту
-           </button>
+          <button
+            onClick={() => navigate('/panel')}
+            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
+          >
+            <Home className="w-5 h-5" /> Басты бетке өту
+          </button>
         </div>
 
         {/* Mobile Floating Quick Action Bar */}
@@ -909,7 +882,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           </button>
         </div>
 
-        <ReportModal 
+        <ReportModal
           isOpen={!!reportQuestion}
           onClose={() => setReportQuestion(null)}
           questionId={reportQuestion?.id || ''}
