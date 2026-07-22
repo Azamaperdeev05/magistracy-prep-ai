@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Question, SubjectId, UserAnswers } from '../../types';
 import { SUBJECTS } from '../../constants';
-import { ChevronDown, ChevronUp, CheckCircle, XCircle, Trophy, Home, RotateCcw, BookOpen, TrendingUp, Target, BarChart3, BrainCircuit, AlertTriangle, Star, MessageSquare } from 'lucide-react';
+import { ChevronDown, ChevronUp, CheckCircle, XCircle, Trophy, Home, RotateCcw, BookOpen, TrendingUp, Target, BarChart3, BrainCircuit, AlertTriangle, Star, MessageSquare, ArrowLeft, Sparkles, GraduationCap } from 'lucide-react';
 import { saveTestResult, checkAndIncrementAiLimit, getSavedUser, getHistoryItemById } from '../../services/authService';
 import { calculateTestResult, scoreQuestion } from '../../services/scoringService';
 import { getAiExplanation, AiQuestionContext } from '../../services/apiService';
@@ -215,6 +215,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
   userName: propUserName
 }) => {
   const { resultId } = useParams<{ resultId?: string }>();
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
 
   const [questions, setQuestions] = useState<Question[]>(() => propQuestions || []);
@@ -397,6 +398,26 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
   const totalScore = testResult.totalScore;
   const maxScore = testResult.maxScore;
+  const scorePct = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+
+  const wrongQuestions = useMemo(() => {
+    return questions.filter(q => !scoreQuestion(q, answers[q.id] || []).correct);
+  }, [questions, answers]);
+
+  const grantChance = useMemo(() => {
+    if (scorePct >= 75) {
+      return { text: 'Өте жоғары', desc: 'Грантқа түсу мүмкіндігіңіз жоғары!', color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' };
+    } else if (scorePct >= 55) {
+      return { text: 'Орташа', desc: 'Сәл шыңдасаңыз грант кепіл!', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' };
+    } else {
+      return { text: 'Дайындық қажет', desc: 'Қателіктермен қайта жұмыс жасаңыз', color: 'text-rose-600', bg: 'bg-rose-50 border-rose-200' };
+    }
+  }, [scorePct]);
+
+  const weakestSubject = useMemo(() => {
+    if (subjectResults.length === 0) return null;
+    return [...subjectResults].sort((a, b) => (a.score / (a.maxScore || 1)) - (b.score / (b.maxScore || 1)))[0];
+  }, [subjectResults]);
 
   useEffect(() => {
     const saveResults = async () => {
@@ -414,15 +435,150 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
   }, [testResult, questions, answers]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-20">
-      <header className="py-12 text-center">
-        <Trophy className="w-14 h-14 text-amber-500 mx-auto mb-3 animate-bounce" />
-        <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-slate-800">Тест нәтижесі</h1>
-        <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">{userName}, құттықтаймыз!</p>
+    <div className="min-h-screen bg-[#F8FAFC] pb-24">
+      {/* Sticky Top Bar for Instant Navigation (No need to scroll!) */}
+      <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs px-4 py-3">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
+          <button
+            onClick={() => navigate('/panel')}
+            className="flex items-center gap-2 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-extrabold text-xs sm:text-sm transition active:scale-95 cursor-pointer shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Басты бетке қайту</span>
+          </button>
+
+          <div className="hidden md:flex items-center gap-2 text-slate-700 text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+            <Trophy className="w-4 h-4 text-amber-500" />
+            <span>Нәтиже: {totalScore} / {maxScore} балл ({scorePct}%)</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {wrongQuestions.length > 0 && onPracticeWrong && (
+              <button
+                onClick={() => onPracticeWrong(wrongQuestions)}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-xl text-xs font-bold transition cursor-pointer"
+              >
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                <span>Қатемен жұмыс</span> ({wrongQuestions.length})
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                if (onRestart) onRestart();
+                else navigate('/test-setup');
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-extrabold text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Қайта тапсыру</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <header className="py-8 text-center px-4">
+        <Trophy className="w-12 h-12 text-amber-500 mx-auto mb-2 animate-bounce" />
+        <h1 className="text-2xl sm:text-3xl font-black mb-1 uppercase tracking-tighter text-slate-800">Тест нәтижесі</h1>
+        <p className="text-slate-400 text-xs sm:text-sm font-bold uppercase tracking-wider">{userName}, құттықтаймыз!</p>
       </header>
 
       <div className="max-w-5xl mx-auto px-4">
-        {/* New Gauge Arc Score Card */}
+        {/* KPI Summary Cards Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-8">
+          {/* Card 1: Score */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Жалпы Балл</span>
+              <Trophy className="w-4 h-4 text-amber-500" />
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-slate-900">
+                {totalScore} <span className="text-xs font-bold text-slate-400">/ {maxScore}</span>
+              </div>
+              <p className="text-[11px] text-slate-500 font-medium mt-0.5">Максималды баллдан</p>
+            </div>
+          </div>
+
+          {/* Card 2: Percentage */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Игеру Пайызы</span>
+              <TrendingUp className="w-4 h-4 text-blue-500" />
+            </div>
+            <div>
+              <div className={`text-2xl sm:text-3xl font-black ${scorePct >= 70 ? 'text-emerald-600' : scorePct >= 40 ? 'text-amber-600' : 'text-rose-600'}`}>
+                {scorePct}%
+              </div>
+              <p className="text-[11px] text-slate-500 font-medium mt-0.5">Дұрыс орындалуы</p>
+            </div>
+          </div>
+
+          {/* Card 3: Grant Chance */}
+          <div className={`p-4 rounded-2xl border shadow-xs flex flex-col justify-between ${grantChance.bg}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-700">Грант Мүмкіндігі</span>
+              <GraduationCap className={`w-4 h-4 ${grantChance.color}`} />
+            </div>
+            <div>
+              <div className={`text-xl sm:text-2xl font-black ${grantChance.color}`}>
+                {grantChance.text}
+              </div>
+              <p className="text-[11px] text-slate-600 font-medium mt-0.5 truncate">{grantChance.desc}</p>
+            </div>
+          </div>
+
+          {/* Card 4: Wrong Questions Action */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Қате Сұрақтар</span>
+              <AlertTriangle className="w-4 h-4 text-rose-500" />
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-rose-600">
+                {wrongQuestions.length} <span className="text-xs font-bold text-slate-400">сұрақ</span>
+              </div>
+              {wrongQuestions.length > 0 && onPracticeWrong ? (
+                <button
+                  onClick={() => onPracticeWrong(wrongQuestions)}
+                  className="mt-1 text-[11px] font-extrabold text-blue-600 hover:text-blue-700 underline cursor-pointer"
+                >
+                  Қателермен жұмыс →
+                </button>
+              ) : (
+                <p className="text-[11px] text-emerald-600 font-bold mt-0.5">Барлығы дұрыс!</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Smart AI Analysis Notice Banner */}
+        {weakestSubject && (
+          <div className="mb-8 bg-gradient-to-r from-blue-900 to-indigo-950 text-white rounded-2xl p-5 shadow-lg border border-blue-800/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-400/30 shrink-0">
+                <BrainCircuit className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-blue-300 bg-blue-500/20 px-2.5 py-0.5 rounded-md border border-blue-400/20 mb-1">
+                  <Sparkles className="w-3 h-3 text-amber-400" /> Сараптамалық кеңес
+                </span>
+                <p className="text-xs sm:text-sm font-medium text-slate-200">
+                  <strong className="text-white font-extrabold">{weakestSubject.subject.name}</strong> бойынша дайындықты күшейту ұсынылады (жинаған балыңыз: {weakestSubject.score}/{weakestSubject.maxScore}).
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => navigate('/prep')}
+              className="shrink-0 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-extrabold text-xs transition active:scale-95 cursor-pointer shadow-md"
+            >
+              Дайындық бөліміне өту
+            </button>
+          </div>
+        )}
+
+        {/* Gauge Arc Score Card */}
         <Gauge score={totalScore} max={maxScore} isDarkMode={isDarkMode} />
         
         {/* PRO Analytics: Subject & Topic Breakdown */}
@@ -710,12 +866,53 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
         {/* Footer Actions */}
         <div className="mt-12 flex flex-wrap justify-center gap-4">
-           <button onClick={onRestart} className="flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition">
-             <RotateCcw /> Қайта тапсыру
+           <button 
+             onClick={() => {
+               if (onRestart) onRestart();
+               else navigate('/test-setup');
+             }} 
+             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
+           >
+             <RotateCcw className="w-5 h-5" /> Қайта тапсыру
            </button>
-           <button onClick={onRestart} className="flex items-center gap-2 bg-slate-800 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition">
-             <Home /> Басты бет
+
+           {wrongQuestions.length > 0 && onPracticeWrong && (
+             <button 
+               onClick={() => onPracticeWrong(wrongQuestions)} 
+               className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
+             >
+               <AlertTriangle className="w-5 h-5" /> Қателермен жұмыс ({wrongQuestions.length})
+             </button>
+           )}
+
+           <button 
+             onClick={() => navigate('/panel')} 
+             className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition cursor-pointer"
+           >
+             <Home className="w-5 h-5" /> Басты бетке өту
            </button>
+        </div>
+
+        {/* Mobile Floating Quick Action Bar */}
+        <div className="sm:hidden fixed bottom-4 left-4 right-4 z-40 bg-slate-900/90 backdrop-blur-lg border border-slate-700/80 text-white rounded-2xl shadow-2xl p-2 flex items-center justify-around gap-2">
+          <button
+            onClick={() => navigate('/panel')}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-extrabold transition cursor-pointer"
+          >
+            <Home className="w-4 h-4 text-blue-400" />
+            <span>Басты бет</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (onRestart) onRestart();
+              else navigate('/test-setup');
+            }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-extrabold transition cursor-pointer"
+          >
+            <RotateCcw className="w-4 h-4 text-white" />
+            <span>Қайта тапсыру</span>
+          </button>
         </div>
 
         <ReportModal 
