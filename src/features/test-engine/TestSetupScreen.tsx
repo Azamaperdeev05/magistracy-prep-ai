@@ -63,20 +63,21 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
     fetchHistory();
   }, []);
 
-  // Countdown timer effect
+  // Countdown timer effect (Minimalist 3 -> 2 -> 1)
   useEffect(() => {
     if (countdownCount === null) return;
 
-    if (countdownCount > 0) {
+    if (countdownCount > 1) {
       const timer = setTimeout(() => {
-        setCountdownCount(prev => (prev !== null && prev > 0 ? prev - 1 : 0));
-      }, 900);
+        setCountdownCount(prev => (prev !== null && prev > 1 ? prev - 1 : 1));
+      }, 750);
       return () => clearTimeout(timer);
     } else {
       const timer = setTimeout(async () => {
+        setCountdownCount(null);
         const updatedFullName = `${firstName} ${lastName}`.trim() || currentUser?.full_name || 'Қолданушы';
         await onStart(updatedFullName);
-      }, 600);
+      }, 750);
       return () => clearTimeout(timer);
     }
   }, [countdownCount, firstName, lastName, currentUser, onStart]);
@@ -433,39 +434,14 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
           </button>
         </div>
 
-        {/* Countdown Overlay Modal */}
+        {/* Minimalist Countdown Overlay */}
         {countdownCount !== null && (
-          <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-xl flex flex-col items-center justify-center p-4 text-white">
-            <div className="absolute w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
-
-            <div className="relative z-10 flex flex-col items-center text-center space-y-6 max-w-sm">
-              <div className="space-y-1.5">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-widest bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  <Sparkles className="w-3.5 h-3.5" /> Дайындық аяқталды
-                </span>
-                <h3 className="text-xl font-extrabold text-white">КТ Симуляторы басталмақ</h3>
-              </div>
-
-              {/* Animated Countdown Number */}
-              <div
-                key={countdownCount}
-                className="w-36 h-36 rounded-full bg-slate-900/90 border-2 border-blue-500/40 shadow-[0_0_50px_rgba(59,130,246,0.3)] flex items-center justify-center animate-pop-in"
-              >
-                {countdownCount > 0 ? (
-                  <span className="text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-indigo-200 to-white drop-shadow-lg">
-                    {countdownCount}
-                  </span>
-                ) : (
-                  <span className="text-2xl font-black tracking-wider text-emerald-400 animate-bounce">
-                    СӘТТІЛІК!
-                  </span>
-                )}
-              </div>
-
-              <div className="space-y-1 text-slate-300 text-xs font-bold">
-                <p className="text-white font-extrabold text-sm">{selectedGop.code} — {selectedGop.name}</p>
-                <p className="text-slate-400 font-medium">150 сұрақ · 235 минут</p>
-              </div>
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center">
+            <div
+              key={countdownCount}
+              className="text-9xl font-black text-white tracking-tighter animate-pop-in drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] select-none"
+            >
+              {countdownCount}
             </div>
           </div>
         )}
