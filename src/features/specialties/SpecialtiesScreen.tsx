@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from '../../components/ui/Motion';
 import {
-  Search, ArrowLeft, Check, Info, Sparkles, GraduationCap,
+  Search, ArrowLeft, Check, Info, Sparkles, GraduationCap, ChevronRight,
   Zap, ShieldCheck, Brain, TrendingUp, Scale, FlaskConical,
   Dna, Calculator, Globe, Bot, BookOpen, Briefcase, Cpu,
   Music, Palette, Wrench, Atom, Code, History, BookMarked,
@@ -171,7 +171,7 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
           </div>
         )}
 
-        {/* Specialties Grid Container (Төрт бұрышты Карточкалар Торы) */}
+        {/* Specialties List Container (Тізім форматы) */}
         {filteredSpecialties.length === 0 ? (
           <div className={`border rounded-3xl p-16 text-center font-bold ${
             isDarkMode ? 'bg-[#0f1219] border-white/5 text-slate-400' : 'bg-white border-slate-200 text-slate-400 shadow-sm'
@@ -179,98 +179,104 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
             Мамандық табылмады. Басқаша іздеп көріңіз.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="space-y-3">
             {filteredSpecialties.map((spec, index) => {
               const isSelected = currentUser?.specialty_code === spec.code;
               const isReady = ['M094'].includes(spec.code);
 
-              // Color accents based on index
-              const colorVariants = [
-                { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-500', badgeBg: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
-                { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-500', badgeBg: 'bg-purple-500/10 text-purple-500 border-purple-500/20' },
-                { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-500', badgeBg: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
-                { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-500', badgeBg: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
-              ];
-              const variant = colorVariants[index % colorVariants.length];
-
               return (
                 <motion.div 
                   key={spec.code}
-                  whileHover={{ y: -4 }}
-                  className={`p-6 rounded-3xl border flex flex-col justify-between transition-all duration-300 ${
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: Math.min(index * 0.02, 0.3) }}
+                  className={`rounded-2xl border p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200 ${
                     isDarkMode 
-                      ? (isSelected ? 'bg-blue-950/30 border-blue-500/50 shadow-xl ring-2 ring-blue-500/30' : 'bg-[#0f1219] border-slate-800/80 hover:border-blue-500/40 hover:shadow-xl')
-                      : (isSelected ? 'bg-blue-50/80 border-blue-400 shadow-xl ring-2 ring-blue-500/20' : 'bg-white border-slate-200/80 hover:border-blue-400 shadow-md')
+                      ? (isSelected ? 'bg-blue-950/30 border-blue-500/50 shadow-md ring-1 ring-blue-500/30' : 'bg-[#0f1219] border-slate-800/80 hover:border-slate-700 hover:shadow-md')
+                      : (isSelected ? 'bg-blue-50/80 border-blue-400 shadow-md ring-1 ring-blue-500/20' : 'bg-white border-slate-200/80 hover:border-slate-300 shadow-xs hover:shadow-md')
                   }`}
                 >
-                  <div>
-                    {/* Top Row: Icon & Code Badge */}
-                    <div className="flex items-center justify-between mb-5">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${variant.bg} ${variant.border} ${variant.text}`}>
-                        {getSpecialtyIconByCode(spec.code, spec.name)}
-                      </div>
-                      <span className={`text-[10px] font-black px-2.5 py-1 rounded-full border uppercase tracking-wider ${variant.badgeBg}`}>
-                        {spec.code}
-                      </span>
+                  {/* Left Side: Icon, Code Badge, Title & Profiles */}
+                  <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
+                    {/* Icon Box */}
+                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 text-base font-black ${
+                      isSelected
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                        : (isDarkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600')
+                    }`}>
+                      {getSpecialtyIconByCode(spec.code, spec.name)}
                     </div>
 
-                    {/* Title & Profiles */}
-                    <h3 className={`text-base font-black uppercase tracking-tight mb-2 leading-tight ${
-                      isDarkMode ? 'text-white' : 'text-slate-900'
-                    }`}>
-                      {spec.name}
-                    </h3>
-                    
-                    <p className={`text-xs leading-relaxed font-medium ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                    }`}>
-                      Профильдер: <span className={`font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-800'}`}>{spec.profile1}</span> және <span className={`font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-800'}`}>{spec.profile2}</span>
-                    </p>
+                    {/* Details */}
+                    <div className="space-y-1 min-w-0 flex-1 text-left">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={`text-[11px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider border ${
+                          isSelected
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : (isDarkMode ? 'bg-slate-800 text-blue-400 border-slate-700' : 'bg-slate-100 text-slate-800 border-slate-200')
+                        }`}>
+                          {spec.code}
+                        </span>
 
-                    {isReady && (
-                      <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black uppercase tracking-wider">
-                        ✓ Сұрақтар дайын
+                        {isReady && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider">
+                            ✓ Сұрақтар дайын
+                          </span>
+                        )}
+
+                        {isSelected && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-wider">
+                            <Check className="w-3 h-3" /> Таңдалған
+                          </span>
+                        )}
                       </div>
-                    )}
+
+                      <h3 className={`text-base font-black leading-snug truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                        {spec.name}
+                      </h3>
+
+                      <p className={`text-xs font-medium truncate ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                        1-профиль: <strong className={isDarkMode ? 'text-slate-300' : 'text-slate-700'}>{spec.profile1}</strong> • 2-профиль: <strong className={isDarkMode ? 'text-slate-300' : 'text-slate-700'}>{spec.profile2}</strong>
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Bottom Action Buttons */}
-                  <div className={`mt-6 pt-4 border-t flex gap-2.5 items-center justify-between ${
-                    isDarkMode ? 'border-white/5' : 'border-slate-100'
-                  }`}>
+                  {/* Right Side: Actions (Толығырақ & Таңдау) */}
+                  <div className="flex items-center gap-2 shrink-0 self-end md:self-center w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
                     <button
                       onClick={() => navigate(`/specialties/${spec.code}`)}
-                      className={`px-3 py-2 border text-[11px] font-extrabold rounded-xl transition-all active:scale-95 flex items-center gap-1 shrink-0 ${
-                        isDarkMode 
-                          ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850 hover:text-white' 
-                          : 'bg-slate-100 border-slate-200 text-slate-650 hover:bg-slate-200'
+                      className={`px-3.5 py-2 border text-xs font-extrabold rounded-xl transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer ${
+                        isDarkMode
+                          ? 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+                          : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
-                      <Info className="w-3.5 h-3.5" /> Толығырақ
+                      <Info className="w-3.5 h-3.5 text-blue-500" />
+                      <span>Толығырақ</span>
                     </button>
 
                     {isSelected ? (
-                      <div className="flex-1 flex gap-2">
-                        <span className="flex-1 py-2 bg-blue-500/15 border border-blue-500/30 text-blue-500 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5">
-                          <Check className="w-4 h-4" /> Белсенді
+                      <div className="flex items-center gap-2">
+                        <span className="px-3.5 py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs rounded-xl flex items-center gap-1">
+                          <Check className="w-3.5 h-3.5" /> Белсенді
                         </span>
                         {isReady && (
                           <button
                             onClick={() => navigate(`/test-setup?gop=${spec.code}`)}
-                            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1"
+                            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-1 cursor-pointer"
                           >
-                            Тест <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
+                            Тест тапсыру <ChevronRight className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
                     ) : (
-                      <div className="flex-1 flex gap-2">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleSelectSpecialty(spec)}
-                          className={`flex-1 py-2 border text-xs font-black uppercase tracking-wider rounded-xl transition-all active:scale-95 ${
-                            isDarkMode 
-                              ? 'bg-slate-800 hover:bg-blue-600 hover:text-white border-slate-700/60 text-slate-300' 
-                              : 'bg-blue-600 hover:bg-blue-750 border-blue-600 text-white shadow-sm'
+                          className={`px-4 py-2 border text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all active:scale-95 cursor-pointer ${
+                            isDarkMode
+                              ? 'bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border-blue-500/30'
+                              : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white shadow-xs'
                           }`}
                         >
                           Таңдау
@@ -281,10 +287,9 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
                               handleSelectSpecialty(spec);
                               navigate(`/test-setup?gop=${spec.code}`);
                             }}
-                            className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1"
-                            title="Тестті бастау"
+                            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-1 cursor-pointer"
                           >
-                            Тест <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
+                            Тест <ChevronRight className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
