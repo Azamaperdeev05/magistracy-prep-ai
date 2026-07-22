@@ -278,6 +278,30 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const [showMobileTools, setShowMobileTools] = useState(false);
   const [audioFailed, setAudioFailed] = useState(false);
 
+  // Intercept browser back button & tab exit while test is active
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.href);
+
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href);
+      setShowFinishModal(true);
+    };
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = 'Тестілеу жүріп жатыр! Шынымен шыққыңыз келе ме?';
+      return e.returnValue;
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   // Compute subject summaries for ҰТО finish modal
   const subjectSummaries = useMemo(() => {
     const activeSubjectIds = Array.from(new Set(questions.map(q => q.subjectId)));

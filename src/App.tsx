@@ -245,7 +245,7 @@ const RootApp: React.FC = () => {
       setIsInProgress(true);
       setQuestions(allQuestions);
       setUserAnswers({});
-      navigate('/test');
+      navigate('/test', { replace: true });
     } catch (error) {
       console.error(error);
       triggerAlert("Тестті бастау кезінде қате орын алды.");
@@ -542,9 +542,13 @@ const RootApp: React.FC = () => {
         <Route
           path="/test-setup"
           element={
-            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
-              <TestSetupScreen onStart={startTest} isLoading={isLoading} />
-            </PanelLayout>
+            questions.length > 0 && isInProgress ? (
+              <Navigate to="/test" replace />
+            ) : (
+              <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+                <TestSetupScreen onStart={startTest} isLoading={isLoading} />
+              </PanelLayout>
+            )
           }
         />
         <Route
