@@ -137,22 +137,16 @@ const RootApp: React.FC = () => {
       }
 
       if (cancelled || !auth) {
-        console.error('[AUTH] Firebase auth is null');
         setIsCheckingAuth(false);
         return;
       }
 
-      console.log('[AUTH] Starting auth flow, auth.currentUser:', auth.currentUser?.email);
-
       const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
-        console.log('[AUTH] onAuthStateChanged fired, user:', fbUser?.email || 'null');
         if (fbUser) {
           try {
             const profile = await getProfile();
-            console.log('[AUTH] Profile loaded:', profile.email);
             setUser(profile);
           } catch (error: any) {
-            console.error('[AUTH] getProfile error:', error.message);
             setUser(null);
           }
         } else {
@@ -164,12 +158,10 @@ const RootApp: React.FC = () => {
       getRedirectResult(auth as any)
         .then((result: any) => {
           if (result?.user) {
-            console.log('[AUTH] Redirect consumed:', result.user.email);
+            // handle redirect result silently
           }
         })
-        .catch((error) => {
-          console.error('[AUTH] getRedirectResult error:', error.code, error.message);
-        });
+        .catch(() => {});
 
       return unsubscribe;
     };
