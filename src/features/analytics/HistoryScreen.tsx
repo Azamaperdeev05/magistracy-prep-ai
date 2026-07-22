@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from '../../components/ui/Motion';
-import { 
-  History, 
-  ChevronRight, 
+import {
+  History,
+  ChevronRight,
   ChevronDown,
   ChevronUp,
-  Calendar, 
-  Award, 
+  Calendar,
+  Award,
   CheckCircle2, 
   Loader2,
   ArrowLeft,
@@ -44,6 +44,7 @@ import MarkdownRenderer from '../test-engine/MarkdownRenderer';
 import CodeAwareText from '../test-engine/CodeAwareText';
 import ReportModal from '../test-engine/modals/ReportModal';
 import ConfirmModal from '../test-engine/modals/ConfirmModal';
+import { useTheme } from '../../app/ThemeContext';
 
 interface HistoryScreenProps {
   onBack: () => void;
@@ -54,8 +55,7 @@ interface HistoryScreenProps {
 const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, onAuthSuccess }) => {
   const { historyId } = useParams<{ historyId?: string }>();
   const navigate = useNavigate();
-
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const { isDarkMode } = useTheme();
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -361,8 +361,8 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   const btnBg = isDarkMode ? 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs';
 
   return (
-    <div className={`min-h-screen ${bg} ${textPrimary} p-4 md:p-8 transition-colors duration-300 relative selection:bg-blue-500/30 select-text`}>
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className={`${textPrimary} transition-colors duration-300 relative selection:bg-blue-500/30 select-text`}>
+      <div className="max-w-5xl space-y-6">
         
         {/* ====== DETAIL SCREEN ====== */}
         {selectedItem ? (

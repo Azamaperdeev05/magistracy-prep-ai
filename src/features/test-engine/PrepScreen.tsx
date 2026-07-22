@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from '../../components/ui/Motion';
-import { 
-  ArrowLeft, GraduationCap, Globe, Brain, Database, Zap, BookOpen, 
+import {
+  GraduationCap, Globe, Brain, Database, Zap, BookOpen,
   Award, Info, FileCheck, ExternalLink, Layers, ShieldCheck, Sparkles
 } from 'lucide-react';
 import { getSavedUser, UserProfile } from '../../services/authService';
 import { SPECIALTIES } from '../../../data/specialties';
 import { getSpecialtyIconByCode } from '../../utils/specialtyIcons';
+import { useTheme } from '../../app/ThemeContext';
 import SEO from '../../components/ui/SEO';
 
 interface PrepScreenProps {
@@ -14,7 +15,7 @@ interface PrepScreenProps {
 }
 
 const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState<'structure' | 'topics' | 'certifications'>('structure');
   
   // User profile & specialty selection
@@ -89,54 +90,22 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
   ];
 
   // Theme styles
-  const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';
   const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
   const textSecondary = isDarkMode ? 'text-slate-400' : 'text-slate-600';
   const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-400';
   const cardBg = isDarkMode ? 'bg-[#0f1219] border-slate-800/80' : 'bg-white border-slate-200 shadow-sm';
   const subCardBg = isDarkMode ? 'bg-slate-900/40 border-slate-800' : 'bg-slate-50 border-slate-200/80';
-  const headerBg = isDarkMode ? 'bg-[#07090d]/80 border-white/5' : 'bg-white/90 border-slate-200 shadow-sm';
 
   return (
-    <div className={`min-h-screen ${bg} ${textPrimary} transition-colors duration-300 relative overflow-x-hidden selection:bg-blue-500/30 select-text`}>
+    <div className={`${textPrimary} transition-colors duration-300 relative overflow-x-hidden selection:bg-blue-500/30 select-text`}>
       <SEO
         title="Дайындық"
         description="Кешенді тестілеуге дайындық жоспары. Пәндер бойынша бағдарлама, тақырыптар және оқу материалдары."
         canonical="https://magis-core.vercel.app/prep"
       />
-      {/* Background decoration */}
-      <div className="absolute overflow-hidden inset-0 pointer-events-none z-0">
-        <div className={`blob w-[500px] h-[500px] top-[-100px] -left-[100px] ${isDarkMode ? 'bg-blue-600/5' : 'bg-blue-600/[0.03]'}`} />
-        <div className={`blob w-[400px] h-[400px] bottom-[10%] -right-[100px] ${isDarkMode ? 'bg-purple-600/5' : 'bg-purple-600/[0.03]'}`} />
-      </div>
-
-      {/* Header */}
-      <header className={`border-b py-3.5 sticky top-0 backdrop-blur-md z-40 ${headerBg}`}>
-        <div className="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between">
-          <button 
-            onClick={onBack}
-            className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-extrabold rounded-xl border transition-all active:scale-95 ${
-              isDarkMode 
-                ? 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white' 
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs'
-            }`}
-          >
-            <ArrowLeft className="w-4 h-4" /> Артқа
-          </button>
-          
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center">
-              <img src="/logo no bg, white.svg" alt="Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-sm font-black tracking-tight uppercase italic">
-              Magis<span className="text-blue-500">Core</span>
-            </span>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 md:px-8 py-8 relative z-10">
+      <div className="max-w-5xl relative z-10">
         
         {/* Hero Header */}
         <div className="text-center max-w-2xl mx-auto mb-8">
@@ -377,7 +346,7 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
           )}
 
         </AnimatePresence>
-      </main>
+      </div>
     </div>
   );
 };

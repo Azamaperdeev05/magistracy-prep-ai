@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from '../../components/ui/Motion';
-import { 
+import {
   Search, ArrowLeft, Check, Info, Sparkles, GraduationCap,
   Zap, ShieldCheck, Brain, TrendingUp, Scale, FlaskConical,
   Dna, Calculator, Globe, Bot, BookOpen, Briefcase, Cpu,
@@ -20,6 +20,7 @@ import { getSpecialtyIconByCode } from '../../utils/specialtyIcons';
 import { SPECIALTIES, Specialty } from '../../../data/specialties';
 import { getSavedUser, updateUserSpecialty, UserProfile } from '../../services/authService';
 import ConfirmModal from '../test-engine/modals/ConfirmModal';
+import { useTheme } from '../../app/ThemeContext';
 import SEO from '../../components/ui/SEO';
 
 interface SpecialtiesScreenProps {
@@ -29,15 +30,10 @@ interface SpecialtiesScreenProps {
 
 const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecialtyChange }) => {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(getSavedUser());
   const [searchQuery, setSearchQuery] = useState('');
   const [showToast, setShowToast] = useState<string | null>(null);
-
-  // Theme State: reads from localStorage
-  const [isDarkMode] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved === 'dark';
-  });
 
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -83,62 +79,41 @@ const SpecialtiesScreen: React.FC<SpecialtiesScreenProps> = ({ onBack, onSpecial
   });
 
   return (
-    <div className={`min-h-screen p-4 md:p-8 relative selection:bg-blue-500/30 overflow-x-hidden transition-colors duration-300 ${
-      isDarkMode ? 'bg-[#07090d] text-[#f8fafc]' : 'bg-slate-50 text-slate-900'
+    <div className={`relative selection:bg-blue-500/30 overflow-x-hidden transition-colors duration-300 ${
+      isDarkMode ? 'text-[#f8fafc]' : 'text-slate-900'
     }`}>
       <SEO
         title="Мамандықтар"
         description="153 мамандық бойынша магистратураға дайындық. M001, M002, M094, M095 — өз мамандығыңызды таңдап, кешенді тестілеуге дайындалыңыз."
         canonical="https://magis-core.vercel.app/specialties"
       />
-      {/* Background blobs */}
-      <div className="absolute overflow-hidden inset-0 pointer-events-none">
-        <div className={`blob w-[500px] h-[500px] top-[-100px] -right-[100px] ${
-          isDarkMode ? 'bg-blue-600/5' : 'bg-blue-600/[0.02]'
-        }`} />
-        <div className={`blob w-[400px] h-[400px] bottom-[20%] -left-[100px] ${
-          isDarkMode ? 'bg-purple-600/5' : 'bg-purple-600/[0.02]'
-        }`} />
-      </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={onBack}
-              className={`p-2 rounded-full transition-all border active:scale-95 ${
-                isDarkMode 
-                  ? 'hover:bg-white/10 border-white/5 text-slate-300' 
-                  : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700 shadow-sm'
-              }`}
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <h1 className={`text-2xl font-black flex items-center gap-2 uppercase tracking-tight italic ${
-                isDarkMode ? 'text-white' : 'text-slate-900'
-              }`}>
-                <GraduationCap className="w-6 h-6 text-blue-500" />
-                Мамандықтар тізімі
-              </h1>
-              <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                КТ (Магистратура) мамандықтары мен пәндерін таңдау
-              </p>
-            </div>
+      <div className="max-w-5xl relative z-10 space-y-6">
+
+        {/* Title + Search */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className={`text-2xl font-black flex items-center gap-2 uppercase tracking-tight ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`}>
+              <GraduationCap className="w-6 h-6 text-blue-500" />
+              Мамандықтар тізімі
+            </h1>
+            <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+              КТ (Магистратура) мамандықтары мен пәндерін таңдау
+            </p>
           </div>
 
           <div className="relative w-full md:w-80 group">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
-            <input 
+            <input
               type="text"
               placeholder="Мамандық атауы немесе коды бойынша іздеу..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`py-3 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all w-full font-medium rounded-xl border ${
-                isDarkMode 
-                  ? 'bg-slate-900/60 border-white/5 text-white placeholder-slate-600' 
+                isDarkMode
+                  ? 'bg-slate-900/60 border-white/5 text-white placeholder-slate-600'
                   : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 shadow-sm'
               }`}
             />

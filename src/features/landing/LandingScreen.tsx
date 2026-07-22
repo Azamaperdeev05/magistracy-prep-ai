@@ -347,7 +347,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
             <div className="space-y-4">
               {[
                 { label: 'Ағылшын тілі', pct: 33, count: '50 сұрақ', color: 'bg-blue-600' },
-                { label: 'ТҒО (ОДАТ)', pct: 20, count: '30 сұрақ', color: 'bg-indigo-600' },
+                { label: 'ТГО (ОДАТ)', pct: 20, count: '30 сұрақ', color: 'bg-indigo-600' },
                 { label: '1-Бейіндік пән', pct: 23, count: '35 сұрақ', color: 'bg-emerald-600' },
                 { label: '2-Бейіндік пән', pct: 23, count: '35 сұрақ', color: 'bg-amber-500' },
               ].map(({ label, pct, count: c, color }) => (
@@ -382,11 +382,10 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
 
       {/* ── Test Interface Showcase Section ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
-        <div className={`rounded-3xl border p-8 sm:p-12 lg:p-14 relative overflow-hidden transition-all duration-300 ${
-          isDark
+        <div className={`rounded-3xl border p-8 sm:p-12 lg:p-14 relative overflow-hidden transition-all duration-300 ${isDark
             ? 'bg-[#0a0c12] border-slate-800 shadow-[0_20px_60px_rgba(0,0,0,0.5)]'
             : 'bg-white border-slate-200/90 shadow-[0_20px_60px_rgba(37,99,235,0.06)]'
-        }`}>
+          }`}>
           {/* Ambient Glow */}
           <div className="absolute top-1/2 left-3/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none -z-0" />
 
@@ -409,7 +408,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
                 {[
                   {
                     title: 'Барлық пәндер қамтылған',
-                    desc: 'Ағылшын тілі, ТҒО және 133 мамандық бойынша бейіндік пәндер',
+                    desc: 'Ағылшын тілі, ТГО және 133 мамандық бойынша бейіндік пәндер',
                   },
                   {
                     title: 'ҰТО тест спецификациясына сай',
@@ -422,11 +421,10 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
                 ].map(({ title, desc }) => (
                   <div
                     key={title}
-                    className={`flex items-start gap-4 p-4 rounded-2xl border transition-all duration-300 hover:translate-x-1 ${
-                      isDark
+                    className={`flex items-start gap-4 p-4 rounded-2xl border transition-all duration-300 hover:translate-x-1 ${isDark
                         ? 'bg-slate-900/50 border-slate-800/80 hover:bg-slate-800/50'
                         : 'bg-slate-50/80 border-slate-200/60 hover:bg-white hover:shadow-md hover:shadow-blue-500/5 hover:border-blue-200'
-                    }`}
+                      }`}
                   >
                     <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
                       <CheckCircle className="w-4 h-4" />
@@ -478,11 +476,10 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
             <div
               key={code}
               onClick={onRegister}
-              className={`p-6 rounded-3xl border flex items-center justify-between gap-4 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer group relative overflow-hidden ${
-                isDark
+              className={`p-6 rounded-3xl border flex items-center justify-between gap-4 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer group relative overflow-hidden ${isDark
                   ? 'bg-[#0f1219] border-slate-800 hover:border-blue-500/40 hover:bg-[#131722]'
                   : 'bg-white border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_35px_rgba(37,99,235,0.08)] hover:border-blue-300'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-4 min-w-0">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 ${iconBg[color]}`}>
@@ -579,11 +576,10 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
                     target="_blank"
                     rel="noreferrer"
                     aria-label={`MagisCore ${name} арнасы`}
-                    className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-                      isDark
+                    className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all duration-300 hover:scale-110 ${isDark
                         ? 'bg-slate-900 border-slate-800 hover:bg-slate-800 hover:border-slate-700'
                         : 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300'
-                    }`}
+                      }`}
                   >
                     {icon}
                   </a>

@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "AP-1",
+      "category": "prefix-stability",
+      "default_severity": "high",
+      "summary": "Volatile prefix.",
+      "search": "datetime, uuid, request_id, trace_id, user, tenant, cwd.",
+      "fix": "Move volatile facts late.",
+      "avoid": "Masking drift with cache keys.",
+      "validation": "Prefix hash stable."
+    },
+    {
+      "id": "AP-2",
+      "category": "tool-schema-stability",
+      "default_severity": "high",
+      "summary": "Tool/schema drift.",
+      "search": "unsorted tools, json.dumps, dynamic response_format.",
+      "fix": "Sort schemas/tools; remove consts.",
+      "avoid": "Tenant/time/request IDs in schemas.",
+      "validation": "Canonical hash stable."
+    },
+    {
+      "id": "AP-3",
+      "category": "rendering-stability",
+      "default_severity": "medium",
+      "summary": "Render drift.",
+      "search": "duplicate templates, strip drift, signed URLs.",
+      "fix": "Use one renderer; pin media settings.",
+      "avoid": "Visible-text-only diff.",
+      "validation": "Provider payloads match."
+    },
+    {
+      "id": "AP-4",
+      "category": "agent-tools",
+      "default_severity": "high",
+      "summary": "Dynamic agent tools.",
+      "search": "get_active_tools, listToolsets, prepareStep activeTools.",
+      "fix": "Stable bundles, allowed tools, search, or masking.",
+      "avoid": "Single-step optimization.",
+      "validation": "Tool/prefix hashes stable."
+    },
+    {
+      "id": "AP-5",
+      "category": "history-stability",
+      "default_severity": "high",
+      "summary": "Context management mutates anchors.",
+      "search": "summarize, compact, truncate, pop, system edits.",
+      "fix": "Preserve system/tools/schemas/first turns.",
+      "avoid": "Silent anchor loss.",
+      "validation": "Anchor survives."
+    },
+    {
+      "id": "AP-6",
+      "category": "framework-injection",
+      "default_severity": "medium",
+      "summary": "Mode metadata drift.",
+      "search": "mode swaps, run_id, platform, cwd, date.",
+      "fix": "Stable base; mode facts late.",
+      "avoid": "Mid-session system/tool replacement.",
+      "validation": "Mode hashes match."
+    },
+    {
+      "id": "AP-7",
+      "category": "routing-locality",
+      "default_severity": "high",
+      "summary": "Lost locality.",
+      "search": "round-robin, Kubernetes Service, replicas, fallback, openrouter/auto.",
+      "fix": "Sticky routing plus route metrics.",
+      "avoid": "Pinning before telemetry.",
+      "validation": "Reads/TTFT by route."
+    },
+    {
+      "id": "AP-8",
+      "category": "cold-prefix-fanout",
+      "default_severity": "medium",
+      "summary": "Cold fan-out.",
+      "search": "asyncio.gather, Promise.all, ThreadPoolExecutor.",
+      "fix": "No-op warm-up with telemetry.",
+      "avoid": "Warming mutating prompts/tools.",
+      "validation": "Warm-up telemetry."
+    },
+    {
+      "id": "AP-9",
+      "category": "cache-lifetime",
+      "default_severity": "medium",
+      "summary": "TTL/KV mismatch.",
+      "search": "sparse traffic, many prefixes, high max_model_len.",
+      "fix": "Match TTL/KV to cadence.",
+      "avoid": "Blindly raising retention/KV.",
+      "validation": "Cadence/KV/TTFT correlate."
+    },
+    {
+      "id": "AP-9b",
+      "category": "cache-isolation",
+      "default_severity": "medium",
+      "summary": "Isolation fragmentation.",
+      "search": "cache_salt, per-user keys, tenant routing.",
+      "fix": "Use coarsest safe trust boundary.",
+      "avoid": "Weakening privacy or ZDR.",
+      "validation": "Boundary/loss documented."
+    },
+    {
+      "id": "AP-10",
+      "category": "experiment-fragmentation",
+      "default_severity": "medium",
+      "summary": "Experiment fragmentation.",
+      "search": "variant, experiment, feature_flag, provider.order.",
+      "fix": "Move differences late or bucket.",
+      "avoid": "Blending experiment buckets.",
+      "validation": "Metrics bucketed."
+    },
+    {
+      "id": "AP-11",
+      "category": "explicit-cache-policy",
+      "default_severity": "high",
+      "summary": "Invalid GPT-5.6 cache controls.",
+      "search": "prompt_cache_options, prompt_cache_breakpoint, prompt_cache_retention.",
+      "fix": "Use the documented mode, TTL, and supported content-block markers.",
+      "avoid": "Applying direct OpenAI rules to provider wrappers.",
+      "validation": "Lint the request and verify cache read/write telemetry."
+    }
+  ]
+}

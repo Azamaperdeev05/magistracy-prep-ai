@@ -1,0 +1,90 @@
+{
+  "skill_name": "audit-prompt-caching",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use $audit-prompt-caching. Сделай ревью.",
+      "expected_output": "cache-focused review, not a general code review; findings first."
+    },
+    {
+      "id": 2,
+      "prompt": "Do we need to change the project after the new OpenAI prompt caching docs? The app is OpenAI-compatible through a wrapper and uses prompt_cache_key.",
+      "expected_output": "Change needed? Check wrapper support first; no-change is valid."
+    },
+    {
+      "id": 3,
+      "prompt": "Сделай ревью на русском: 7 prompt families, most run once per day, and a script scan might touch env files.",
+      "expected_output": "Russian; Project Context Gate; Script Transparency Rule; do not mark prefix-cache findings high severity."
+    },
+    {
+      "id": 4,
+      "prompt": "Give a quick operational playbook for low cache hit rate, provider wrapper ambiguity, TTL decisions, and a minimum telemetry contract with prefix_hash and first_256_token_hash.",
+      "expected_output": "Include read/write fields, TTFT, route/model/provider, prefix_hash, first_256_token_hash. Do not log raw prompts."
+    },
+    {
+      "id": 5,
+      "prompt": "benchmark vLLM APC with vllm bench serve prefix_repetition and compare it to benchmark_prefix_caching.py output.",
+      "expected_output": "Compare vllm:prefix_cache_hits, vllm:prefix_cache_queries, vllm:prompt_tokens_cached; do not claim production ROI."
+    },
+    {
+      "id": 6,
+      "prompt": "An MCP tool registry changes tools every step. The agent got more expensive after selecting fewer tools.",
+      "expected_output": "Check tools_count/tool hash/prefix_hash/cache fields; use stable bundles, allowed tools, tool search, or deferred loading."
+    },
+    {
+      "id": 7,
+      "prompt": "The team has 90 percent cached tokens but output tokens dominate and changing the prompt cache setup may not help.",
+      "expected_output": "Not worth caching: output/decode dominates; not worth changing the cache setup."
+    },
+    {
+      "id": 8,
+      "prompt": "Audit an OpenAI request builder where system uses datetime.now().isoformat(), response_format has dynamic `requestId`, and tools come from registry order.",
+      "expected_output": "Flag volatile prefix, dynamic schema, unsorted tools; validate prefix fingerprints and cached_tokens."
+    },
+    {
+      "id": 9,
+      "prompt": "A 25-step coding agent selects 6 tools per step; tools_count changes and prefix_hash changes while total cost rises.",
+      "expected_output": "Dynamic tools are prefix drift; use stable bundles, allowed tools/tool search, or deferred loading."
+    },
+    {
+      "id": 10,
+      "prompt": "Self-hosted vLLM has four replicas behind a Service, stable 30k-token prompts, low hit rate, and --max-model-len 131072 while p99 is 12k.",
+      "expected_output": "Audit routing/KV; use prefix-aware routing, max_model_len review, route/replica metrics."
+    },
+    {
+      "id": 11,
+      "prompt": "DashScope Qwen writes cache_creation_input_tokens but reads are unclear across OpenAI-compatible and Anthropic-compatible response fields.",
+      "expected_output": "Distinguish creation/write from read fields; check prefix/TTL/route/model support."
+    },
+    {
+      "id": 12,
+      "prompt": "RAG document-classification migration from Claude to OpenAI: layout is system instructions, then the user question, then repeated 12k policy.",
+      "expected_output": "Move stable document before dynamic user text; verify prefix hashes and usage."
+    },
+    {
+      "id": 13,
+      "prompt": "OpenRouter usage shows `cache_write_tokens` but cached_tokens stays zero after provider.order, fallback, openrouter/auto, and dynamic first messages.",
+      "expected_output": "Check routed provider/model, first-message identity, fallback, transforms, locality."
+    },
+    {
+      "id": 14,
+      "prompt": "Review an Amazon Bedrock Converse request where cachePoint appears after a user-specific intro and tools vary by route.",
+      "expected_output": "Check cachePoint placement, support, read/write tokens, dynamic pre-checkpoint content."
+    },
+    {
+      "id": 15,
+      "prompt": "A Claude app added top-level `cache_control`; stable policy is followed by timestamp and user question, so writes happen every request.",
+      "expected_output": "Use explicit stable-prefix breakpoint; validate cache_read_input_tokens."
+    },
+    {
+      "id": 16,
+      "prompt": "Audit a direct GPT-5.6 request that copied prompt_cache_retention from GPT-5.5 and marks a stable policy before a dynamic suffix.",
+      "expected_output": "Replace the legacy field with prompt_cache_options, validate prompt_cache_breakpoint placement, and say whole-input comparison does not prove provider breakpoint reuse."
+    },
+    {
+      "id": 17,
+      "prompt": "OpenAI GPT-5.6 telemetry has high cache_write_tokens and few reads. Is the cache saving money?",
+      "expected_output": "Treat cache fields as inclusive input breakdowns and require current read, write, input, and output pricing before a cost conclusion."
+    }
+  ]
+}

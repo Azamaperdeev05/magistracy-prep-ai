@@ -1,0 +1,90 @@
+[
+  {
+    "query": "cached_tokens is zero in repeated OpenAI Responses API calls",
+    "should_trigger": true
+  },
+  {
+    "query": "PR only changes the system prompt wording for our long shared policy classifier",
+    "should_trigger": true
+  },
+  {
+    "query": "We moved the shared policy document after the user question in a repeated RAG request",
+    "should_trigger": true
+  },
+  {
+    "query": "This release changes tool registry order and response_format serialization",
+    "should_trigger": true
+  },
+  {
+    "query": "We switched from direct Anthropic to OpenRouter but visible prompt text is identical",
+    "should_trigger": true
+  },
+  {
+    "query": "We scaled vLLM pods and did not touch prompts, but repeated long-request TTFT increased",
+    "should_trigger": true
+  },
+  {
+    "query": "LLM cost increased after an agent refactor even though nobody mentioned prompt caching; repeated long tool loops are involved",
+    "should_trigger": true
+  },
+  {
+    "query": "Use $audit-prompt-caching. Сделай ревью.",
+    "should_trigger": true
+  },
+  {
+    "query": "Please benchmark vLLM APC with vllm bench serve prefix_repetition",
+    "should_trigger": true
+  },
+  {
+    "query": "Give me a quick operational playbook for low cache hit rate and provider wrapper ambiguity",
+    "should_trigger": true
+  },
+  {
+    "query": "Define the minimum telemetry contract with prefix_hash, first_256_token_hash, and Do not log raw prompts",
+    "should_trigger": true
+  },
+  {
+    "query": "Azure OpenAI cached_tokens is zero for repeated prompts",
+    "should_trigger": true
+  },
+  {
+    "query": "SGLang radix cache hit rate is low because timestamp comes before shared context",
+    "should_trigger": true
+  },
+  {
+    "query": "Audit our GPT-5.6 prompt_cache_options and cache_write_tokens after migration",
+    "should_trigger": true
+  },
+  {
+    "query": "Rewrite this short greeting prompt to sound warmer",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a friendly system prompt for a customer support bot",
+    "should_trigger": false
+  },
+  {
+    "query": "Design a generic RAG architecture without repeated prompt-cache or latency concerns",
+    "should_trigger": false
+  },
+  {
+    "query": "Count tokens in this one-off message",
+    "should_trigger": false
+  },
+  {
+    "query": "Review this JSON schema for correctness and required fields",
+    "should_trigger": false
+  },
+  {
+    "query": "Our API gateway round-robins traffic between services, but none of them are LLM inference replicas",
+    "should_trigger": false
+  },
+  {
+    "query": "Create a Kubernetes Service for a stateless API without LLM inference",
+    "should_trigger": false
+  },
+  {
+    "query": "Explain OpenRouter model routing basics for a beginner without prompt caching or costs",
+    "should_trigger": false
+  }
+]

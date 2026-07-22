@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Analytics } from '@vercel/analytics/react';
+import { ThemeProvider } from './app/ThemeContext';
 import { Question, SubjectId, UserAnswers } from './types';
 import { EXAM_DURATION_MINUTES, SUBJECTS } from './constants';
 import { SPECIALTIES } from '../data/specialties';
@@ -14,7 +15,6 @@ import { useYandexMetrica } from './hooks/useYandexMetrica';
 // Feature-Sliced Architecture: Lazy loaded domain screens for code splitting
 const AuthScreen = lazy(() => import('./features/auth/AuthScreen'));
 const LandingScreen = lazy(() => import('./features/landing/LandingScreen'));
-const WelcomeScreen = lazy(() => import('./features/auth/WelcomeScreen'));
 const TestScreen = lazy(() => import('./features/test-engine/TestScreen'));
 const ResultScreen = lazy(() => import('./features/analytics/ResultScreen'));
 const SyllabusScreen = lazy(() => import('./features/specialties/SyllabusScreen'));
@@ -22,6 +22,8 @@ const HistoryScreen = lazy(() => import('./features/analytics/HistoryScreen'));
 const PrepScreen = lazy(() => import('./features/test-engine/PrepScreen'));
 const SpecialtiesScreen = lazy(() => import('./features/specialties/SpecialtiesScreen'));
 const SpecialtyDetailScreen = lazy(() => import('./features/specialties/SpecialtyDetailScreen'));
+const UniversitiesScreen = lazy(() => import('./features/specialties/UniversitiesScreen'));
+const UniversityDetailScreen = lazy(() => import('./features/specialties/UniversityDetailScreen'));
 const TestSetupScreen = lazy(() => import('./features/test-engine/TestSetupScreen'));
 const ConsentGateScreen = lazy(() => import('./features/auth/ConsentGateScreen'));
 const AdminScreen = lazy(() => import('./features/admin/AdminScreen'));
@@ -29,6 +31,8 @@ const BlogScreen = lazy(() => import('./features/blog/BlogScreen'));
 const BlogPostScreen = lazy(() => import('./features/blog/BlogPostScreen'));
 const UpgradeModal = lazy(() => import('./features/test-engine/modals/UpgradeModal'));
 const InstallBanner = lazy(() => import('./components/ui/InstallBanner'));
+const PanelLayout = lazy(() => import('./features/panel/PanelLayout'));
+const PanelHome = lazy(() => import('./features/panel/PanelHome'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#FAFCFF] flex items-center justify-center">
@@ -317,7 +321,7 @@ const RootApp: React.FC = () => {
     const path = window.location.pathname;
     const isPublicHistory = path.startsWith('/history');
     const isPublicBlog = path.startsWith('/blog');
-    const isLanding = path === '/' || path === '/home';
+    const isLanding = path === '/' || path === '/home' || path === '/panel';
 
     if (isPublicBlog) {
       return (
@@ -383,94 +387,28 @@ const RootApp: React.FC = () => {
     <div className="font-sans">
       <Suspense fallback={<LoadingFallback />}>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route 
-          path="/home" 
-          element={
-            <WelcomeScreen 
-              onStart={(gopCode?: string) => navigate(gopCode ? `/test-setup?gop=${gopCode}` : '/test-setup')} 
-              isLoading={isLoading} 
-              onViewProgram={(subId) => navigate(subId ? `/program/${subId}` : '/program')}
-              onViewHistory={() => navigate('/history')}
-              onViewPrep={() => navigate('/prep')}
-              onViewSpecialties={() => navigate('/specialties')}
-              userName={user.full_name}
-              userEmail={user.email}
-              isPremium={user.is_premium}
-              onUpgrade={() => setShowGlobalUpgradeModal(true)}
-              specialtyCode={user.specialty_code}
-              specialtyName={user.specialty_name}
-              onLogout={handleLogout}
-              hasActiveTest={questions.length > 0 && isInProgress}
-              onResume={() => navigate('/test')}
-              onViewAdmin={() => navigate('/admin')}
-            />
-          } 
-        />
-        <Route path="/blog" element={<BlogScreen onBack={() => navigate('/home')} />} />
-        <Route path="/blog/:postId" element={<BlogPostScreen onBack={() => navigate('/blog')} />} />
-        <Route 
-          path="/test-setup" 
-          element={
-            <TestSetupScreen 
-              onStart={startTest} 
-              isLoading={isLoading} 
-            />
-          } 
-        />
-        <Route 
-          path="/prep" 
-          element={<PrepScreen onBack={() => navigate('/home')} />} 
-        />
-        <Route 
-          path="/program/:subjectId?" 
-          element={<SyllabusScreen onBack={() => navigate('/home')} />} 
-        />
-        <Route 
-          path="/history/:historyId?" 
-          element={<HistoryScreen onBack={() => navigate('/home')} />} 
-        />
-        <Route 
-          path="/specialties" 
-          element={
-            <SpecialtiesScreen 
-              onBack={() => navigate('/home')} 
-              onSpecialtyChange={(updatedUser) => setUser(updatedUser)}
-            />
-          } 
-        />
-        <Route 
-          path="/specialties/:code" 
-          element={<SpecialtyDetailScreen />} 
-        />
-        <Route 
-          path="/admin" 
-          element={
-            user.email === 'azamaperdeev05@gmail.com' ? (
-              <AdminScreen onBack={() => navigate('/home')} />
-            ) : (
-              <Navigate to="/home" replace />
-            )
-          } 
-        />
-        <Route 
-          path="/test/:subjectId/q/:qIndex" 
+        <Route path="/" element={<Navigate to="/panel" replace />} />
+        <Route path="/home" element={<Navigate to="/panel" replace />} />
+
+        {/* Full-screen routes (no sidebar) */}
+        <Route
+          path="/test/:subjectId/q/:qIndex"
           element={
             questions.length > 0 ? (
-              <TestScreen 
-                questions={questions} 
-                durationMinutes={EXAM_DURATION_MINUTES} 
+              <TestScreen
+                questions={questions}
+                durationMinutes={EXAM_DURATION_MINUTES}
                 onFinish={handleFinishTest}
                 user={user}
               />
             ) : (
-              <Navigate to="/home" replace />
+              <Navigate to="/panel" replace />
             )
-          } 
+          }
         />
         <Route path="/test" element={<Navigate to={`/test/${SubjectId.ENGLISH}/q/1`} replace />} />
-        <Route 
-          path="/result" 
+        <Route
+          path="/result"
           element={
             (() => {
               const latestId = localStorage.getItem('latest_result_id');
@@ -479,7 +417,7 @@ const RootApp: React.FC = () => {
               }
               if (questions.length > 0) {
                 return (
-                  <ResultScreen 
+                  <ResultScreen
                     questions={questions}
                     answers={userAnswers}
                     onRestart={handleRestart}
@@ -488,14 +426,14 @@ const RootApp: React.FC = () => {
                   />
                 );
               }
-              return <Navigate to="/home" replace />;
+              return <Navigate to="/panel" replace />;
             })()
-          } 
+          }
         />
-        <Route 
-          path="/result/:resultId" 
+        <Route
+          path="/result/:resultId"
           element={
-            <ResultScreen 
+            <ResultScreen
               questions={questions}
               answers={userAnswers}
               onRestart={handleRestart}
@@ -503,11 +441,127 @@ const RootApp: React.FC = () => {
               onPracticeWrong={handlePracticeWrong}
               userName={user.full_name}
             />
-          } 
+          }
+        />
+
+        {/* Panel layout routes — sidebar persists, content changes */}
+        <Route
+          path="/panel"
+          element={
+            <PanelLayout
+              userName={user.full_name}
+              userEmail={user.email}
+              isPremium={user.is_premium}
+              onLogout={handleLogout}
+            >
+              <PanelHome
+                onStart={(gopCode?: string) => navigate(gopCode ? `/test-setup?gop=${gopCode}` : '/test-setup')}
+                isLoading={isLoading}
+                userName={user.full_name}
+                specialtyCode={user.specialty_code}
+                specialtyName={user.specialty_name}
+                isPremium={user.is_premium}
+                hasActiveTest={questions.length > 0 && isInProgress}
+                onResume={() => navigate('/test')}
+              />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/prep"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <PrepScreen onBack={() => {}} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/program/:subjectId?"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <SyllabusScreen onBack={() => {}} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/history/:historyId?"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <HistoryScreen onBack={() => {}} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/specialties"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <SpecialtiesScreen onBack={() => {}} onSpecialtyChange={(updatedUser) => setUser(updatedUser)} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/specialties/:code"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <SpecialtyDetailScreen />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/universities/:code"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <UniversityDetailScreen />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/universities"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <UniversitiesScreen onBack={() => {}} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/blog"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <BlogScreen onBack={() => {}} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/blog/:postId"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <BlogPostScreen onBack={() => navigate('/blog')} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/test-setup"
+          element={
+            <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+              <TestSetupScreen onStart={startTest} isLoading={isLoading} />
+            </PanelLayout>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            user.email === 'azamaperdeev05@gmail.com' ? (
+              <PanelLayout userName={user.full_name} userEmail={user.email} isPremium={user.is_premium} onLogout={handleLogout}>
+                <AdminScreen onBack={() => {}} />
+              </PanelLayout>
+            ) : (
+              <Navigate to="/panel" replace />
+            )
+          }
         />
       </Routes>
       </Suspense>
-      <ConfirmModal 
+      <ConfirmModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={confirmConfig?.onConfirm || (() => {})}
@@ -531,8 +585,10 @@ const RootApp: React.FC = () => {
 const App: React.FC = () => (
   <HelmetProvider>
     <Router>
-      <RootApp />
-      <Analytics />
+      <ThemeProvider>
+        <RootApp />
+        <Analytics />
+      </ThemeProvider>
     </Router>
   </HelmetProvider>
 );

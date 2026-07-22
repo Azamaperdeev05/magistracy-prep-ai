@@ -10,6 +10,7 @@ import { findQuestionsByIds } from '../../../data/questions';
 import { Question } from '../../types';
 import { scoreQuestion } from '../../services/scoringService';
 import CodeAwareText from '../test-engine/CodeAwareText';
+import { useTheme } from '../../app/ThemeContext';
 
 interface AdminScreenProps {
   onBack: () => void;
@@ -364,7 +365,7 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
     return f.user_name.toLowerCase().includes(term) || f.user_email.toLowerCase().includes(term) || f.comment.toLowerCase().includes(term);
   });
 
-  const [isDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const { isDarkMode } = useTheme();
 
   // Theme styles
   const bg = isDarkMode ? 'bg-[#07090d]' : 'bg-slate-50';
@@ -394,8 +395,8 @@ const AdminScreen: React.FC<AdminScreenProps> = ({ onBack }) => {
   })();
 
   return (
-    <div className={`min-h-screen ${bg} ${textPrimary} p-4 md:p-8 transition-colors duration-300 select-text`}>
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className={`${textPrimary} transition-colors duration-300 select-text`}>
+      <div className="max-w-5xl space-y-8">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

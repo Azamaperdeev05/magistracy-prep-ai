@@ -35,7 +35,7 @@ MagisCore платформасында деректер **Cloud Firestore (Fireb
 - `percentage` (Number): Пайыздық көрсеткіші.
 - `correctCount` (Number): Дұрыс жауап берілген сұрақтар саны.
 - `totalQuestions` (Number): Жалпы сұрақтар саны.
-- `subjectScores` (Array / Object): Әр пән бойынша жеке бөлінген ұпайлар (Шет тілі, ТҒО/ОДАТ, Беске қатысты пәндер).
+- `subjectScores` (Array / Object): Әр пән бойынша жеке бөлінген ұпайлар (Шет тілі, ТГО/ОДАТ, Беске қатысты пәндер).
 - `userAnswers` (Object): Пайдаланушының әр сұраққа берген жауаптар картасы (`questionId -> answerId[]`).
 - `timestamp` (Number / Timestamp): Тест аяқталған уақыт белгісі (Epoch ms).
 

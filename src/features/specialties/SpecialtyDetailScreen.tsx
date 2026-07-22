@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { SPECIALTIES } from '../../../data/specialties';
 import { fetchLiveSpecialtyDetail, LiveProgramData } from '../../services/univisionService';
+import { useTheme } from '../../app/ThemeContext';
 import SEO from '../../components/ui/SEO';
 
 // Lazy load large JSON data
@@ -17,11 +18,7 @@ const loadUniversitiesData = () => import('../../../data/univision_universities.
 const SpecialtyDetailScreen: React.FC = () => {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-
-  const [isDarkMode] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved === 'dark';
-  });
+  const { isDarkMode } = useTheme();
 
   const [activeTab, setActiveTab] = useState<'info' | 'universities' | 'programs'>('info');
   const [expandedUniversity, setExpandedUniversity] = useState<string | null>(null);
@@ -150,14 +147,19 @@ const SpecialtyDetailScreen: React.FC = () => {
     handleSyncLive();
   }, [handleSyncLive]);
 
-  const cleanStr = (s: string) => s.toLowerCase().replace(/[^a-zа-яәғқңөұүһі]/g, '');
+  const cleanStr = (s: string) => s.toLowerCase()
+    .replace(/\s*\(.*?\)\s*/g, '') // Remove abbreviations in parentheses
+    .replace(/[^a-zа-яәғқңөұүһіıįųė]/g, '') // Keep Latin + Cyrillic + Kazakh chars
+    .trim();
 
   const getUniversityDetails = (uniName: string) => {
     if (!universitiesData?.universities) return null;
     const cleanUni = cleanStr(uniName);
     return (universitiesData.universities as any[]).find((u: any) => {
       const cleanTitle = cleanStr(u.title);
-      return cleanTitle.includes(cleanUni) || cleanUni.includes(cleanTitle);
+      return cleanTitle === cleanUni ||
+             cleanTitle.includes(cleanUni) ||
+             cleanUni.includes(cleanTitle);
     }) || null;
   };
 
@@ -189,68 +191,50 @@ const SpecialtyDetailScreen: React.FC = () => {
   // Loading state for lazy data
   if (isLoadingData) {
     return (
-      <div className={`min-h-screen ${bg} flex items-center justify-center`}>
+      <div className={`flex items-center justify-center py-20`}>
         <div className={`text-lg font-medium ${textSecondary} animate-pulse`}>Жүктелуде...</div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen ${bg} transition-colors duration-300`}>
+    <div className={`transition-colors duration-300`}>
       <SEO
         title={specialty ? `${specialty.code} — ${specialty.name}` : 'Мамандық'}
         description={specialty ? `${specialty.name} мамандығы бойынша магистратураға дайындық. Білім беру бағдарламалары және университеттер.` : 'Мамандық туралы ақпарат'}
         canonical={`https://magis-core.vercel.app/specialties/${code}`}
       />
-      {/* Fixed Header */}
-      <div className={`sticky top-0 z-30 backdrop-blur-xl border-b ${
-        isDarkMode ? 'bg-[#07090d]/90 border-white/5' : 'bg-white/90 border-slate-200'
-      }`}>
-        <div className="max-w-5xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate(-1)}
-              className={`p-2 rounded-full border transition-all active:scale-95 ${
-                isDarkMode
-                  ? 'border-white/5 hover:bg-white/10 text-slate-300'
-                  : 'border-slate-200 hover:bg-slate-100 text-slate-600 shadow-sm bg-white'
-              }`}
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest block">
-                {programData.code}
-              </span>
-              <h1 className={`text-base sm:text-lg font-black uppercase tracking-tight leading-tight mt-0.5 ${textPrimary}`}>
-                {specialty?.name || (programData.title ? programData.title.replace(/^[A-Z0-9]+\s+/, '') : programData.code)}
-              </h1>
-            </div>
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <div>
+            <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest block">
+              {programData.code}
+            </span>
+            <h1 className={`text-xl sm:text-2xl font-black uppercase tracking-tight leading-tight mt-0.5 ${textPrimary}`}>
+              {specialty?.name || (programData.title ? programData.title.replace(/^[A-Z0-9]+\s+/, '') : programData.code)}
+            </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            {programData.url && (
-              <a
-                href={programData.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all active:scale-95 ${
-                  isDarkMode
-                    ? 'border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20'
-                    : 'border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100'
-                }`}
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Univision</span>
-              </a>
-            )}
-          </div>
+          {programData.url && (
+            <a
+              href={programData.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all active:scale-95 ${
+                isDarkMode
+                  ? 'border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20'
+                  : 'border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100'
+              }`}
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Univision</span>
+            </a>
+          )}
         </div>
 
         {/* Tabs */}
-        <div className={`max-w-5xl mx-auto px-4 md:px-8 flex border-t ${
-          isDarkMode ? 'border-white/5' : 'border-slate-100'
-        }`}>
+        <div className={`flex border-t ${isDarkMode ? 'border-white/5' : 'border-slate-200'}`}>
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -575,6 +559,24 @@ const SpecialtyDetailScreen: React.FC = () => {
                                           </div>
                                         ))}
                                       </div>
+                                    )}
+
+                                    {/* Navigate to university detail */}
+                                    {details.code && (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          navigate(`/universities/${details.code}`);
+                                        }}
+                                        className={`w-full py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+                                          isDarkMode
+                                            ? 'border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20'
+                                            : 'border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                        }`}
+                                      >
+                                        <Building2 className="w-4 h-4" />
+                                        Университетке өту
+                                      </button>
                                     )}
                                   </>
                                 ) : (

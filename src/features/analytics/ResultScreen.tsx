@@ -9,6 +9,7 @@ import { getAiExplanation, AiQuestionContext } from '../../services/apiService';
 import MarkdownRenderer from '../test-engine/MarkdownRenderer';
 import CodeAwareText from '../test-engine/CodeAwareText';
 import ReportModal from '../test-engine/modals/ReportModal';
+import { useTheme } from '../../app/ThemeContext';
 
 interface ResultScreenProps {
   questions?: Question[];
@@ -206,14 +207,15 @@ const getSubjectRecommendation = (pct: number) => {
   }
 };
 
-const ResultScreen: React.FC<ResultScreenProps> = ({ 
-  questions: propQuestions, 
-  answers: propAnswers, 
-  onRestart, 
-  onPracticeWrong, 
-  userName: propUserName 
+const ResultScreen: React.FC<ResultScreenProps> = ({
+  questions: propQuestions,
+  answers: propAnswers,
+  onRestart,
+  onPracticeWrong,
+  userName: propUserName
 }) => {
   const { resultId } = useParams<{ resultId?: string }>();
+  const { isDarkMode } = useTheme();
 
   const [questions, setQuestions] = useState<Question[]>(() => propQuestions || []);
   const [answers, setAnswers] = useState<UserAnswers>(() => propAnswers || {});
@@ -421,7 +423,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
       <div className="max-w-5xl mx-auto px-4">
         {/* New Gauge Arc Score Card */}
-        <Gauge score={totalScore} max={maxScore} />
+        <Gauge score={totalScore} max={maxScore} isDarkMode={isDarkMode} />
         
         {/* PRO Analytics: Subject & Topic Breakdown */}
         <h2 className="text-xl font-black text-slate-800 mb-6 flex items-center justify-center gap-3">

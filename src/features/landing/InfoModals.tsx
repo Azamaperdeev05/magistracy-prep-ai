@@ -44,9 +44,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
 
           <button
             onClick={onClose}
-            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-              isDark ? 'hover:bg-slate-800 text-slate-400 hover:text-white' : 'hover:bg-slate-200/70 text-slate-500 hover:text-slate-900'
-            }`}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${isDark ? 'hover:bg-slate-800 text-slate-400 hover:text-white' : 'hover:bg-slate-200/70 text-slate-500 hover:text-slate-900'
+              }`}
           >
             <X className="w-5 h-5" />
           </button>
@@ -68,7 +67,7 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
                 },
                 {
                   q: 'Кешенді тестілеу (КТ) форматы қалай өтеді?',
-                  a: 'КТ емтиханы 150 сұрақтан тұрады: Шет тілі (Ағылшын) — 50 сұрақ, ТҒО (ОДАТ) — 30 сұрақ, 1-бейіндік пән — 35 сұрақ, 2-бейіндік пән — 35 сұрақ. Жалпы бөлінген уақыт — 230 минут.'
+                  a: 'КТ емтиханы 150 сұрақтан тұрады: Шет тілі (Ағылшын) — 50 сұрақ, ТГО (ОДАТ) — 30 сұрақ, 1-бейіндік пән — 35 сұрақ, 2-бейіндік пән — 35 сұрақ. Жалпы бөлінген уақыт — 230 минут.'
                 },
                 {
                   q: 'ИИ Ассистент қате талдауын қалай жасайды?',
@@ -81,9 +80,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
               ].map((item, index) => (
                 <div
                   key={index}
-                  className={`rounded-2xl border transition-all ${
-                    isDark ? 'border-slate-800 bg-slate-900/40' : 'border-slate-200/80 bg-slate-50/50'
-                  }`}
+                  className={`rounded-2xl border transition-all ${isDark ? 'border-slate-800 bg-slate-900/40' : 'border-slate-200/80 bg-slate-50/50'
+                    }`}
                 >
                   <button
                     onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
@@ -114,9 +112,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
                   href="https://t.me/magiscore_support"
                   target="_blank"
                   rel="noreferrer"
-                  className={`p-4 rounded-2xl border flex items-center gap-3 transition-colors ${
-                    isDark ? 'bg-slate-900 border-slate-800 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'
-                  }`}
+                  className={`p-4 rounded-2xl border flex items-center gap-3 transition-colors ${isDark ? 'bg-slate-900 border-slate-800 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'
+                    }`}
                 >
                   <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
                     <Send className="w-5 h-5" />
@@ -127,9 +124,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
                   </div>
                 </a>
 
-                <div className={`p-4 rounded-2xl border flex items-center gap-3 ${
-                  isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'
-                }`}>
+                <div className={`p-4 rounded-2xl border flex items-center gap-3 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'
+                  }`}>
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
@@ -161,9 +157,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
                         type="text"
                         required
                         placeholder="Аты-жөніңіз"
-                        className={`w-full px-4 py-2.5 rounded-xl border text-xs outline-none transition-colors ${
-                          isDark ? 'bg-slate-900 border-slate-800 focus:border-blue-500' : 'bg-slate-50 border-slate-200 focus:border-blue-500'
-                        }`}
+                        className={`w-full px-4 py-2.5 rounded-xl border text-xs outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-800 focus:border-blue-500' : 'bg-slate-50 border-slate-200 focus:border-blue-500'
+                          }`}
                       />
                     </div>
                     <div>
@@ -171,9 +166,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
                         type="email"
                         required
                         placeholder="Email немесе Телефон"
-                        className={`w-full px-4 py-2.5 rounded-xl border text-xs outline-none transition-colors ${
-                          isDark ? 'bg-slate-900 border-slate-800 focus:border-blue-500' : 'bg-slate-50 border-slate-200 focus:border-blue-500'
-                        }`}
+                        className={`w-full px-4 py-2.5 rounded-xl border text-xs outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-800 focus:border-blue-500' : 'bg-slate-50 border-slate-200 focus:border-blue-500'
+                          }`}
                       />
                     </div>
                     <div>
@@ -181,9 +175,8 @@ export const InfoModals: React.FC<InfoModalsProps> = ({ activeModal, onClose, is
                         required
                         rows={3}
                         placeholder="Сізді не қызықтырады немесе қандай мәселе болды?"
-                        className={`w-full px-4 py-2.5 rounded-xl border text-xs outline-none transition-colors ${
-                          isDark ? 'bg-slate-900 border-slate-800 focus:border-blue-500' : 'bg-slate-50 border-slate-200 focus:border-blue-500'
-                        }`}
+                        className={`w-full px-4 py-2.5 rounded-xl border text-xs outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-800 focus:border-blue-500' : 'bg-slate-50 border-slate-200 focus:border-blue-500'
+                          }`}
                       />
                     </div>
                     <button

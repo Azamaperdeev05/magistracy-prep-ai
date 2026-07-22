@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from '../../components/ui/Motion';
 import { Shield, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
 import { UserConsent } from '../../services/authService';
+import { useTheme } from '../../app/ThemeContext';
 
 interface ConsentGateScreenProps {
   onAccept: (consent: UserConsent) => void;
@@ -9,6 +10,7 @@ interface ConsentGateScreenProps {
 }
 
 const ConsentGateScreen: React.FC<ConsentGateScreenProps> = ({ onAccept, onLogout }) => {
+  const { isDarkMode } = useTheme();
   // Checkbox states
   const [chkNotOfficial, setChkNotOfficial] = useState(false);
   const [chkPolicyAgreement, setChkPolicyAgreement] = useState(false);
@@ -43,7 +45,7 @@ const ConsentGateScreen: React.FC<ConsentGateScreenProps> = ({ onAccept, onLogou
   };
 
   return (
-    <div className="min-h-screen bg-[#07090d] text-[#f8fafc] flex items-center justify-center px-4 py-12 relative overflow-hidden selection:bg-blue-500/30">
+    <div className={`min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden selection:bg-blue-500/30 ${isDarkMode ? 'bg-[#07090d] text-[#f8fafc]' : 'bg-slate-50 text-slate-900'}`}>
       {/* Background Glows */}
       <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] top-[-100px] right-[-100px] pointer-events-none" />
       <div className="absolute w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[80px] bottom-[-50px] left-[-50px] pointer-events-none" />
@@ -55,32 +57,32 @@ const ConsentGateScreen: React.FC<ConsentGateScreenProps> = ({ onAccept, onLogou
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-400">
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400' : 'bg-blue-50 border border-blue-200 text-blue-600'}`}>
             <Shield className="w-8 h-8 animate-pulse" />
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight">
             Қауіпсіздік және Келісімдер
           </h1>
-          <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto leading-relaxed">
+          <p className={`text-sm mt-2 max-w-md mx-auto leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             MagisCore платформасын пайдалану үшін төмендегі құжаттармен танысып, келісім беру қажет:
           </p>
         </div>
 
         {/* Card */}
-        <div className="glass-dark rounded-3xl p-6 md:p-8 border border-white/5 shadow-2xl space-y-6">
+        <div className={`rounded-3xl p-6 md:p-8 border shadow-2xl space-y-6 ${isDarkMode ? 'glass-dark border-white/5' : 'bg-white border-slate-200 shadow-lg'}`}>
           
           {/* Accordion Documents */}
           <div className="space-y-3">
             
             {/* 1. Пайдаланушы келісімі */}
-            <div className="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.01]">
+            <div className={`rounded-2xl overflow-hidden border ${isDarkMode ? 'border-white/5 bg-white/[0.01]' : 'border-slate-200 bg-slate-50'}`}>
               <button
                 type="button"
                 onClick={() => toggleDoc('agreement')}
-                className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+                className={`w-full px-5 py-4 flex items-center justify-between text-left transition-colors ${isDarkMode ? 'hover:bg-white/[0.02]' : 'hover:bg-slate-100'}`}
               >
-                <span className="text-sm font-bold text-slate-200">1. Пайдаланушы келісімі</span>
-                {openDoc === 'agreement' ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>1. Пайдаланушы келісімі</span>
+                {openDoc === 'agreement' ? <ChevronUp className={`w-4 h-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-400'}`} /> : <ChevronDown className={`w-4 h-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-400'}`} />}
               </button>
               <AnimatePresence>
                 {openDoc === 'agreement' && (
@@ -88,10 +90,10 @@ const ConsentGateScreen: React.FC<ConsentGateScreenProps> = ({ onAccept, onLogou
                     initial={{ height: 0 }}
                     animate={{ height: 'auto' }}
                     exit={{ height: 0 }}
-                    className="overflow-hidden border-t border-white/5"
+                    className={`overflow-hidden border-t ${isDarkMode ? 'border-white/5' : 'border-slate-200'}`}
                   >
-                    <div className="p-5 text-xs text-slate-400 leading-relaxed max-h-48 overflow-y-auto space-y-3 bg-black/35 font-medium">
-                      <p className="font-bold text-slate-300">ПАЙДАЛАНУШЫ КЕЛІСІМІ</p>
+                    <div className={`p-5 text-xs leading-relaxed max-h-48 overflow-y-auto space-y-3 font-medium ${isDarkMode ? 'text-slate-400 bg-black/35' : 'text-slate-600 bg-slate-100'}`}>
+                      <p className={`font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>ПАЙДАЛАНУШЫ КЕЛІСІМІ</p>
                       <p>MagisCore — магистратура КТ емтиханына дайындалуға арналған тәуелсіз оқу симуляторы.</p>
                       <p>MagisCore Ұлттық тестілеу орталығының ресми сайты емес және ресми емтихан тапсыру, тіркеу немесе ресми нәтиже беру қызметін көрсетпейді.</p>
                       <p className="text-amber-400 font-bold">Пайдаланушы платформаға ЖСН (ИИН), жеке куәлік деректері, телефон нөмірі немесе басқа да артық дербес деректерді енгізбеуге міндеттенеді.</p>

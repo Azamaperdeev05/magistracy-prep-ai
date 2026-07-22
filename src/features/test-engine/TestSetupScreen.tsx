@@ -87,6 +87,8 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   // Personal details state variables (fully editable inputs)
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
+  const [firstNameError, setFirstNameError] = useState(false);
+  const firstNameRef = React.useRef<HTMLInputElement>(null);
   const [patronymic, setPatronymic] = useState('');
   const [email, setEmail] = useState('');
 
@@ -160,12 +162,21 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   };
 
   const handleContinue = async () => {
+    if (!firstName.trim()) {
+      setFirstNameError(true);
+      if (firstNameRef.current) {
+        firstNameRef.current.focus();
+      }
+      return;
+    }
+    setFirstNameError(false);
+
     if (!currentUser?.is_premium && history.length >= 1) {
       setShowUpgradeModal(true);
       return;
     }
 
-    const updatedFullName = `${lastName} ${firstName} ${patronymic}`.trim() || currentUser?.full_name || 'Қолданушы';
+    const updatedFullName = `${lastName} ${firstName}`.trim() || currentUser?.full_name || 'Қолданушы';
     const saveAndStart = async () => {
       try {
         updateUserProfileFields({
@@ -193,7 +204,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 py-10 px-4 md:px-8 selection:bg-blue-500/20">
+    <div className="text-slate-800 selection:bg-blue-500/20">
       <div className="max-w-4xl mx-auto">
         
         {/* Back Button */}
@@ -214,7 +225,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-x-8 gap-y-5 max-w-3xl mx-auto mb-10 text-sm font-bold text-slate-700">
-          <div className="flex items-center">Тегі <span className="text-xs text-slate-400 font-normal ml-1">(міндетті емес)</span></div>
+          <div className="flex items-center">Тегі</div>
           <div>
             <input 
               type="text" 
@@ -226,39 +237,31 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             />
           </div>
 
-          <div className="flex items-center">Аты <span className="text-xs text-slate-400 font-normal ml-1">(міндетті емес)</span></div>
+          <div className="flex items-center">
+            Аты <span className="text-red-500 font-extrabold ml-1">*</span>
+          </div>
           <div>
             <input 
+              ref={firstNameRef}
               type="text" 
               value={firstName} 
-              onChange={(e) => setFirstName(e.target.value)} 
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                if (e.target.value.trim()) setFirstNameError(false);
+              }} 
               onBlur={() => setFirstName(formatNameInput(firstName))}
               placeholder="Атыңызды енгізіңіз"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
+              className={`w-full max-w-md px-4 py-2.5 outline-none rounded-md font-bold text-base md:text-sm transition-all ${
+                firstNameError 
+                  ? 'bg-red-50 border-2 border-red-500 text-red-900 ring-4 ring-red-500/20 animate-shake' 
+                  : 'bg-[#e2e8f0]/60 border border-slate-300/40 text-slate-800 focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]'
+              }`} 
             />
-          </div>
-
-          <div className="flex items-center">Әкесінің аты</div>
-          <div>
-            <input 
-              type="text" 
-              value={patronymic} 
-              onChange={(e) => setPatronymic(e.target.value)} 
-              onBlur={() => setPatronymic(formatNameInput(patronymic))}
-              placeholder="Әкесінің атын енгізіңіз (міндетті емес)"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
-            />
-          </div>
-
-          <div className="flex items-center">Электрондық пошта <span className="text-xs text-slate-400 font-normal ml-1">(міндетті емес)</span></div>
-          <div>
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Электрондық поштаңызды енгізіңіз"
-              className="w-full max-w-md px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]" 
-            />
+            {firstNameError && (
+              <p className="text-xs text-red-500 font-extrabold mt-1.5 flex items-center gap-1">
+                ⚠️ Атыңызды енгізу міндетті!
+              </p>
+            )}
           </div>
         </div>
 
@@ -272,18 +275,6 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-x-8 gap-y-5 max-w-3xl mx-auto mb-10 text-sm font-bold text-slate-700">
-          <div className="flex items-center">Тестілеу тапсыру тілі</div>
-          <div className="relative w-full max-w-md">
-            <select 
-              value={testLang} 
-              onChange={(e) => setTestLang(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#e2e8f0]/60 border border-slate-300/40 outline-none rounded-md text-slate-800 font-bold appearance-none cursor-pointer pr-10 text-base md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:bg-[#e2e8f0]"
-            >
-              <option value="қазақша">Қазақша</option>
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-          </div>
-
           <div className="flex items-center">Шет тілі</div>
           <div className="relative w-full max-w-md">
             <select 
