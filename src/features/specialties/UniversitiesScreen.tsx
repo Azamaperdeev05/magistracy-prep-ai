@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, Users, Star, ExternalLink, Building2, Loader2, ChevronDown, Check } from 'lucide-react';
+import { Search, MapPin, Users, Star, ExternalLink, Building2, Loader2, ChevronDown, ChevronRight, Check } from 'lucide-react';
 import { useTheme } from '../../app/ThemeContext';
 import SEO from '../../components/ui/SEO';
 
