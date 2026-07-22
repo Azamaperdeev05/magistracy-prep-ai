@@ -13,6 +13,7 @@ interface FinishTestModalProps {
   onClose: () => void;
   onConfirm: () => void;
   subjectSummaries: SubjectSummary[];
+  isBackNavAttempt?: boolean;
 }
 
 const SIMPLE_MATH_PROBLEMS = [
@@ -35,6 +36,7 @@ const FinishTestModal: React.FC<FinishTestModalProps> = ({
   onClose,
   onConfirm,
   subjectSummaries,
+  isBackNavAttempt = false,
 }) => {
   const [step, setStep] = useState<'summary' | 'captcha'>('summary');
   const [currentProblem, setCurrentProblem] = useState(SIMPLE_MATH_PROBLEMS[0]);
@@ -93,6 +95,13 @@ const FinishTestModal: React.FC<FinishTestModalProps> = ({
         {/* STEP 1: SUMMARY TABLE */}
         {step === 'summary' && (
           <>
+            {/* Back Nav Warning Notice */}
+            {isBackNavAttempt && (
+              <div className="mb-3 p-3 bg-amber-50 border-l-4 border-amber-500 rounded text-amber-900 text-xs sm:text-sm font-bold flex items-center gap-2 animate-shake">
+                <span>⚠️ Тестілеу барысында артқа қайтуға болмайды. Тестті аяқтау үшін «Растау» батырмасын басыңыз.</span>
+              </div>
+            )}
+
             {/* Title */}
             <div className="text-left mb-3">
               <h3 className="text-sm sm:text-base font-bold text-slate-800">
@@ -176,7 +185,9 @@ const FinishTestModal: React.FC<FinishTestModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('captcha')}
-                className="bg-[#348FE2] hover:bg-[#2980B9] text-white px-6 sm:px-10 py-2.5 rounded-md text-xs sm:text-sm font-bold shadow-md transition active:scale-95 cursor-pointer"
+                className={`bg-[#348FE2] hover:bg-[#2980B9] text-white px-6 sm:px-10 py-2.5 rounded-md text-xs sm:text-sm font-bold shadow-md transition cursor-pointer ${
+                  isBackNavAttempt ? 'animate-shake ring-4 ring-blue-400/60 shadow-lg shadow-blue-500/50 scale-105' : 'active:scale-95'
+                }`}
               >
                 Растау
               </button>
@@ -224,7 +235,9 @@ const FinishTestModal: React.FC<FinishTestModalProps> = ({
               </button>
               <button
                 type="submit"
-                className="bg-[#348FE2] hover:bg-[#2980B9] text-white px-6 sm:px-10 py-2 rounded-md text-xs sm:text-sm font-bold shadow-md transition active:scale-95 cursor-pointer"
+                className={`bg-[#348FE2] hover:bg-[#2980B9] text-white px-6 sm:px-10 py-2 rounded-md text-xs sm:text-sm font-bold shadow-md transition cursor-pointer ${
+                  isBackNavAttempt ? 'animate-shake ring-4 ring-blue-400/60 shadow-lg shadow-blue-500/50 scale-105' : 'active:scale-95'
+                }`}
               >
                 Тестті аяқтау!
               </button>

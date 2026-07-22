@@ -275,6 +275,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
   const [reportQuestion, setReportQuestion] = useState<{ id: string; text: string } | null>(null);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
+  const [isBackNavAttempt, setIsBackNavAttempt] = useState(false);
   const [showMobileTools, setShowMobileTools] = useState(false);
   const [audioFailed, setAudioFailed] = useState(false);
 
@@ -284,6 +285,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
     const handlePopState = () => {
       window.history.pushState(null, '', window.location.href);
+      setIsBackNavAttempt(true);
       setShowFinishModal(true);
     };
 
@@ -781,9 +783,14 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
 
       <FinishTestModal
         isOpen={showFinishModal}
-        onClose={() => setShowFinishModal(false)}
+        isBackNavAttempt={isBackNavAttempt}
+        onClose={() => {
+          setShowFinishModal(false);
+          setIsBackNavAttempt(false);
+        }}
         onConfirm={() => {
           setShowFinishModal(false);
+          setIsBackNavAttempt(false);
           submitTestResult(answers);
         }}
         subjectSummaries={subjectSummaries}
