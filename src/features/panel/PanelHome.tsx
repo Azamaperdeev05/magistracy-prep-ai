@@ -194,27 +194,32 @@ const PanelHome: React.FC<PanelHomeProps> = ({
             ) : (
               <div className={`rounded-xl border overflow-hidden ${cardBg}`}>
                 <div className="p-3 space-y-0.5">
-                  {unis.map((uni, i) => (
-                    <a key={i} href={uni.url} target="_blank" rel="noopener noreferrer"
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${isDarkMode ? 'hover:bg-white/5 border-white/5' : 'hover:bg-slate-50 border-slate-100'
-                        }`}
-                      style={{ textDecoration: 'none' }}>
-                      <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 text-[9px] font-black ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>
-                        {i + 1}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-[11px] font-bold leading-tight truncate ${textPrimary} group-hover:text-[var(--brand-primary)] transition-colors`}>
-                          {uni.title}
-                        </p>
-                        {uni.general_info?.city && (
-                          <p className={`text-[9px] ${textMuted} flex items-center gap-1 mt-0.5`}>
-                            <MapPin className="w-2.5 h-2.5 shrink-0" />{uni.general_info.city}
+                  {unis.map((uni, i) => {
+                    const uniId = uni.code || String(i);
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => navigate(`/universities/${uniId}`)}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group cursor-pointer ${isDarkMode ? 'hover:bg-white/5 border-white/5' : 'hover:bg-slate-50 border-slate-100'
+                          }`}
+                      >
+                        <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 text-[9px] font-black ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>
+                          {i + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-[11px] font-bold leading-tight truncate ${textPrimary} group-hover:text-[var(--brand-primary)] transition-colors`}>
+                            {uni.title}
                           </p>
-                        )}
+                          {uni.general_info?.city && (
+                            <p className={`text-[9px] ${textMuted} flex items-center gap-1 mt-0.5`}>
+                              <MapPin className="w-2.5 h-2.5 shrink-0" />{uni.general_info.city}
+                            </p>
+                          )}
+                        </div>
+                        <ChevronRight className="w-3 h-3 text-slate-400 group-hover:text-[var(--brand-primary)] transition-colors shrink-0" />
                       </div>
-                      <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[var(--brand-primary)] transition-colors shrink-0" />
-                    </a>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

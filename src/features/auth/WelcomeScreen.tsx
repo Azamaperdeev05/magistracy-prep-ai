@@ -1,6 +1,7 @@
 /* Hallmark · genre: modern-minimal · macrostructure: Workbench · theme: Cobalt · enrichment: none · nav: N5 · footer: Ft2 */
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from '../../components/ui/Motion';
 import {
   BookOpen, Brain, Clock, Database, Globe, ArrowRight,
@@ -27,6 +28,7 @@ interface University {
 }
 
 const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
+  const navigate = useNavigate();
   const [universities, setUniversities] = useState<University[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -104,19 +106,17 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {shown.map((uni, idx) => {
               const city = uni.general_info?.city || '';
+              const uniId = uni.code || String(idx);
 
               return (
-                <a
-                  key={uni.url || idx}
-                  href={uni.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`group relative rounded-xl border p-5 flex flex-col gap-3 cursor-pointer no-underline
+                <div
+                  key={uni.code || idx}
+                  onClick={() => navigate(`/universities/${uniId}`)}
+                  className={`group relative rounded-xl border p-5 flex flex-col gap-3 cursor-pointer
                     transition-all duration-200 hover:-translate-y-0.5 ${isDarkMode
                       ? 'bg-[#0f1219] border-slate-800/80 hover:border-slate-600'
                       : 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300'
                     }`}
-                  style={{ textDecoration: 'none' }}
                 >
                   {/* Top row */}
                   <div className="flex items-start justify-between gap-3">
@@ -124,7 +124,7 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
                       }`}>
                       <Building2 className="w-4 h-4" />
                     </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-[var(--brand-primary)] transition-colors shrink-0 mt-1" />
+                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[var(--brand-primary)] transition-colors shrink-0 mt-1" />
                   </div>
 
                   {/* Title */}
@@ -159,7 +159,7 @@ const UniversitiesSection: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) 
                       </span>
                     )}
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
@@ -199,56 +199,55 @@ const UniversityPreviewList: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }
       })
       .catch(console.error)
       .finally(() => setLoading(false));
+
+  useEffect(() => {
+    import('../../../data/univision_universities.json')
+      .then((m: any) => {
+        const data = m.default || m;
+        setUnis(Array.isArray(data.universities) ? data.universities.slice(0, 5) : []);
+      })
+      .catch(console.error);
   }, []);
 
-  const textPrimary = isDarkMode ? 'text-white' : 'text-slate-800';
-  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-500';
   const rowBase = isDarkMode
-    ? 'hover:bg-white/5 border-white/5'
-    : 'hover:bg-slate-50 border-slate-100';
-
-  if (loading) return (
-    <div className="flex items-center justify-center py-8 gap-2 text-slate-400 text-xs">
-      <Loader2 className="w-4 h-4 animate-spin text-[var(--brand-primary)]" /> Жүктелуде...
-    </div>
-  );
+    ? 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+    : 'bg-white border-slate-100 hover:border-slate-200 shadow-xs';
+  const textPrimary = isDarkMode ? 'text-white' : 'text-slate-900';
+  const textMuted = isDarkMode ? 'text-slate-400' : 'text-slate-500';
 
   return (
     <div className="flex flex-col gap-1">
-      {unis.map((uni, i) => (
-        <a
-          key={i}
-          href={uni.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all group ${rowBase}`}
-          style={{ textDecoration: 'none' }}
-        >
-          <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[10px] font-black ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>
-            {i + 1}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className={`text-[11px] font-black leading-tight truncate ${textPrimary} group-hover:text-[var(--brand-primary)] transition-colors`}>
-              {uni.title}
-            </p>
-            {uni.general_info?.city && (
-              <p className={`text-[10px] ${textMuted} flex items-center gap-1 mt-0.5`}>
-                <MapPin className="w-2.5 h-2.5 shrink-0" />{uni.general_info.city}
+      {unis.map((uni, i) => {
+        const uniId = uni.code || String(i);
+        return (
+          <div
+            key={i}
+            onClick={() => navigate(`/universities/${uniId}`)}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all group cursor-pointer ${rowBase}`}
+          >
+            <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[10px] font-black ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>
+              {i + 1}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className={`text-[11px] font-black leading-tight truncate ${textPrimary} group-hover:text-[var(--brand-primary)] transition-colors`}>
+                {uni.title}
               </p>
-            )}
+              {uni.general_info?.city && (
+                <p className={`text-[10px] ${textMuted} flex items-center gap-1 mt-0.5`}>
+                  <MapPin className="w-2.5 h-2.5 shrink-0" />{uni.general_info.city}
+                </p>
+              )}
+            </div>
+            <ChevronRight className="w-3 h-3 text-slate-400 group-hover:text-[var(--brand-primary)] transition-colors shrink-0" />
           </div>
-          <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[var(--brand-primary)] transition-colors shrink-0" />
-        </a>
-      ))}
-      <a
-        href="https://univision.kz"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-2 text-center text-[10px] font-black text-[var(--brand-primary)] hover:text-blue-400 uppercase tracking-widest flex items-center justify-center gap-1"
-        style={{ textDecoration: 'none' }}
+        );
+      })}
+      <button
+        onClick={() => navigate('/universities')}
+        className="mt-2 text-center text-[10px] font-black text-[var(--brand-primary)] hover:text-blue-400 uppercase tracking-widest flex items-center justify-center gap-1 cursor-pointer bg-transparent border-0"
       >
         Барлық 125 ЖОО <ChevronRight className="w-3 h-3" />
-      </a>
+      </button>
     </div>
   );
 };

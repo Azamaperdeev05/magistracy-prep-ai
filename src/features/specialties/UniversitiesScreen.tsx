@@ -213,7 +213,7 @@ const UniversitiesScreen: React.FC = () => {
                         {uni.title?.charAt(0)?.toUpperCase()}
                       </span>
                     </div>
-                    <ExternalLink className={`w-3.5 h-3.5 shrink-0 mt-1 transition-colors ${isDarkMode ? 'text-slate-500 group-hover:text-blue-400' : 'text-slate-400 group-hover:text-blue-500'}`} />
+                    <ChevronRight className={`w-4 h-4 shrink-0 mt-1 transition-colors ${isDarkMode ? 'text-slate-500 group-hover:text-blue-400' : 'text-slate-400 group-hover:text-blue-500'}`} />
                   </div>
 
                   <h3 className={`text-sm font-black leading-tight line-clamp-2 transition-colors ${isDarkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-500'}`}>
