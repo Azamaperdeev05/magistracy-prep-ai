@@ -465,40 +465,39 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 pt-6">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6">
         {/* Unified Hero Dashboard Card */}
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 mb-8">
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-sm p-4 sm:p-8 mb-6 sm:mb-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             {/* Left: Speedometer Gauge */}
-            <div className="md:col-span-5 flex flex-col items-center border-b md:border-b-0 md:border-r border-slate-100 pb-6 md:pb-0 md:pr-6">
+            <div className="md:col-span-5 flex flex-col items-center border-b md:border-b-0 md:border-r border-slate-100 pb-5 md:pb-0 md:pr-6">
               <Gauge score={totalScore} max={maxScore} isDarkMode={isDarkMode} />
             </div>
 
             {/* Right: Core Metrics & Status */}
-            <div className="md:col-span-7 space-y-4 text-left">
+            <div className="md:col-span-7 space-y-3 sm:space-y-4 text-left">
               <div className="flex items-center justify-between flex-wrap gap-2">
-
-                <div className={`px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${grantChance.bg} ${grantChance.color}`}>
+                <div className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider ${grantChance.bg} ${grantChance.color}`}>
                   {grantChance.text}
                 </div>
               </div>
 
               {/* Quick Metrics Grid */}
-              <div className="grid grid-cols-3 gap-3 pt-2">
-                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Дұрыс Жауап</span>
-                  <span className="text-lg font-black text-emerald-600">{testResult.correctCount}</span>
-                  <span className="text-[10px] text-slate-400 font-semibold block">/ {questions.length}</span>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
+                <div className="bg-slate-50 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-slate-100 text-center min-w-0">
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">Дұрыс Жауап</span>
+                  <span className="text-base sm:text-lg font-black text-emerald-600">{testResult.correctCount}</span>
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 font-semibold block">/ {questions.length}</span>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Қате Жауап</span>
-                  <span className="text-lg font-black text-rose-600">{wrongQuestions.length}</span>
-                  <span className="text-[10px] text-slate-400 font-semibold block">сұрақ</span>
+                <div className="bg-slate-50 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-slate-100 text-center min-w-0">
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">Қате Жауап</span>
+                  <span className="text-base sm:text-lg font-black text-rose-600">{wrongQuestions.length}</span>
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 font-semibold block">сұрақ</span>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Игеру Пайызы</span>
-                  <span className="text-lg font-black text-blue-600">{scorePct}%</span>
-                  <span className="text-[10px] text-slate-400 font-semibold block">жалпы</span>
+                <div className="bg-slate-50 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-slate-100 text-center min-w-0">
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">Игеру Пайызы</span>
+                  <span className="text-base sm:text-lg font-black text-blue-600">{scorePct}%</span>
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 font-semibold block">жалпы</span>
                 </div>
               </div>
 
@@ -510,37 +509,37 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-slate-200 mb-8 overflow-x-auto">
+        <div className="flex items-center gap-1 sm:gap-2 border-b border-slate-200 mb-6 sm:mb-8 overflow-x-auto no-scrollbar scroll-smooth">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'overview'
+            className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'overview'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
           >
-            <BarChart3 className="w-4 h-4" />
+            <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>Жалпы Шолу</span>
           </button>
 
           <button
             onClick={() => setActiveTab('topics')}
-            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'topics'
+            className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'topics'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
           >
-            <Target className="w-4 h-4" />
+            <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>Пәндер & Тақырыптар</span>
           </button>
 
           <button
             onClick={() => setActiveTab('review')}
-            className={`flex items-center gap-2 px-5 py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'review'
+            className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 font-extrabold text-xs sm:text-sm border-b-2 transition cursor-pointer whitespace-nowrap ${activeTab === 'review'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
           >
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>Сұрақтар Талдауы ({questions.length})</span>
           </button>
         </div>
