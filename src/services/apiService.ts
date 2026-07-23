@@ -45,11 +45,11 @@ const generateEnglishQuestions = async (count: number): Promise<Question[]> => {
 
   const selectedListening = shuffle([...byAudio.values()].filter(group => group.length >= 8))
     .slice(0, 2)
-    .flatMap(group => shuffle(group).slice(0, 8));
+    .flatMap(group => group.slice(0, 8));
 
   const selectedReading = shuffle([...byPassage.values()].filter(group => group.length >= 8))
     .slice(0, 3)
-    .flatMap(group => shuffle(group).slice(0, 8));
+    .flatMap(group => group.slice(0, 8));
 
   const selectedGrammar = pickRandom(grammar, 18);
   const selectedIds = new Set([...selectedListening, ...selectedGrammar, ...selectedReading].map(q => q.id));
