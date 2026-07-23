@@ -218,14 +218,22 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   };
 
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('kk-KZ', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    if (!dateStr) return '';
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return dateStr;
+
+      const months = ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'];
+      const day = date.getDate();
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+
+      return `${day} ${month}, ${year} • ${hours}:${minutes}`;
+    } catch {
+      return dateStr;
+    }
   };
 
   // Status Badge Generator based on Official CT Rules (150 max points)
@@ -294,15 +302,54 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
     }
   };
 
+  // Status Filter State
+  const [filterStatus, setFilterStatus] = useState<'all' | 'passed' | 'failed'>('all');
+
   // Filtered History
   const filteredHistory = history.filter(item => {
     const dateStr = formatDate(item.created_at).toLowerCase();
-    return dateStr.includes(searchQuery.toLowerCase());
+    const matchesSearch = dateStr.includes(searchQuery.toLowerCase());
+    if (!matchesSearch) return false;
+
+    if (filterStatus === 'passed') return item.total_score >= 50;
+    if (filterStatus === 'failed') return item.total_score < 50;
+    return true;
   });
 
   // Overall Student Stats
   const topScore = history.length > 0 ? Math.max(...history.map(h => h.total_score)) : 0;
   const avgScore = history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.total_score, 0) / history.length) : 0;
+  const passedCount = history.filter(h => h.total_score >= 50).length;
+  const passingRate = history.length > 0 ? Math.round((passedCount / history.length) * 100) : 0;
+
+  // Calculate Overall Subject Mastery Across History
+  const getSubjectMastery = () => {
+    if (history.length === 0) return [];
+
+    const totals: Record<string, { label: string; score: number; max: number; icon: any }> = {
+      english: { label: 'Шет тілі', score: 0, max: 0, icon: Globe },
+      tgo: { label: 'ТГО', score: 0, max: 0, icon: Brain },
+      profile1: { label: '1-Бейіндік', score: 0, max: 0, icon: Zap },
+      profile2: { label: '2-Бейіндік', score: 0, max: 0, icon: Database },
+    };
+
+    history.forEach(item => {
+      const scores = getSubjectScoresFromItem(item);
+      if (scores) {
+        if (scores.english && scores.english.max > 0) { totals.english.score += scores.english.score; totals.english.max += scores.english.max; }
+        if (scores.tgo && scores.tgo.max > 0) { totals.tgo.score += scores.tgo.score; totals.tgo.max += scores.tgo.max; }
+        const p1 = scores.profile1 || scores.algo;
+        if (p1 && p1.max > 0) { totals.profile1.score += p1.score; totals.profile1.max += p1.max; }
+        const p2 = scores.profile2 || scores.db;
+        if (p2 && p2.max > 0) { totals.profile2.score += p2.score; totals.profile2.max += p2.max; }
+      }
+    });
+
+    return Object.entries(totals).map(([key, data]) => {
+      const pct = data.max > 0 ? Math.round((data.score / data.max) * 100) : 0;
+      return { key, label: data.label, pct, icon: data.icon, totalScore: data.score, totalMax: data.max };
+    });
+  };
 
   // Calculate Subject Performance for Weak Points Widget
   const analyzeWeakPoints = (items: HistoryItem[]) => {
@@ -745,40 +792,84 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
         ) : (
           /* ====== LIST SCREEN ====== */
           <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={onBack}
-                  className={`p-2.5 rounded-xl border transition-all active:scale-95 ${btnBg}`}
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                </button>
-                <div>
-                  <h1 className={`text-2xl font-black flex items-center gap-2 ${textPrimary}`}>
-                    <History className="w-6 h-6 text-blue-500" />
-                    КТ Нәтижелері Жұрналы
-                  </h1>
-                  <p className={`text-xs font-medium ${textMuted}`}>Тапсырылған барлық байқау тестілерінің тарихы</p>
+            {/* Header & Controls */}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={onBack}
+                    className={`p-2.5 rounded-xl border transition-all active:scale-95 ${btnBg}`}
+                  >
+                    <ArrowLeft className="w-5 h-5" />
+                  </button>
+                  <div>
+                    <h1 className={`text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2.5 ${textPrimary}`}>
+                      <span className="p-2 rounded-2xl bg-blue-500/10 text-blue-500 border border-blue-500/20 shadow-xs">
+                        <History className="w-6 h-6" />
+                      </span>
+                      КТ Нәтижелері Жұрналы
+                    </h1>
+                    <p className={`text-xs font-medium mt-0.5 ${textMuted}`}>
+                      Тапсырылған барлық байқау тестілерінің жиынтық нәтижелері
+                    </p>
+                  </div>
                 </div>
+
+                {/* Filter Pills */}
+                {history.length > 0 && (
+                  <div className="flex items-center gap-1 p-1 rounded-2xl border bg-slate-500/5 backdrop-blur-sm self-start sm:self-auto">
+                    <button
+                      onClick={() => setFilterStatus('all')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                        filterStatus === 'all'
+                          ? 'bg-blue-600 text-white shadow-md'
+                          : `${textMuted} hover:text-slate-900 dark:hover:text-white`
+                      }`}
+                    >
+                      Барлығы ({history.length})
+                    </button>
+                    <button
+                      onClick={() => setFilterStatus('passed')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1 cursor-pointer ${
+                        filterStatus === 'passed'
+                          ? 'bg-emerald-600 text-white shadow-md'
+                          : `${textMuted} hover:text-emerald-500`
+                      }`}
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Өтті ({passedCount})
+                    </button>
+                    <button
+                      onClick={() => setFilterStatus('failed')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1 cursor-pointer ${
+                        filterStatus === 'failed'
+                          ? 'bg-rose-600 text-white shadow-md'
+                          : `${textMuted} hover:text-rose-500`
+                      }`}
+                    >
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                      Өтпеді ({history.length - passedCount})
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* Search */}
-              <div className="relative flex-1 md:w-64">
-                <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${textMuted}`} />
+              {/* Search Bar */}
+              <div className="relative w-full">
+                <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 ${textMuted}`} />
                 <input 
                   type="text"
-                  placeholder="Күн бойынша іздеу..."
+                  placeholder="Күн немесе уақыт бойынша іздеу..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full border rounded-xl py-2 pl-10 pr-4 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${
-                    isDarkMode ? 'bg-slate-900/50 border-slate-800 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'
+                  className={`w-full border rounded-2xl py-2.5 pl-10 pr-4 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${
+                    isDarkMode ? 'bg-slate-900/60 border-slate-800 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 shadow-xs'
                   }`}
                 />
               </div>
             </div>
 
-            {/* Student Stats Summary Cards & Sidebar Layout */}
+            {/* Content Display */}
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
                 <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
@@ -790,11 +881,11 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                 <button onClick={fetchHistory} className="block mx-auto mt-2 text-sm underline">Қайталау</button>
               </div>
             ) : filteredHistory.length === 0 ? (
-              <div className={`text-center py-20 border border-dashed rounded-2xl ${subCardBg}`}>
+              <div className={`text-center py-20 border border-dashed rounded-3xl ${subCardBg}`}>
                 <History className={`w-16 h-16 mx-auto mb-4 ${textMuted}`} />
                 <h3 className={`text-lg font-bold ${textPrimary}`}>Тесттер табылмады</h3>
                 <p className={`max-w-xs mx-auto mt-2 text-sm ${textMuted}`}>
-                  Іздеу шартына сәйкес келетін нәтижелер табылмады.
+                  Іздеу немесе сүзгі шартына сәйкес келетін нәтижелер табылмады.
                 </p>
               </div>
             ) : (
@@ -807,193 +898,292 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                       const itemKey = `${item.id || 0}-${item.created_at || ''}-${index}`;
                       const isExpanded = expandedCardKey === itemKey;
                       const subjectScores = getSubjectScoresFromItem(item);
+                      const scorePct = Math.min(100, Math.round((item.total_score / (item.max_score || 150)) * 100));
+                      const isPassed = item.total_score >= 50;
 
                       return (
                         <motion.div
                           key={itemKey}
-                          initial={{ opacity: 0, y: 20 }}
+                          initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ delay: index * 0.03 }}
-                          className={`rounded-2xl border transition-all overflow-hidden ${cardBg}`}
+                          className={`rounded-3xl border transition-all overflow-hidden relative group hover:shadow-md ${cardBg}`}
                         >
+                          {/* Accent Color Side Bar */}
+                          <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${
+                            item.total_score >= 75 ? 'bg-amber-500' : isPassed ? 'bg-emerald-500' : 'bg-rose-500'
+                          }`} />
+
                           {/* Main Summary Header Row (Click to Expand) */}
                           <div 
                             onClick={() => setExpandedCardKey(isExpanded ? null : itemKey)}
-                            className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-500/5 transition-all"
+                            className="p-5 pl-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-500/5 transition-all"
                           >
                             <div className="flex items-start gap-4">
-                              <div className={`p-3 rounded-xl shrink-0 ${status.iconClass}`}>
+                              <div className={`p-3 rounded-2xl shrink-0 ${status.iconClass}`}>
                                 <Award className="w-6 h-6" />
                               </div>
-                              <div>
-                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                              <div className="space-y-1">
+                                <div className="flex flex-wrap items-center gap-2">
                                   <Calendar className={`w-3.5 h-3.5 ${textMuted}`} />
                                   <span className={`text-xs font-bold ${textMuted}`}>
                                     {formatDate(item.created_at)}
                                   </span>
-                                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${status.badgeClass}`}>
+                                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${status.badgeClass}`}>
                                     {status.label}
                                   </span>
                                 </div>
 
-                                <h3 className={`text-xl font-black ${textPrimary}`}>
-                                  {item.total_score} <span className="text-xs font-bold text-slate-400">/ {item.max_score || 150} балл</span>
-                                </h3>
+                                <div className="flex items-baseline gap-2">
+                                  <h3 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+                                    {item.total_score}
+                                  </h3>
+                                  <span className="text-xs font-bold text-slate-400">/ {item.max_score || 150} балл</span>
+                                </div>
+
+                                {/* Mini Score Progress Line */}
+                                <div className="w-36 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-1">
+                                  <div 
+                                    className={`h-full rounded-full transition-all duration-500 ${
+                                      item.total_score >= 75 ? 'bg-amber-500' : isPassed ? 'bg-emerald-500' : 'bg-rose-500'
+                                    }`}
+                                    style={{ width: `${scorePct}%` }}
+                                  />
+                                </div>
                               </div>
                             </div>
 
-                            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-700/20">
-                              <span className={`text-xs font-bold ${textSecondary}`}>
+                            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-700/10">
+                              <span className={`text-xs font-extrabold ${textSecondary}`}>
                                 {item.correct_count} / {item.total_questions} сұрақ дұрыс
                               </span>
-                              <div className={`p-2 rounded-xl border transition-all ${
+                              <div className={`p-2 rounded-xl border transition-all group-hover:border-blue-500/40 ${
                                 isDarkMode ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'
                               }`}>
-                                {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                {isExpanded ? <ChevronUp className="w-4 h-4 text-blue-500" /> : <ChevronDown className="w-4 h-4" />}
                               </div>
                             </div>
                           </div>
 
-                        {/* Accordion Expanded Details */}
-                        <AnimatePresence>
-                          {isExpanded && (
-                            <motion.div 
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              exit={{ opacity: 0, height: 0 }}
-                              className={`p-5 border-t space-y-4 ${subCardBg}`}
-                            >
-                              <h4 className={`text-xs font-black uppercase tracking-wider ${textMuted}`}>
-                                Пәндер бойынша балдар таралымы:
-                              </h4>
+                          {/* Accordion Expanded Details */}
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div 
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className={`p-5 pl-6 border-t space-y-4 ${subCardBg}`}
+                              >
+                                <h4 className={`text-xs font-black uppercase tracking-wider ${textMuted}`}>
+                                  Пәндер бойынша балдар таралымы:
+                                </h4>
 
-                              {/* Subject Breakdown Chips */}
-                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                                {[
-                                  { label: 'Шет тілі', key: 'english', max: 50, icon: Globe },
-                                  { label: 'ТГО', key: 'tgo', max: 30, icon: Brain },
-                                  { label: '1-Бейіндік', key: 'profile1', max: 30, icon: Zap },
-                                  { label: '2-Бейіндік', key: 'profile2', max: 40, icon: Database },
-                                ].map(s => {
-                                  const sData = subjectScores?.[s.key] || subjectScores?.[s.key === 'profile1' ? 'algo' : s.key === 'profile2' ? 'db' : s.key];
-                                  const scoreVal = typeof sData === 'object' ? sData.score : (typeof sData === 'number' ? sData : 0);
-                                  const maxVal = typeof sData === 'object' ? sData.max : s.max;
+                                {/* Subject Breakdown Chips */}
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                                  {[
+                                    { label: 'Шет тілі', key: 'english', max: 50, icon: Globe },
+                                    { label: 'ТГО', key: 'tgo', max: 30, icon: Brain },
+                                    { label: '1-Бейіндік', key: 'profile1', max: 30, icon: Zap },
+                                    { label: '2-Бейіндік', key: 'profile2', max: 40, icon: Database },
+                                  ].map(s => {
+                                    const sData = subjectScores?.[s.key] || subjectScores?.[s.key === 'profile1' ? 'algo' : s.key === 'profile2' ? 'db' : s.key];
+                                    const scoreVal = typeof sData === 'object' ? sData.score : (typeof sData === 'number' ? sData : 0);
+                                    const maxVal = typeof sData === 'object' ? sData.max : s.max;
+                                    const pct = maxVal > 0 ? Math.round((scoreVal / maxVal) * 100) : 0;
 
-                                  return (
-                                    <div key={s.key} className={`p-3 rounded-xl border flex flex-col justify-between ${cardBg}`}>
-                                      <div className="flex items-center gap-1.5 text-xs font-bold text-blue-500 mb-1">
-                                        <s.icon className="w-3.5 h-3.5" />
-                                        <span>{s.label}</span>
+                                    return (
+                                      <div key={s.key} className={`p-3.5 rounded-2xl border flex flex-col justify-between space-y-2 ${cardBg}`}>
+                                        <div className="flex items-center justify-between">
+                                          <span className="flex items-center gap-1.5 text-xs font-bold text-blue-500">
+                                            <s.icon className="w-3.5 h-3.5" />
+                                            {s.label}
+                                          </span>
+                                          <span className="text-[10px] font-black text-slate-400">{pct}%</span>
+                                        </div>
+
+                                        <div>
+                                          <span className={`text-base font-black ${textPrimary}`}>
+                                            {scoreVal} <span className="text-[10px] text-slate-400 font-normal">/ {maxVal}</span>
+                                          </span>
+                                          <div className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-1">
+                                            <div 
+                                              className={`h-full rounded-full ${
+                                                pct >= 60 ? 'bg-emerald-500' : pct >= 40 ? 'bg-blue-500' : 'bg-rose-500'
+                                              }`}
+                                              style={{ width: `${pct}%` }}
+                                            />
+                                          </div>
+                                        </div>
                                       </div>
-                                      <span className={`text-sm font-black ${textPrimary}`}>
-                                        {scoreVal} <span className="text-[10px] text-slate-400 font-normal">/ {maxVal}</span>
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
+                                    );
+                                  })}
+                                </div>
 
-                              {/* CTA Button to Full Detail View */}
-                              <div className="flex justify-end pt-2">
-                                <button
-                                  onClick={() => handleOpenDetail(item)}
-                                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-95"
-                                >
-                                  <span>Тестті талдау</span>
-                                  <ChevronRight className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                                {/* CTA Button to Full Detail View */}
+                                <div className="flex justify-end pt-2">
+                                  <button
+                                    onClick={() => handleOpenDetail(item)}
+                                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-95 cursor-pointer"
+                                  >
+                                    <span>Тестті толық талдау</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
 
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
+                {/* Right Column: Dynamic Dashboard Sidebar */}
+                <div className="lg:col-span-1 space-y-5">
+                  {/* 1. Overall Student Analytics Dashboard Card */}
+                  <div className={`p-5 rounded-3xl border space-y-5 ${cardBg}`}>
+                    <div className="flex items-center justify-between border-b border-slate-700/10 dark:border-slate-800 pb-3">
+                      <span className="text-xs font-black uppercase tracking-wider text-blue-500 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        Оқыту Аналитикасы
+                      </span>
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                        {history.length} тест
+                      </span>
+                    </div>
 
-              {/* Right Column: Personal Metrics & Sparkline Chart + Weak Points Alert */}
-              <div className="lg:col-span-1 space-y-5">
-                {/* 1. Personal Metrics & Sparkline Card */}
-                <div className={`p-5 rounded-3xl border ${cardBg}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-500 flex items-center gap-1.5">
-                      <TrendingUp className="w-4 h-4" /> Өсу Прогресі
-                    </span>
-                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                      {history.length} тест
-                    </span>
-                  </div>
+                    {/* 3 Metric Tiles Grid */}
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div className={`p-3.5 rounded-2xl border ${isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50/80 border-amber-200'}`}>
+                        <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest block">Рекорд</span>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
+                          <span className={`text-lg font-black ${textPrimary}`}>{topScore} <span className="text-[10px] text-slate-400 font-normal">/ 150</span></span>
+                        </div>
+                      </div>
 
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    <div className={`p-3.5 rounded-2xl border ${isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50/70 border-amber-200'}`}>
-                      <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest block">Рекорд</span>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
-                        <span className={`text-lg font-black ${textPrimary}`}>{topScore} <span className="text-[10px] text-slate-400 font-normal">/ 150</span></span>
+                      <div className={`p-3.5 rounded-2xl border ${isDarkMode ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/80 border-blue-200'}`}>
+                        <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest block">Орташа</span>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <TrendingUp className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className={`text-lg font-black ${textPrimary}`}>{avgScore} <span className="text-[10px] text-slate-400 font-normal">/ 150</span></span>
+                        </div>
+                      </div>
+
+                      <div className={`p-3.5 rounded-2xl border col-span-2 ${isDarkMode ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-emerald-50/80 border-emerald-200'}`}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest block">Өту Көрсеткіші (Шектен өту үлесі)</span>
+                          <span className="text-xs font-black text-emerald-500">{passingRate}%</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-emerald-500/20 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${passingRate}%` }} />
+                        </div>
                       </div>
                     </div>
 
-                    <div className={`p-3.5 rounded-2xl border ${isDarkMode ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/70 border-blue-200'}`}>
-                      <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest block">Орташа</span>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <Award className="w-4 h-4 text-blue-500 shrink-0" />
-                        <span className={`text-lg font-black ${textPrimary}`}>{avgScore} <span className="text-[10px] text-slate-400 font-normal">/ 150</span></span>
-                      </div>
-                    </div>
+                    {/* Sparkline Curve Visualizer */}
+                    {history.length >= 2 && (() => {
+                      const rawScores = [...history].reverse().map(h => h.total_score);
+                      const width = 240;
+                      const height = 56;
+                      const points = rawScores.map((val, idx) => {
+                        const x = (idx / (rawScores.length - 1)) * width;
+                        const y = height - (val / 150) * height;
+                        return `${x},${y}`;
+                      }).join(' ');
+
+                      const lastScore = rawScores[rawScores.length - 1];
+                      const lastX = width;
+                      const lastY = height - (lastScore / 150) * height;
+
+                      return (
+                        <div className="pt-3 border-t border-slate-700/10 dark:border-slate-800">
+                          <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 mb-2">
+                            <span className="flex items-center gap-1">
+                              <Sparkles className="w-3 h-3 text-blue-500" />
+                              Балл Динамикасы (Sparkline)
+                            </span>
+                            <span className="text-blue-500 font-black">{lastScore} б. (соңғы)</span>
+                          </div>
+
+                          <div className="w-full h-14 relative">
+                            <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                              <defs>
+                                <linearGradient id="histSparklineGrad2" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
+                                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                                </linearGradient>
+                              </defs>
+                              <polygon
+                                points={`0,${height} ${points} ${width},${height}`}
+                                fill="url(#histSparklineGrad2)"
+                              />
+                              <polyline
+                                fill="none"
+                                stroke="#3b82f6"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                points={points}
+                              />
+                              {/* Pulse Dot on Latest Test Score */}
+                              <circle cx={lastX} cy={lastY} r="4" fill="#3b82f6" className="animate-ping opacity-75" />
+                              <circle cx={lastX} cy={lastY} r="4" fill="#2563eb" />
+                            </svg>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
 
-                  {/* Sparkline Curve Chart */}
-                  {history.length >= 2 && (() => {
-                    const rawScores = [...history].reverse().map(h => h.total_score);
-                    const width = 220;
-                    const height = 48;
-                    const points = rawScores.map((val, idx) => {
-                      const x = (idx / (rawScores.length - 1)) * width;
-                      const y = height - (val / 150) * height;
-                      return `${x},${y}`;
-                    }).join(' ');
+                  {/* 2. Subject Mastery Breakdown Card */}
+                  {history.length > 0 && (() => {
+                    const mastery = getSubjectMastery();
 
                     return (
-                      <div className="pt-2 border-t border-slate-700/10 dark:border-slate-800">
-                        <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 mb-1">
-                          <span>Нәтижелер Серпіні (Sparkline)</span>
-                          <span className="text-blue-500 font-bold">{rawScores[rawScores.length - 1]} балл (соңғы)</span>
+                      <div className={`p-5 rounded-3xl border space-y-3.5 ${cardBg}`}>
+                        <div className="flex items-center justify-between border-b border-slate-700/10 dark:border-slate-800 pb-2.5">
+                          <span className="text-xs font-black uppercase tracking-wider text-purple-500 flex items-center gap-1.5">
+                            <BrainCircuit className="w-4 h-4" /> Пәндер Меңгерілуі
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">Орташа %</span>
                         </div>
-                        <div className="w-full h-12 relative my-1">
-                          <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
-                            <defs>
-                              <linearGradient id="histSparklineGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.35" />
-                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
-                              </linearGradient>
-                            </defs>
-                            <polygon
-                              points={`0,${height} ${points} ${width},${height}`}
-                              fill="url(#histSparklineGrad)"
-                            />
-                            <polyline
-                              fill="none"
-                              stroke="#3b82f6"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              points={points}
-                            />
-                          </svg>
+
+                        <div className="space-y-3">
+                          {mastery.map(sub => (
+                            <div key={sub.key} className="space-y-1">
+                              <div className="flex items-center justify-between text-xs font-bold">
+                                <span className={`flex items-center gap-1.5 ${textPrimary}`}>
+                                  <sub.icon className="w-3.5 h-3.5 text-blue-500" />
+                                  {sub.label}
+                                </span>
+                                <span className={`font-black ${
+                                  sub.pct >= 60 ? 'text-emerald-500' : sub.pct >= 40 ? 'text-blue-500' : 'text-rose-500'
+                                }`}>
+                                  {sub.pct}%
+                                </span>
+                              </div>
+                              <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full rounded-full transition-all duration-500 ${
+                                    sub.pct >= 60 ? 'bg-emerald-500' : sub.pct >= 40 ? 'bg-blue-500' : 'bg-rose-500'
+                                  }`}
+                                  style={{ width: `${sub.pct}%` }}
+                                />
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     );
                   })()}
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* ====== GUEST 10-CLICK SOFT REGISTRATION MODAL (HAS X CLOSE BUTTON) ====== */}
       <AnimatePresence>
