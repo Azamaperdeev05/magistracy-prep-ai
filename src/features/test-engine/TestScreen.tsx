@@ -469,38 +469,28 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
               </div>
           </div>
 
-          {/* Timer Display */}
-          <div className="flex items-center gap-2.5 bg-black/10 border border-white/10 px-3 py-1 rounded-full text-xs font-black shadow-inner">
-            <Clock className="w-4 h-4 text-sky-200" />
-            <span className="font-mono text-white tracking-widest">{isTimerEnabled ? formatTime(timeLeft) : 'Шектеусіз'}</span>
-            {user.is_premium && (
-              <button
-                onClick={() => {
-                  const nextVal = !isTimerEnabled;
-                  setIsTimerEnabled(nextVal);
-                  localStorage.setItem('is_timer_enabled', String(nextVal));
-                }}
-                className="px-2 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded text-[10px] uppercase font-bold active:scale-95 transition"
-              >
-                {isTimerEnabled ? 'Өшіру' : 'Қосу'}
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-1.5 md:gap-2">
+          <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
             {!isFirstSubject && (
               <button 
                 onClick={handlePrevSubject}
-                className="bg-white/15 hover:bg-white/25 border border-white/30 text-white px-2 md:px-3 py-1 rounded-[3px] text-[10px] md:text-xs font-bold transition shadow-xs uppercase tracking-tight whitespace-nowrap active:scale-95"
+                className="bg-white/15 hover:bg-white/25 border border-white/30 text-white px-2 md:px-3 py-1 rounded-[3px] text-[10px] md:text-xs font-bold transition shadow-xs uppercase tracking-tight whitespace-nowrap active:scale-95 cursor-pointer"
               >
-                &lt; Алдыңғы пән
+                <span className="hidden sm:inline">&lt; Алдыңғы пән</span>
+                <span className="sm:hidden">&lt; Алдыңғы</span>
               </button>
             )}
             <button 
               onClick={handleNextSubject}
-              className="bg-white text-[#348FE2] px-2 md:px-3 py-1 rounded-[3px] text-[10px] md:text-xs font-bold hover:bg-slate-50 transition shadow-sm uppercase tracking-tight whitespace-nowrap active:scale-95"
+              className="bg-white text-[#348FE2] px-2 md:px-3 py-1 rounded-[3px] text-[10px] md:text-xs font-bold hover:bg-slate-50 transition shadow-sm uppercase tracking-tight whitespace-nowrap active:scale-95 cursor-pointer"
             >
-              {isLastSubject ? 'Аяқтау >' : 'Келесі пән >'}
+              {isLastSubject ? (
+                'Аяқтау >'
+              ) : (
+                <>
+                  <span className="hidden sm:inline">Келесі пән &gt;</span>
+                  <span className="sm:hidden">Келесі &gt;</span>
+                </>
+              )}
             </button>
           </div>
       </header>
