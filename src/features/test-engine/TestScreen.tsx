@@ -644,14 +644,14 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                           )}
 
                           {currentQuestion.chartData && (
-                            <div className="mb-6">
+                            <div className="mb-6 overflow-x-auto touch-pan-y custom-scrollbar rounded-xl">
                               <ChartRenderer chartData={currentQuestion.chartData} />
                             </div>
                           )}
 
                           {/* Reading Passage for Comprehension Questions */}
                           {currentQuestion.readingPassage && (
-                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 mb-6 shadow-sm">
+                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 sm:p-5 mb-6 shadow-sm touch-pan-y max-h-[280px] sm:max-h-none overflow-y-auto custom-scrollbar">
                                 {currentQuestion.readingPassage.startsWith('CHART:') ? (
                                     (() => {
                                         try {

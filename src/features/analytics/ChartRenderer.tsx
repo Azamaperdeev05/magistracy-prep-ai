@@ -173,7 +173,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, labels, color = '#3b82f6' }
 // Table Chart Component
 const TableChart: React.FC<TableChartProps> = ({ headers, rows }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto touch-pan-y custom-scrollbar">
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-slate-100">
@@ -379,7 +379,7 @@ const MathExpression: React.FC<MathExpressionProps> = ({ expressions, question }
 };
 
 const ExamFigureFrame: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`bg-white border border-slate-400 text-slate-950 shadow-sm ${className}`}>
+  <div className={`bg-white border border-slate-400 text-slate-950 shadow-sm touch-pan-y overflow-x-auto custom-scrollbar ${className}`}>
     {children}
   </div>
 );
