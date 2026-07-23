@@ -988,47 +988,12 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                     );
                   })()}
                 </div>
-
-                {/* 2. Weak Points Alert Widget */}
-                {(() => {
-                  const weakest = analyzeWeakPoints(history);
-                  if (!weakest) return null;
-
-                  return (
-                    <div className={`p-5 rounded-3xl border space-y-3 ${
-                      isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50/80 border-amber-200 shadow-xs'
-                    }`}>
-                      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-                        <AlertTriangle className="w-5 h-5 shrink-0 animate-bounce" />
-                        <h4 className="text-xs font-black uppercase tracking-wider">Әлсіз Тақырып Ұсынысы</h4>
-                      </div>
-
-                      <div className="space-y-1">
-                        <p className={`text-base font-black ${textPrimary}`}>
-                          {weakest.name}
-                        </p>
-                        <p className={`text-xs font-medium leading-relaxed ${textSecondary}`}>
-                          Сіздің бұл пәннен орташа нәтижеңіз <strong className="text-amber-600 dark:text-amber-400 font-extrabold">{weakest.percent}%</strong> құрайды. Ұпай санын өсіру үшін осы бөлімді қайталау ұсынылады.
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => navigate('/prep')}
-                        className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer mt-2"
-                      >
-                        <BookOpen className="w-4 h-4" />
-                        <span>Дайындық бөліміне өту</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  );
-                })()}
               </div>
             </div>
           )}
         </div>
       )}
-      </div>
+    </div>
 
       {/* ====== GUEST 10-CLICK SOFT REGISTRATION MODAL (HAS X CLOSE BUTTON) ====== */}
       <AnimatePresence>
