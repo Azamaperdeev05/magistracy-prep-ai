@@ -6,7 +6,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "0d9cae9c-dde1-4d28-aaab-22bd21d66005",
     "subjectId": "english",
     "text": "Where does Anna's father work?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "033c38a6-2e34-4acf-a76c-d880f1e7c2b0",
@@ -36,7 +36,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "0e215d50-efd8-459c-98b4-6a027b3fc5c3",
     "subjectId": "english",
     "text": "Where is the library located?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "14cfe2e2-5921-43f2-81c5-56723ab41e85",
@@ -66,7 +66,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "170cea90-8d7f-4049-a31b-77191f7ad82e",
     "subjectId": "english",
     "text": "What will Aisha show Marat?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "2feaaa8b-9441-4053-b379-a30ac42d4447",
@@ -96,7 +96,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "3333eda2-fc6f-4ae8-bf82-8ddf4886002f",
     "subjectId": "english",
     "text": "What is Anna's father's profession?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "2df46c08-44d1-47e8-bba4-9ec4f38b7f21",
@@ -126,7 +126,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "5c77bca9-848d-4aac-a2cb-831ac7cf17e2",
     "subjectId": "english",
     "text": "What is Marat studying?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "31813f17-0c2e-4c03-bd3b-edf051973875",
@@ -156,7 +156,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "87af7aa9-6eb4-470c-9bc7-f4f723df27bb",
     "subjectId": "english",
     "text": "What is Aisha studying?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "280dc51d-50a1-4f20-b475-9f8d96f6ce66",
@@ -186,7 +186,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "89839d67-3006-4d0e-9c4f-d5aa8a3f1a9a",
     "subjectId": "english",
     "text": "How many people are in Anna's family?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "5b116c66-f636-4ca0-989a-8c4c08142d90",
@@ -216,7 +216,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "9aab54ca-b45b-4e1c-aa41-8cd5c22d26cc",
     "subjectId": "english",
     "text": "What time does Aisha's class finish?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "2e66d227-be68-4dcd-a5e6-297308e01643",
@@ -246,7 +246,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "a89ce7cb-6872-4782-ba39-c027ac1911ee",
     "subjectId": "english",
     "text": "Is it Marat's first day at the university?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "8737c6b8-6532-4530-b3bd-b6412c9ff376",
@@ -276,7 +276,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "b2694496-6c04-4295-b006-cc7f244c4d89",
     "subjectId": "english",
     "text": "Where will they go first after class?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "12f78d04-9997-4cb9-b5a1-54d3b02d9a91",
@@ -306,7 +306,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "c0ac42bf-e672-48ee-be49-21bcd3584466",
     "subjectId": "english",
     "text": "What is Anna's mother's profession?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "1accbdd8-720c-44ec-a099-8386e6fc8d96",
@@ -336,7 +336,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "ceb9e63a-5f00-4716-9b3e-57dc2db3c633",
     "subjectId": "english",
     "text": "What do they often do on weekends?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "45cb5da0-d2c1-4f3a-9b9c-79b96d1a27d4",
@@ -366,7 +366,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "e27a5efd-5029-4404-af0e-ddea4c7da4f6",
     "subjectId": "english",
     "text": "How old is Anna's brother?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "44b27bb0-f70f-4bdc-b766-3269300081dc",
@@ -396,7 +396,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "e790253c-28d2-43aa-9a53-3b2c7235a5bf",
     "subjectId": "english",
     "text": "Does Marat know where the library is?",
-    "audioUrl": "/english/At the University.mp3",
+    "audioUrl": "/english/audio/02_choosing_a_major.mp3",
     "options": [
       {
         "id": "22b18a62-b0fa-40e2-a7d4-17d07513e35f",
@@ -426,7 +426,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "ecd0592e-60fd-438a-9c18-0ae3324362b3",
     "subjectId": "english",
     "text": "Where does Anna live?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "14bb41d9-2fc7-4610-bc16-7234e8623566",
@@ -456,7 +456,7 @@ export const englishListeningAudioTextsQuestions = [
     "id": "f095c2d9-7c2c-485a-974b-10f3814d85ba",
     "subjectId": "english",
     "text": "How old is Anna?",
-    "audioUrl": "/english/My Family and Home.mp3",
+    "audioUrl": "/english/audio/08_at_the_library.mp3",
     "options": [
       {
         "id": "9ebe10ce-941a-46a0-ab24-4a8dc67e6f35",
