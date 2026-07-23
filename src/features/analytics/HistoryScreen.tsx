@@ -304,6 +304,41 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
   const topScore = history.length > 0 ? Math.max(...history.map(h => h.total_score)) : 0;
   const avgScore = history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.total_score, 0) / history.length) : 0;
 
+  // Calculate Subject Performance for Weak Points Widget
+  const analyzeWeakPoints = (items: HistoryItem[]) => {
+    if (!items || items.length === 0) return null;
+
+    const subjectTotals: Record<string, { score: number; max: number; name: string }> = {
+      english: { score: 0, max: 0, name: 'Ағылшын тілі' },
+      tgo: { score: 0, max: 0, name: 'ТГО (ОДАТ)' },
+      profile1: { score: 0, max: 0, name: '1-Бейіндік пән' },
+      profile2: { score: 0, max: 0, name: '2-Бейіндік пән' },
+    };
+
+    items.forEach(item => {
+      const scores = getSubjectScoresFromItem(item);
+      if (scores.english && scores.english.max > 0) { subjectTotals.english.score += scores.english.score; subjectTotals.english.max += scores.english.max; }
+      if (scores.tgo && scores.tgo.max > 0) { subjectTotals.tgo.score += scores.tgo.score; subjectTotals.tgo.max += scores.tgo.max; }
+      if (scores.profile1 && scores.profile1.max > 0) { subjectTotals.profile1.score += scores.profile1.score; subjectTotals.profile1.max += scores.profile1.max; }
+      if (scores.profile2 && scores.profile2.max > 0) { subjectTotals.profile2.score += scores.profile2.score; subjectTotals.profile2.max += scores.profile2.max; }
+    });
+
+    let weakest: { id: string; name: string; percent: number } | null = null;
+    let lowestPercent = 101;
+
+    Object.entries(subjectTotals).forEach(([id, data]) => {
+      if (data.max > 0) {
+        const pct = Math.round((data.score / data.max) * 100);
+        if (pct < lowestPercent) {
+          lowestPercent = pct;
+          weakest = { id, name: data.name, percent: pct };
+        }
+      }
+    });
+
+    return weakest;
+  };
+
   // Reconstruct test questions and answers from IDs for detail view
   const reconstructedData = () => {
     if (!selectedItem) return null;
@@ -743,36 +778,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
               </div>
             </div>
 
-            {/* Student Stats Summary Cards */}
-            {history.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50/70 border-amber-200'}`}>
-                  <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest block">Рекордтық Балл</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Trophy className="w-5 h-5 text-amber-500" />
-                    <h3 className={`text-xl font-black ${textPrimary}`}>{topScore} <span className="text-xs font-normal text-slate-400">/ 150</span></h3>
-                  </div>
-                </div>
-
-                <div className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/70 border-blue-200'}`}>
-                  <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest block">Орташа Балл</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <TrendingUp className="w-5 h-5 text-blue-500" />
-                    <h3 className={`text-xl font-black ${textPrimary}`}>{avgScore} <span className="text-xs font-normal text-slate-400">/ 150</span></h3>
-                  </div>
-                </div>
-
-                <div className={`p-4 rounded-2xl border col-span-2 sm:col-span-1 ${isDarkMode ? 'bg-purple-500/5 border-purple-500/20' : 'bg-purple-50/70 border-purple-200'}`}>
-                  <span className="text-[9px] font-black text-purple-500 uppercase tracking-widest block">Барлық тесттер</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Award className="w-5 h-5 text-purple-500" />
-                    <h3 className={`text-xl font-black ${textPrimary}`}>{history.length} <span className="text-xs font-normal text-slate-400">тапсырылды</span></h3>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Content List */}
+            {/* Student Stats Summary Cards & Sidebar Layout */}
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
                 <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
@@ -792,60 +798,62 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                 </p>
               </div>
             ) : (
-              <div className="grid gap-4">
-                <AnimatePresence mode='popLayout'>
-                  {filteredHistory.map((item, index) => {
-                    const status = getCtStatusBadge(item.total_score, item.max_score);
-                    const itemKey = `${item.id || 0}-${item.created_at || ''}-${index}`;
-                    const isExpanded = expandedCardKey === itemKey;
-                    const subjectScores = getSubjectScoresFromItem(item);
+              <div className="lg:grid lg:grid-cols-3 lg:gap-6 items-start space-y-6 lg:space-y-0">
+                {/* Left Column: History Test Cards List */}
+                <div className="lg:col-span-2 space-y-4">
+                  <AnimatePresence mode='popLayout'>
+                    {filteredHistory.map((item, index) => {
+                      const status = getCtStatusBadge(item.total_score, item.max_score);
+                      const itemKey = `${item.id || 0}-${item.created_at || ''}-${index}`;
+                      const isExpanded = expandedCardKey === itemKey;
+                      const subjectScores = getSubjectScoresFromItem(item);
 
-                    return (
-                      <motion.div
-                        key={itemKey}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ delay: index * 0.03 }}
-                        className={`rounded-2xl border transition-all overflow-hidden ${cardBg}`}
-                      >
-                        {/* Main Summary Header Row (Click to Expand) */}
-                        <div 
-                          onClick={() => setExpandedCardKey(isExpanded ? null : itemKey)}
-                          className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-500/5 transition-all"
+                      return (
+                        <motion.div
+                          key={itemKey}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ delay: index * 0.03 }}
+                          className={`rounded-2xl border transition-all overflow-hidden ${cardBg}`}
                         >
-                          <div className="flex items-start gap-4">
-                            <div className={`p-3 rounded-xl shrink-0 ${status.iconClass}`}>
-                              <Award className="w-6 h-6" />
-                            </div>
-                            <div>
-                              <div className="flex flex-wrap items-center gap-2 mb-1">
-                                <Calendar className={`w-3.5 h-3.5 ${textMuted}`} />
-                                <span className={`text-xs font-bold ${textMuted}`}>
-                                  {formatDate(item.created_at)}
-                                </span>
-                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${status.badgeClass}`}>
-                                  {status.label}
-                                </span>
+                          {/* Main Summary Header Row (Click to Expand) */}
+                          <div 
+                            onClick={() => setExpandedCardKey(isExpanded ? null : itemKey)}
+                            className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-500/5 transition-all"
+                          >
+                            <div className="flex items-start gap-4">
+                              <div className={`p-3 rounded-xl shrink-0 ${status.iconClass}`}>
+                                <Award className="w-6 h-6" />
                               </div>
+                              <div>
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                                  <Calendar className={`w-3.5 h-3.5 ${textMuted}`} />
+                                  <span className={`text-xs font-bold ${textMuted}`}>
+                                    {formatDate(item.created_at)}
+                                  </span>
+                                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${status.badgeClass}`}>
+                                    {status.label}
+                                  </span>
+                                </div>
 
-                              <h3 className={`text-xl font-black ${textPrimary}`}>
-                                {item.total_score} <span className="text-xs font-bold text-slate-400">/ {item.max_score || 150} балл</span>
-                              </h3>
+                                <h3 className={`text-xl font-black ${textPrimary}`}>
+                                  {item.total_score} <span className="text-xs font-bold text-slate-400">/ {item.max_score || 150} балл</span>
+                                </h3>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-700/20">
+                              <span className={`text-xs font-bold ${textSecondary}`}>
+                                {item.correct_count} / {item.total_questions} сұрақ дұрыс
+                              </span>
+                              <div className={`p-2 rounded-xl border transition-all ${
+                                isDarkMode ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'
+                              }`}>
+                                {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                              </div>
                             </div>
                           </div>
-
-                          <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-700/20">
-                            <span className={`text-xs font-bold ${textSecondary}`}>
-                              {item.correct_count} / {item.total_questions} сұрақ дұрыс
-                            </span>
-                            <div className={`p-2 rounded-xl border transition-all ${
-                              isDarkMode ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'
-                            }`}>
-                              {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                            </div>
-                          </div>
-                        </div>
 
                         {/* Accordion Expanded Details */}
                         <AnimatePresence>
@@ -905,9 +913,121 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                   })}
                 </AnimatePresence>
               </div>
-            )}
-          </div>
-        )}
+
+              {/* Right Column: Personal Metrics & Sparkline Chart + Weak Points Alert */}
+              <div className="lg:col-span-1 space-y-5">
+                {/* 1. Personal Metrics & Sparkline Card */}
+                <div className={`p-5 rounded-3xl border ${cardBg}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-500 flex items-center gap-1.5">
+                      <TrendingUp className="w-4 h-4" /> Өсу Прогресі
+                    </span>
+                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                      {history.length} тест
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className={`p-3.5 rounded-2xl border ${isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50/70 border-amber-200'}`}>
+                      <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest block">Рекорд</span>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
+                        <span className={`text-lg font-black ${textPrimary}`}>{topScore} <span className="text-[10px] text-slate-400 font-normal">/ 150</span></span>
+                      </div>
+                    </div>
+
+                    <div className={`p-3.5 rounded-2xl border ${isDarkMode ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50/70 border-blue-200'}`}>
+                      <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest block">Орташа</span>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Award className="w-4 h-4 text-blue-500 shrink-0" />
+                        <span className={`text-lg font-black ${textPrimary}`}>{avgScore} <span className="text-[10px] text-slate-400 font-normal">/ 150</span></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sparkline Curve Chart */}
+                  {history.length >= 2 && (() => {
+                    const rawScores = [...history].reverse().map(h => h.total_score);
+                    const width = 220;
+                    const height = 48;
+                    const points = rawScores.map((val, idx) => {
+                      const x = (idx / (rawScores.length - 1)) * width;
+                      const y = height - (val / 150) * height;
+                      return `${x},${y}`;
+                    }).join(' ');
+
+                    return (
+                      <div className="pt-2 border-t border-slate-700/10 dark:border-slate-800">
+                        <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 mb-1">
+                          <span>Нәтижелер Серпіні (Sparkline)</span>
+                          <span className="text-blue-500 font-bold">{rawScores[rawScores.length - 1]} балл (соңғы)</span>
+                        </div>
+                        <div className="w-full h-12 relative my-1">
+                          <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                            <defs>
+                              <linearGradient id="histSparklineGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.35" />
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <polygon
+                              points={`0,${height} ${points} ${width},${height}`}
+                              fill="url(#histSparklineGrad)"
+                            />
+                            <polyline
+                              fill="none"
+                              stroke="#3b82f6"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              points={points}
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* 2. Weak Points Alert Widget */}
+                {(() => {
+                  const weakest = analyzeWeakPoints(history);
+                  if (!weakest) return null;
+
+                  return (
+                    <div className={`p-5 rounded-3xl border space-y-3 ${
+                      isDarkMode ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-50/80 border-amber-200 shadow-xs'
+                    }`}>
+                      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                        <AlertTriangle className="w-5 h-5 shrink-0 animate-bounce" />
+                        <h4 className="text-xs font-black uppercase tracking-wider">Әлсіз Тақырып Ұсынысы</h4>
+                      </div>
+
+                      <div className="space-y-1">
+                        <p className={`text-base font-black ${textPrimary}`}>
+                          {weakest.name}
+                        </p>
+                        <p className={`text-xs font-medium leading-relaxed ${textSecondary}`}>
+                          Сіздің бұл пәннен орташа нәтижеңіз <strong className="text-amber-600 dark:text-amber-400 font-extrabold">{weakest.percent}%</strong> құрайды. Ұпай санын өсіру үшін осы бөлімді қайталау ұсынылады.
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => navigate('/prep')}
+                        className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer mt-2"
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        <span>Дайындық бөліміне өту</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       </div>
 
       {/* ====== GUEST 10-CLICK SOFT REGISTRATION MODAL (HAS X CLOSE BUTTON) ====== */}
