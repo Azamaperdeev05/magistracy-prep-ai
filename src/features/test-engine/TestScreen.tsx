@@ -574,8 +574,11 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                   </div>
               </div>
 
-              {/* Main Question Card Area */}
-              <div className="flex-1 overflow-y-auto bg-white p-4 pb-24 md:px-8 md:py-6 md:pb-6">
+              {/* Main Question Card Area - Fixed for Mobile Safari 8-option scroll overflow */}
+              <div 
+                className="flex-1 overflow-y-auto overscroll-contain touch-pan-y bg-white p-4 pb-36 sm:pb-32 md:px-8 md:py-6 md:pb-12"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+              >
                   <div className="max-w-6xl mx-auto min-h-full flex flex-col">
                       
                       {/* Nav Bar - Mobile Responsive */}
@@ -680,7 +683,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ questions, durationMinutes, onF
                             </div>
                           )}
 
-                          <div className="grid gap-3 max-w-4xl">
+                          <div className="grid gap-3 max-w-4xl pb-16 sm:pb-8">
                               {currentQuestion.options.map((option, idx) => {
                                   const isSelected = (answers[currentQuestionId] || []).includes(option.id);
                                   const letter = String.fromCharCode(65 + idx);
