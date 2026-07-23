@@ -12,7 +12,7 @@ import { useTheme } from '../../app/ThemeContext';
 import { useCountUp } from '../../hooks/useCountUp';
 import { getLeaderboard, LeaderboardEntry, getSavedUser } from '../../services/authService';
 import { SUBJECTS } from '../../constants';
-import { SubjectId } from '../../types';
+import { SPECIALTIES } from '../../../data/specialties';
 
 interface University {
   code: string;
@@ -37,7 +37,7 @@ const StatCard: React.FC<{ label: string; value: number; color: string; bg: stri
   const count = useCountUp(value, 800);
   return (
     <div className={`p-4 rounded-xl border transition-all hover:scale-[1.02] hover:shadow-md ${bg}`}>
-      <p className={`text-[10px] font-bold ${textMuted} mb-1`}>{label}</p>
+      <p className={`text-[10px] font-bold ${textMuted} mb-1 truncate`} title={label}>{label}</p>
       <p className={`text-2xl font-black ${color}`}>{count}</p>
     </div>
   );
@@ -163,19 +163,28 @@ const PanelHome: React.FC<PanelHomeProps> = ({
           </motion.div>
 
           {/* Test Structure */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.15 }} className="space-y-4">
-            <h2 className={`text-lg font-black uppercase tracking-tight ${textPrimary}`}>КТ Құрылымы</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { label: 'Ағылшын', value: 50, color: isDarkMode ? 'text-blue-400' : 'text-blue-600', bg: isDarkMode ? 'bg-blue-500/5 border-blue-500/15' : 'bg-blue-50 border-blue-100' },
-                { label: 'ТГО', value: 30, color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/15' : 'bg-violet-50 border-violet-100' },
-                { label: '1-Профиль', value: 30, color: isDarkMode ? 'text-emerald-400' : 'text-emerald-600', bg: isDarkMode ? 'bg-emerald-500/5 border-emerald-500/15' : 'bg-emerald-50 border-emerald-100' },
-                { label: '2-Профиль', value: 20, color: isDarkMode ? 'text-amber-400' : 'text-amber-600', bg: isDarkMode ? 'bg-amber-500/5 border-amber-500/15' : 'bg-amber-50 border-amber-100' },
-              ].map(({ label, value, color, bg }) => (
-                <StatCard key={label} label={label} value={value} color={color} bg={bg} textMuted={textMuted} />
-              ))}
-            </div>
-          </motion.div>
+          {(() => {
+            const currentSpecCode = specialtyCode || getSavedUser()?.specialty_code || 'M094';
+            const selectedSpec = SPECIALTIES.find(s => s.code === currentSpecCode);
+            const profile1Label = selectedSpec?.profile1 || '1-Профиль';
+            const profile2Label = selectedSpec?.profile2 || '2-Профиль';
+
+            return (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.15 }} className="space-y-4">
+                <h2 className={`text-lg font-black uppercase tracking-tight ${textPrimary}`}>КТ Құрылымы</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { label: 'Ағылшын', value: 50, color: isDarkMode ? 'text-blue-400' : 'text-blue-600', bg: isDarkMode ? 'bg-blue-500/5 border-blue-500/15' : 'bg-blue-50 border-blue-100' },
+                    { label: 'ТГО', value: 30, color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/15' : 'bg-violet-50 border-violet-100' },
+                    { label: profile1Label, value: 30, color: isDarkMode ? 'text-emerald-400' : 'text-emerald-600', bg: isDarkMode ? 'bg-emerald-500/5 border-emerald-500/15' : 'bg-emerald-50 border-emerald-100' },
+                    { label: profile2Label, value: 20, color: isDarkMode ? 'text-amber-400' : 'text-amber-600', bg: isDarkMode ? 'bg-amber-500/5 border-amber-500/15' : 'bg-amber-50 border-amber-100' },
+                  ].map(({ label, value, color, bg }) => (
+                    <StatCard key={label} label={label} value={value} color={color} bg={bg} textMuted={textMuted} />
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })()}
 
           {/* Universities Preview */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.2 }} className="space-y-4">

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { SUBJECTS } from '../../constants';
 import { SubjectId } from '../../types';
+import { SPECIALTIES } from '../../../data/specialties';
 import SEO from '../../components/ui/SEO';
 
 // ─── Universities Section ─────────────────────────────────────────────────────
@@ -673,20 +674,30 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { label: 'Ағылшын тілі', value: '50', unit: 'сұрақ', color: isDarkMode ? 'text-blue-400' : 'text-blue-600', bg: isDarkMode ? 'bg-blue-500/5 border-blue-500/15' : 'bg-blue-50 border-blue-100' },
-              { label: 'ТГО (ОДАТ)', value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/15' : 'bg-violet-50 border-violet-100' },
-              { label: '1-Профиль', value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-emerald-400' : 'text-emerald-600', bg: isDarkMode ? 'bg-emerald-500/5 border-emerald-500/15' : 'bg-emerald-50 border-emerald-100' },
-              { label: '2-Профиль', value: '20', unit: 'сұрақ', color: isDarkMode ? 'text-amber-400' : 'text-amber-600', bg: isDarkMode ? 'bg-amber-500/5 border-amber-500/15' : 'bg-amber-50 border-amber-100' },
-            ].map(({ label, value, unit, color, bg }) => (
-              <div key={label} className={`p-4 rounded-xl border ${bg}`}>
-                <p className={`text-[10px] font-bold ${textMuted} mb-1`}>{label}</p>
-                <p className={`text-2xl font-black ${color}`}>{value}</p>
-                <p className={`text-[10px] font-bold ${textMuted}`}>{unit}</p>
+          {(() => {
+            const savedUser = getSavedUser();
+            const specCode = savedUser?.specialty_code || 'M094';
+            const selectedSpec = SPECIALTIES.find(s => s.code === specCode);
+            const profile1Label = selectedSpec?.profile1 || '1-Профиль';
+            const profile2Label = selectedSpec?.profile2 || '2-Профиль';
+
+            return (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { label: 'Ағылшын тілі', value: '50', unit: 'сұрақ', color: isDarkMode ? 'text-blue-400' : 'text-blue-600', bg: isDarkMode ? 'bg-blue-500/5 border-blue-500/15' : 'bg-blue-50 border-blue-100' },
+                  { label: 'ТГО (ОДАТ)', value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/15' : 'bg-violet-50 border-violet-100' },
+                  { label: profile1Label, value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-emerald-400' : 'text-emerald-600', bg: isDarkMode ? 'bg-emerald-500/5 border-emerald-500/15' : 'bg-emerald-50 border-emerald-100' },
+                  { label: profile2Label, value: '20', unit: 'сұрақ', color: isDarkMode ? 'text-amber-400' : 'text-amber-600', bg: isDarkMode ? 'bg-amber-500/5 border-amber-500/15' : 'bg-amber-50 border-amber-100' },
+                ].map(({ label, value, unit, color, bg }) => (
+                  <div key={label} className={`p-4 rounded-xl border ${bg}`}>
+                    <p className={`text-[10px] font-bold ${textMuted} mb-1 truncate`} title={label}>{label}</p>
+                    <p className={`text-2xl font-black ${color}`}>{value}</p>
+                    <p className={`text-[10px] font-bold ${textMuted}`}>{unit}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
 
           {/* PRO upsell — minimal */}
           {!isPremium && (
