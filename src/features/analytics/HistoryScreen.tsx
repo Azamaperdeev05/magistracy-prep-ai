@@ -310,7 +310,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
 
     const subjectTotals: Record<string, { score: number; max: number; name: string }> = {
       english: { score: 0, max: 0, name: 'Ағылшын тілі' },
-      tgo: { score: 0, max: 0, name: 'ТГО (ОДАТ)' },
+      tgo: { score: 0, max: 0, name: 'ОДАТ' },
       profile1: { score: 0, max: 0, name: '1-Бейіндік пән' },
       profile2: { score: 0, max: 0, name: '2-Бейіндік пән' },
     };
@@ -492,7 +492,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                     {[
                       { id: 'all', label: 'Барлығы' },
                       { id: 'english', label: 'Шет тілі' },
-                      { id: 'tgo', label: 'ТГО' },
+                      { id: 'tgo', label: 'ОДАТ' },
                       { id: 'profile1', label: '1-Бейіндік' },
                       { id: 'profile2', label: '2-Бейіндік' },
                     ].map(tab => (
@@ -872,7 +872,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack, isGuest = false, 
                               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                                 {[
                                   { label: 'Шет тілі', key: 'english', max: 50, icon: Globe },
-                                  { label: 'ТГО', key: 'tgo', max: 30, icon: Brain },
+                                  { label: 'ОДАТ', key: 'tgo', max: 30, icon: Brain },
                                   { label: '1-Бейіндік', key: 'profile1', max: 30, icon: Zap },
                                   { label: '2-Бейіндік', key: 'profile2', max: 40, icon: Database },
                                 ].map(s => {

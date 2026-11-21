@@ -295,7 +295,7 @@ const SyllabusScreen: React.FC<SyllabusScreenProps> = ({ onBack }) => {
                   <div className="max-w-4xl mx-auto space-y-4">
                     <div className={`p-4 rounded-2xl border mb-6 ${isDarkMode ? 'border-blue-500/20 bg-blue-500/5' : 'border-blue-200 bg-blue-50'}`}>
                       <h3 className="text-sm font-black text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                        <Globe className="w-4 h-4" /> Барлық мамандыққа ортақ пәндер (Шет тілі & ОДАТ/ТГО)
+                        <Globe className="w-4 h-4" /> Барлық мамандыққа ортақ пәндер (Шет тілі & ОДАТ)
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Магистратура кешенді тестілеуінің барлық мамандықтарына ортақ міндетті пәндер

@@ -323,7 +323,7 @@ const TestSetupScreen: React.FC<TestSetupScreenProps> = ({ onStart, isLoading })
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           </div>
 
-          <div className="flex items-center">ОДАТ (ТГО) тапсыру тілі</div>
+          <div className="flex items-center">ОДАТ (Оқу дайындығын анықтау тесті) тапсыру тілі</div>
           <div className="relative w-full max-w-md">
             <select 
               value={tgoLang} 

@@ -39,7 +39,7 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
     {
       id: 'tgo',
       renderIcon: (className = 'w-5 h-5') => <Brain className={className} />,
-      name: 'Оқуға дайындығын анықтау тесті (ТГО)',
+      name: 'Оқу дайындығын анықтау тесті (ОДАТ)',
       questions: 30,
       score: 30,
       desc: 'Сыни ойлау (15) және Аналитикалық ойлау (15)'
@@ -207,7 +207,7 @@ const PrepScreen: React.FC<PrepScreenProps> = ({ onBack }) => {
                     <span className={`font-bold ${textPrimary}`}>Кемінде 25 балл (50-ден)</span>
                   </div>
                   <div className={`p-3.5 rounded-xl border ${subCardBg}`}>
-                    <span className="text-purple-500 font-black block">ТГО</span>
+                    <span className="text-purple-500 font-black block">ОДАТ</span>
                     <span className={`font-bold ${textPrimary}`}>Кемінде 7 балл (30-дан)</span>
                   </div>
                   <div className={`p-3.5 rounded-xl border ${subCardBg}`}>

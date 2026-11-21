@@ -17,7 +17,7 @@ export const SUBJECTS: Record<SubjectId, SubjectConfig> = {
   },
   [SubjectId.TGO]: {
     id: SubjectId.TGO,
-    name: "Оқу дайындығын анықтау (ОДАТ)",
+    name: "Оқу дайындығын анықтау тесті (ОДАТ)",
     totalQuestions: 30,
     maxScore: 30,
     description: "15 сұрақ — Сыни ойлау, 15 сұрақ — Аналитикалық ойлау.",

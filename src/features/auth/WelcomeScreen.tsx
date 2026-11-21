@@ -685,7 +685,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { label: 'Ағылшын тілі', value: '50', unit: 'сұрақ', color: isDarkMode ? 'text-blue-400' : 'text-blue-600', bg: isDarkMode ? 'bg-blue-500/5 border-blue-500/15' : 'bg-blue-50 border-blue-100' },
-                  { label: 'ТГО (ОДАТ)', value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/15' : 'bg-violet-50 border-violet-100' },
+                  { label: 'ОДАТ', value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-violet-400' : 'text-violet-600', bg: isDarkMode ? 'bg-violet-500/5 border-violet-500/15' : 'bg-violet-50 border-violet-100' },
                   { label: profile1Label, value: '30', unit: 'сұрақ', color: isDarkMode ? 'text-emerald-400' : 'text-emerald-600', bg: isDarkMode ? 'bg-emerald-500/5 border-emerald-500/15' : 'bg-emerald-50 border-emerald-100' },
                   { label: profile2Label, value: '20', unit: 'сұрақ', color: isDarkMode ? 'text-amber-400' : 'text-amber-600', bg: isDarkMode ? 'bg-amber-500/5 border-amber-500/15' : 'bg-amber-50 border-amber-100' },
                 ].map(({ label, value, unit, color, bg }) => (

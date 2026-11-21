@@ -347,7 +347,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
             <div className="space-y-4">
               {[
                 { label: 'Ағылшын тілі', pct: 33, count: '50 сұрақ', color: 'bg-blue-600' },
-                { label: 'ТГО (ОДАТ)', pct: 20, count: '30 сұрақ', color: 'bg-indigo-600' },
+                { label: 'ОДАТ', pct: 20, count: '30 сұрақ', color: 'bg-indigo-600' },
                 { label: '1-Бейіндік пән', pct: 23, count: '35 сұрақ', color: 'bg-emerald-600' },
                 { label: '2-Бейіндік пән', pct: 23, count: '35 сұрақ', color: 'bg-amber-500' },
               ].map(({ label, pct, count: c, color }) => (
@@ -408,7 +408,7 @@ const LandingScreen: React.FC<LandingScreenProps> = ({ onLogin, onRegister }) =>
                 {[
                   {
                     title: 'Барлық пәндер қамтылған',
-                    desc: 'Ағылшын тілі, ТГО және 133 мамандық бойынша бейіндік пәндер',
+                    desc: 'Ағылшын тілі, ОДАТ және 133 мамандық бойынша бейіндік пәндер',
                   },
                   {
                     title: 'ҰТО тест спецификациясына сай',
